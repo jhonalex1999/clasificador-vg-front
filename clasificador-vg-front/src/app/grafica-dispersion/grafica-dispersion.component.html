@@ -1,0 +1,71 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header card-header-primary ">
+                        <h4 class="card-title">Elige la columna independiente</h4>
+                    </div>
+                    <div class="card-body">
+                        Escoge una de las columnas disponibles para que se genere la gráfica.
+                        <form>
+                            <mat-form-field>
+                                <mat-label>Columna 1</mat-label>
+                                <mat-select [(ngModel)]="columna1_selec" name="columna1"
+                                    (selectionChange)="actualizarGraficoScatter()">
+                                    <mat-option *ngFor="let columna of columnasIndep" [value]="columna">
+                                        {{columna}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Elige la columna dependiente</h4>
+                    </div>
+                    <div class="card-body">
+                        Escoge una de las columnas disponibles para que se genere la gráfica
+                        <form>
+                            <mat-form-field>
+                                <mat-label>Columna 2</mat-label>
+                                <mat-select [(ngModel)]="columna2_selec" name="columna2"
+                                    (selectionChange)="actualizarGraficoScatter()">
+                                    <mat-option *ngFor="let columna of columnas" [value]="columna">
+                                        {{columna}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </div>
+                <div class="card card-stats">
+                    <div class="card-header card-header-icon card-header-primary">
+                        <div class="card-icon">
+                            <i class="material-icons">scatter_plot</i>
+                        </div>
+                        <p class="card-category">Valores de la Gráfica:</p>
+                        <h3 class="card-title">{{columna2_selec}}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="legend-container" class="legend-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Grafica de dispersión</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="scatterChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

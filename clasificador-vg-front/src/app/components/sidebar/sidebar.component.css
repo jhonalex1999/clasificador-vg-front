@@ -1,0 +1,9 @@
+.nav-item.active .nav-link {
+    background-color: rgba(156, 39, 176, 1) !important;
+    text-decoration: none; 
+    box-shadow: 0 0 10px rgba(156, 39, 176, 1) !important;
+  }
+  .title-with-space {
+    margin-top: 10px; /* Puedes ajustar el valor según tus necesidades */
+    margin-left: 10px;
+}

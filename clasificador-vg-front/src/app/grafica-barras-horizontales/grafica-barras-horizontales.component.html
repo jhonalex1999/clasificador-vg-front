@@ -1,0 +1,55 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Elige la columna</h4>
+                    </div>
+                    <div class="card-body">
+                        Escoge una de las columnas disponibles para que se genere la gráfica de barras horizontal.
+                        <form>
+                            <mat-form-field>
+                                <mat-label>Columna 1</mat-label>
+                                <mat-select [(ngModel)]="columna_selec" name="columna3"
+                                    (selectionChange)="actualizarGraficaHorizontal()">
+                                    <mat-option *ngFor="let columna of columnas" [value]="columna">
+                                        {{columna}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card card-stats">
+                    <div class="card-header card-header-icon card-header-primary">
+                        <div class="card-icon">
+                            <i class="material-icons" style="transform: rotate(90deg)">bar_chart</i>
+                        </div>
+                        <p class="card-category">Valores de la columna: </p>
+                        <h3 class="card-title">{{columna_selec}}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="legend-container" class="legend-container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9 col-md-6">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Gráfica de barras horizontal</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-scroll-container">
+                            <canvas id="myChart2"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

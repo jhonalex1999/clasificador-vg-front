@@ -1,0 +1,54 @@
+.form-scroll-viewport {
+    height: 800px; /* Ajusta la altura según tus necesidades */
+    overflow-y: auto;
+  }
+  .card {
+    width: 500px;
+    margin: 50px auto auto auto;
+  }
+  
+  .expandable-content {
+    overflow: hidden;
+  }
+  /* Estilos para el contenedor del control deslizante y la línea detrás */
+.slider-container {
+  position: relative;
+}
+
+/* Estilos para la línea detrás del control deslizante */
+.slider-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px; /* Altura de la línea */
+  background: #9c27B0; /* Color de la línea */
+  transform: translateY(-50%);
+  z-index: -1; /* Coloca la línea detrás del control deslizante */
+}
+
+/* Estilos para la bola del control deslizante */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px; /* Ancho de la bola */
+  height: 20px; /* Altura de la bola */
+  background:#9c27B0; /* Color de la bola */
+
+  border-radius: 50%; /* Borde redondeado para la bola */
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px; /* Ancho de la bola */
+  height: 20px; /* Altura de la bola */
+  background: #9c27B0; /* Color de la bola */
+
+  border-radius: 50%; /* Borde redondeado para la bola */
+  cursor: pointer;
+}
+#prediccion{
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}

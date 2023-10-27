@@ -1,0 +1,30 @@
+
+#encabezado{
+    color: white;
+}
+#primero {
+  width: 20px; 
+  height: 20px; 
+}
+#segundo {
+  width: 24px; 
+  height: 24px; 
+}
+#tercero {
+  width: 24px; 
+  height: 24px; 
+}
+#ImgHeader{
+  width: 220px; 
+  height: 220px; 
+  display: block; 
+  margin: 0 auto;
+}
+.card {
+  min-height: 400px; /* Ajusta la altura mínima según tus necesidades */
+  max-height: 500px; /* Ajusta la altura máxima según tus necesidades */
+}
+
+.card-body {
+  overflow-y: auto; /* Agregar una barra de desplazamiento vertical si el contenido es demasiado largo */
+}

@@ -1,0 +1,17 @@
+.chart-scroll-container {
+  max-height: 400px; /* Ajusta la altura máxima según tus necesidades */
+  overflow: auto;    /* Habilita el desplazamiento cuando el contenido es más grande */
+}
+
+#myChart2 {
+  width: 100%; /* Asegura que el canvas se ajuste al ancho del contenedor */
+  height: auto; /* Permite que la altura del canvas se ajuste según el contenido */
+}
+
+.legend-container {
+    overflow-y: auto; /* Habilitar el scroll vertical */
+    max-height: 200px; /* Ajustar la altura máxima según sea necesario */
+    max-width: 100%; /* Asegurar que el div se ajuste dentro de la card */
+    white-space: nowrap; /* Evitar el ajuste de línea */
+    display: inline-block; /* Asegurarse de que el div ocupe el ancho del contenido */
+}

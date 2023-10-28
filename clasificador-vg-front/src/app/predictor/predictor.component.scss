@@ -52,3 +52,28 @@
   text-align: center;
   font-weight: bold;
 }
+.loading-animation {
+  border: 10px solid #9C27B0;
+  border-top: 10px solid transparent;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  animation: spin 2s linear infinite;
+
+  position: absolute;
+  left: 40%; /* Ajusta este valor para centrar horizontalmente */
+  top: 50%; /* Deja esto como está para centrar verticalmente */
+  transform: translate(-50%, -50%);
+
+  /* Añade un espacio entre el círculo y el contenedor */
+  margin-top: 2px; /* Ajusta este valor según sea necesario */
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.invisible {
+  display: none;
+}

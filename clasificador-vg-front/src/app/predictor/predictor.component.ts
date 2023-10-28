@@ -17,12 +17,13 @@ export class PredictorComponent implements OnInit {
   public definicion: any;
   public prediccion: any;
   public importancia_caracteristicas: any;
-  public banderaGrafica: boolean = false;
+  public banderaVisibilidad: boolean = false;
+  public animacion;
   formulario: FormGroup;
   departamentos: string[] = ["SANTANDER", "Otros"];
   municipios: string[] = ["BUCARAMANGA", "Otros"];
   anios: string[] = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"];
-  gruposEdad: string[] = ["0 a 6", "7 a 11", "12 a 17", "18 a 28", "29 a 59", "60 y mas"];
+  gruposEdad: string[] = ["0 a 6", "7  a 11", "12 a 17", "18 a 28", "29 a 59", "60 y mas"];
   sexos: string[] = ["Femenino", "Masculino"];
   areas: string[] = ["CABECERA MUNICIPAL", "RURAL DISPERSO", "CENTRO POBLADO"];
   comunas: string[] = [
@@ -174,9 +175,10 @@ export class PredictorComponent implements OnInit {
   }
 
   public predecir() {
-    this.banderaGrafica = false;
+    this.banderaVisibilidad = true;
+    
     if (this.formulario.valid) {
-   
+      this.animacion=true;
       const formularioValue = { ...this.formulario.value };
       formularioValue.semana = formularioValue.semana.toString();
       formularioValue.año = formularioValue.año.toString();
@@ -194,8 +196,9 @@ export class PredictorComponent implements OnInit {
         this.prediccion = result.prediccion;
         this.importancia_caracteristicas = result.importancia_caracteristicas;
         console.log(this.importancia_caracteristicas[this.prediccion]);
-        this.banderaGrafica = true;
+        this.animacion=false;
         this.graficaCaracteristicas(this.importancia_caracteristicas[this.prediccion]);
+        this.banderaVisibilidad = false;
       });
     } else {
       console.log("Algunos campos del formulario no son válidos.");
@@ -317,7 +320,7 @@ export class PredictorComponent implements OnInit {
       case '0 a 6':
         cicloDeVidaValue = 'Primera infancia';
         break;
-      case '7 a 11':
+      case '7  a 11':
         cicloDeVidaValue = 'Infancia';
         break;
       case '12 a 17':

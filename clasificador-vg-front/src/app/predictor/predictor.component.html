@@ -259,10 +259,10 @@
             <div class="card">
               <div class="card-header card-header-primary">
                 <h3 id="prediccion">Predicción</h3>
-                <h3 class="card-title">{{ definicion }}</h3>
+                <h3 *ngIf="!banderaVisibilidad"  class="card-title">{{ definicion }}</h3>
               </div>
               <div class="card-body">
-                <div *ngIf="prediccion==0">
+                <div *ngIf="prediccion==0 && !banderaVisibilidad">
                   <p>La violencia física consiste en hacer uso de la fuerza para causar un daño 
                     a la víctima. Las víctimas no tienen por qué pertenecer a un determinado colectivo,
                     y tampoco se tiene por qué tener en cuenta su sexo o condición. Lo que caracteriza 
@@ -272,25 +272,24 @@
                     a la víctima, pudiendo necesitar apoyo psicológico. Este tipo de violencia también se caracteriza
                     por su método, no por el tipo de víctima</p>
               </div>
-              <div *ngIf="prediccion==1">
+              <div *ngIf="prediccion==1 && !banderaVisibilidad">
                 <p>Una agresión sexual o abuso se refiere a cualquier contacto sexual no deseado.
                   Sucede cuando alguien te fuerza o presiona (sea física o emocionalmente) a que hagas
                   alguna cosa de tipo sexual. La violación es cuando alguien te fuerza o presiona para
                   que tengas sexo</p>
             </div>
-            <div *ngIf="prediccion==2">
+            <div *ngIf="prediccion==2 && !banderaVisibilidad">
               <p>
                 implica descuido u omisión en la realización de determinadas atenciones o desamparo de una
                    persona que depende de uno o por la cual uno tiene alguna obligación legal o moral.
                    
                 </p>
             </div>
+           
               </div>
           </div>
-            
-              <canvas id="graficoImportancia"></canvas>
-           
-            
+              <div *ngIf="animacion" class="loading-animation"></div>
+              <canvas  [class.invisible]="banderaVisibilidad" id="graficoImportancia"></canvas>
         </div>
         </div>
     </div>

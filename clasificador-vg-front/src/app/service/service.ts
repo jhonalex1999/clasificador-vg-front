@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RegistroDto } from 'app/dto/registro-dto';
-const back_end_url = "https://clasificador-vg.onrender.com/"
+const back_end_url = "https://predictor-violencia-genero.onrender.com/"
 
 @Injectable({
   providedIn: 'root'

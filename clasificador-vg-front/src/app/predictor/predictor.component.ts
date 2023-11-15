@@ -19,6 +19,7 @@ export class PredictorComponent implements OnInit {
   public importancia_caracteristicas: any;
   public banderaVisibilidad: boolean = false;
   public animacion;
+  public banderaCard: boolean=true;
   formulario: FormGroup;
   departamentos: string[] = ["SANTANDER", "Otros"];
   municipios: string[] = ["BUCARAMANGA", "Otros"];
@@ -176,7 +177,7 @@ export class PredictorComponent implements OnInit {
 
   public predecir() {
     this.banderaVisibilidad = true;
-    
+    this.banderaCard=true;
     if (this.formulario.valid) {
       this.animacion=true;
       const formularioValue = { ...this.formulario.value };
@@ -199,6 +200,7 @@ export class PredictorComponent implements OnInit {
         this.animacion=false;
         this.graficaCaracteristicas(this.importancia_caracteristicas[this.prediccion]);
         this.banderaVisibilidad = false;
+        this.banderaCard=false;
       });
     } else {
       console.log("Algunos campos del formulario no son válidos.");

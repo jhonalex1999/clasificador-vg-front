@@ -17,7 +17,8 @@ export class ModeloInfoComponent implements OnInit {
   precisiones = [];
   sensibilidades = [];
   puntuacionesF1 = [];
-  
+  itemsPerPage: number = 10;
+  currentPage: number = 1;
   chart: any;
  
   constructor(private service: Service) { }
@@ -35,11 +36,11 @@ export class ModeloInfoComponent implements OnInit {
                  {modelo:'Random Forest',exactitud:0.849,precision:0.842,sensibilidad:0.837,puntuacion_F1:0.839},
                  {modelo:'LightGBM',exactitud:0.854,precision:0.846,sensibilidad:0.846,puntuacion_F1:0.846},
                  {modelo:'XGBoost',exactitud:0.851,precision:0.843,sensibilidad:0.842,puntuacion_F1:0.842},
-                 {modelo:'XGBoost Optimizado',exactitud:0.856,precision:0.848,sensibilidad:0.848,puntuacion_F1:0.847}]
+                 {modelo:'XGBoost Optimizado',exactitud:0.859,precision:0.851,sensibilidad:0.847,puntuacion_F1:0.848}]
     this.service.obtenerDF().subscribe(
       result => {
         this.dataframe = JSON.parse(result.dataframe);
-        this.dataRows = Object.values(this.dataframe).slice(0, 5); 
+        this.dataRows = Object.values(this.dataframe); 
         console.log(this.dataRows)
         this.dataRows.forEach((row) => {
           row.anio = row.año;
@@ -102,9 +103,30 @@ export class ModeloInfoComponent implements OnInit {
           y: {
             beginAtZero: true
           }
-        }
+        },
+        responsive: true,  
+        maintainAspectRatio: false, 
       }
     });
   }
-  
+  // Función para obtener los elementos de la página actual
+ getCurrentPageRows(): any[] {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  return this.dataRows.slice(startIndex, endIndex);
+}
+
+// Función para cambiar a la siguiente página
+nextPage() {
+  if ((this.currentPage * this.itemsPerPage) < this.dataRows.length) {
+    this.currentPage++;
+  }
+}
+
+// Función para cambiar a la página anterior
+prevPage() {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
 }

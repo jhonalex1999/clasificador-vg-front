@@ -1,56 +1,56 @@
 .form-scroll-viewport {
-    height: 800px; /* Ajusta la altura según tus necesidades */
-    overflow-y: auto;
-  }
-  .card {
-    width: 500px;
-    margin: 50px auto auto auto;
-  }
-  
-  .expandable-content {
-    overflow: hidden;
-  }
-  /* Estilos para el contenedor del control deslizante y la línea detrás */
+  height: 800px; /* Ajusta la altura según tus necesidades */
+  overflow-y: auto;
+}
+.card {
+  width: 500px;
+  margin: 50px auto auto auto;
+}
+
+.expandable-content {
+  overflow: hidden;
+}
+/* Estilos para el contenedor del control deslizante y la línea detrás */
 .slider-container {
-  position: relative;
+position: relative;
 }
 
 /* Estilos para la línea detrás del control deslizante */
 .slider-track {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 2px; /* Altura de la línea */
-  background: #9c27B0; /* Color de la línea */
-  transform: translateY(-50%);
-  z-index: -1; /* Coloca la línea detrás del control deslizante */
+position: absolute;
+top: 50%;
+left: 0;
+right: 0;
+height: 2px; /* Altura de la línea */
+background: #9c27B0; /* Color de la línea */
+transform: translateY(-50%);
+z-index: -1; /* Coloca la línea detrás del control deslizante */
 }
 
 /* Estilos para la bola del control deslizante */
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px; /* Ancho de la bola */
-  height: 20px; /* Altura de la bola */
-  background:#9c27B0; /* Color de la bola */
+-webkit-appearance: none;
+appearance: none;
+width: 20px; /* Ancho de la bola */
+height: 20px; /* Altura de la bola */
+background:#9c27B0; /* Color de la bola */
 
-  border-radius: 50%; /* Borde redondeado para la bola */
-  cursor: pointer;
+border-radius: 50%; /* Borde redondeado para la bola */
+cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-  width: 20px; /* Ancho de la bola */
-  height: 20px; /* Altura de la bola */
-  background: #9c27B0; /* Color de la bola */
+width: 20px; /* Ancho de la bola */
+height: 20px; /* Altura de la bola */
+background: #9c27B0; /* Color de la bola */
 
-  border-radius: 50%; /* Borde redondeado para la bola */
-  cursor: pointer;
+border-radius: 50%; /* Borde redondeado para la bola */
+cursor: pointer;
 }
 #prediccion{
-  color: white;
-  text-align: center;
-  font-weight: bold;
+color: white;
+text-align: center;
+font-weight: bold;
 }
 .loading-animation {
   border: 10px solid #9C27B0;
@@ -60,13 +60,12 @@
   height: 150px;
   animation: spin 2s linear infinite;
 
-  position: absolute;
-  left: 40%; /* Ajusta este valor para centrar horizontalmente */
-  top: 50%; /* Deja esto como está para centrar verticalmente */
-  transform: translate(-50%, -50%);
+  /* Cambiado a posición relativa */
+  position: relative;
+  margin: 10px auto; /* Centra horizontalmente y agrega espacio arriba */
 
-  /* Añade un espacio entre el círculo y el contenedor */
-  margin-top: 2px; /* Ajusta este valor según sea necesario */
+  /* Ajusta el espacio entre el círculo y el contenedor */
+  margin-top: 10px; /* Ajusta según sea necesario */
 }
 
 @keyframes spin {
@@ -76,4 +75,21 @@
 
 .invisible {
   display: none;
+}
+
+/* Media query para dispositivos con un ancho máximo de 767px (tamaño de pantalla típico para dispositivos móviles) */
+@media (max-width: 767px) {
+  .loading-animation {
+    width: 100px; /* Ajusta el tamaño del círculo según sea necesario para dispositivos móviles */
+    height: 100px;
+    margin-top: 5px; /* Ajusta el espacio entre el círculo y el contenedor */
+    border-width: 5px; /* Ajusta el grosor del borde del círculo según sea necesario */
+  }
+}
+
+@media (max-width: 767px) {
+  .card {
+    width: 100%; /* Ajusta el ancho de la tarjeta al 100% del contenedor */
+    margin-bottom: 15px; /* Ajusta el espacio entre tarjetas según sea necesario */
+  }
 }

@@ -1,297 +1,298 @@
 <div class="main-content">
-    <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-6 col-md-6 col-sm-12 ">
-            <cdk-virtual-scroll-viewport itemSize="auto" class="form-scroll-viewport">
-            <form [formGroup]="formulario" (ngSubmit)="predecir()">
-                
-                <mat-form-field>
-                  <mat-label>Departamento</mat-label>
-                  <mat-select formControlName="departamento" required>
-                    <mat-option *ngFor="let departamento of departamentos" [value]="departamento" >
-                      {{ departamento }}
+  <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 ">
+          <cdk-virtual-scroll-viewport itemSize="auto" class="form-scroll-viewport">
+          <form [formGroup]="formulario" (ngSubmit)="predecir()">
+              
+              <mat-form-field>
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="departamento" required>
+                  <mat-option *ngFor="let departamento of departamentos" [value]="departamento" >
+                    {{ departamento }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('departamento').invalid">
+                  Departamento es requerido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Municipio</mat-label>
+                <mat-select formControlName="municipio" required>
+                  <mat-option *ngFor="let municipio of municipios" [value]="municipio">
+                    {{ municipio}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('municipio').invalid">
+                  Municipio es requerido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="slider-field">
+                <mat-label>Semana</mat-label>
+                <div class="slider-container">
+                  <input type="range" matInput formControlName="semana" min="1" max="52" step="1" class="slider">
+                  <div class="slider-track"></div>
+                </div>
+                <span>{{ formulario.get('semana').value }}</span>
+                <mat-error *ngIf="formulario.get('semana').invalid">
+                  Semana es requerido.
+                </mat-error>
+              </mat-form-field>
+              
+              <mat-form-field class="slider-field">
+                <mat-label>Año</mat-label>
+                <div class="slider-container">
+                  <input type="range" matInput formControlName="año" min="2015" max="2023" step="1" class="slider">
+                  <div class="slider-track"></div>
+                </div>
+                <span>{{ formulario.get('año').value }}</span>
+                <mat-error *ngIf="formulario.get('año').invalid">
+                  Año es requerido.
+                </mat-error>
+              </mat-form-field>
+
+            
+              <mat-form-field>
+                  <mat-label>Grupo Edad</mat-label>
+                  <mat-select formControlName="grupo_edad" required>
+                    <mat-option *ngFor="let grupoEdad of gruposEdad" [value]="grupoEdad">
+                      {{ grupoEdad }}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="formulario.get('departamento').invalid">
-                    Departamento es requerido.
+                  <mat-error *ngIf="formulario.get('grupo_edad').invalid">
+                    Grupo edad es requerido.
                   </mat-error>
-                </mat-form-field>
+              </mat-form-field>
+            
+            
+              <mat-form-field>
+                <mat-label>Sexo</mat-label>
+                <mat-select formControlName="sexo" required>
+                  <mat-option *ngFor="let sexo of sexos" [value]="sexo">
+                    {{ sexo }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('sexo').invalid">
+                  Sexo es requerido.
+                </mat-error>
+              </mat-form-field>
 
-                <mat-form-field>
-                  <mat-label>Municipio</mat-label>
-                  <mat-select formControlName="municipio" required>
-                    <mat-option *ngFor="let municipio of municipios" [value]="municipio">
-                      {{ municipio}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('municipio').invalid">
-                    Municipio es requerido.
-                  </mat-error>
-                </mat-form-field>
+              <mat-form-field>
+                <mat-label>Area</mat-label>
+                <mat-select formControlName="area" required>
+                  <mat-option *ngFor="let area of areas" [value]="area">
+                    {{ area }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('area').invalid">
+                  Area es requerido.
+                </mat-error>
+              </mat-form-field>
 
-                <mat-form-field class="slider-field">
-                  <mat-label>Semana</mat-label>
-                  <div class="slider-container">
-                    <input type="range" matInput formControlName="semana" min="1" max="52" step="1" class="slider">
-                    <div class="slider-track"></div>
-                  </div>
-                  <span>{{ formulario.get('semana').value }}</span>
-                  <mat-error *ngIf="formulario.get('semana').invalid">
-                    Semana es requerido.
-                  </mat-error>
-                </mat-form-field>
-                
-                <mat-form-field class="slider-field">
-                  <mat-label>Año</mat-label>
-                  <div class="slider-container">
-                    <input type="range" matInput formControlName="año" min="2015" max="2023" step="1" class="slider">
-                    <div class="slider-track"></div>
-                  </div>
-                  <span>{{ formulario.get('año').value }}</span>
-                  <mat-error *ngIf="formulario.get('año').invalid">
-                    Año es requerido.
-                  </mat-error>
-                </mat-form-field>
+              <mat-form-field>
+                <mat-label>Comuna</mat-label>
+                <mat-select formControlName="comuna" required>
+                  <mat-option *ngFor="let comuna of comunas" [value]="comuna">
+                    {{ comuna }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('comuna').invalid">
+                  Comuna es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Tipo de Seguridad Social</mat-label>
+                <mat-select formControlName="tipo_de_seguridad_social" required>
+                  <mat-option *ngFor="let tipo_de_seguridad_social of tiposDeSeguridadSocial" [value]="tipo_de_seguridad_social">
+                    {{ tipo_de_seguridad_social }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('tipo_de_seguridad_social').invalid">
+                  Tipo de Seguridad Social es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Paciente Hospitalizado</mat-label>
+                <mat-select formControlName="paciente_hospitalizado" required>
+                  <mat-option *ngFor="let paciente_hospitalizado of  tiposDePacienteHospitalizado" [value]="paciente_hospitalizado.valor">
+                    {{ paciente_hospitalizado.texto }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('paciente_hospitalizado').invalid">
+                  Paciente Hospitalizado es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Condición Final</mat-label>
+                <mat-select formControlName="condicion_final" required>
+                  <mat-option *ngFor="let condicion_final of  condicionesFinales" [value]="condicion_final.valor">
+                    {{ condicion_final.texto }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('condicion_final').invalid">
+                  Condición Final es requerido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Actividad</mat-label>
+                <mat-select formControlName="actividad" required>
+                  <mat-option *ngFor="let actividad of  actividades" [value]="actividad.valor">
+                    {{ actividad.texto }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('actividad').invalid">
+                  Actividad es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              
+              <mat-form-field>
+                <mat-label>Edad Agresor</mat-label>
+                <div class="slider-container">
+                  <input type="range" matInput formControlName="edad_agre" min="10" max="99" step="1" class="slider">
+                  <div class="slider-track"></div> <!-- Elemento de línea -->
+                </div>
+                <span>{{ formulario.get('edad_agre').value }}</span>
+                <mat-error *ngIf="formulario.get('edad_agre').invalid">
+                  Edad Agresor es requerido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Sexo Agresor</mat-label>
+                <mat-select formControlName="sexo_agre" required>
+                  <mat-option *ngFor="let sexo_agre of  sexosAgre" [value]="sexo_agre">
+                    {{ sexo_agre }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('sexo_agre').invalid">
+                  Sexo Agresor es requerido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Parentezco Víctima</mat-label>
+                <mat-select formControlName="parentezco_vict" required>
+                  <mat-option *ngFor="let parentezco_vict of  parentezcosVict" [value]="parentezco_vict">
+                    {{ parentezco_vict}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('parentezco_vict').invalid">
+                  Parentezco Víctima es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Sustancias Víctima</mat-label>
+                <mat-select formControlName="sustancias_victima" required>
+                  <mat-option *ngFor="let sustancias_victima of  sustanciasVictima" [value]="sustancias_victima.valor">
+                    {{ sustancias_victima.texto }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('sustancias_victima').invalid">
+                  Sustancias Víctima es requerido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Escenario</mat-label>
+                <mat-select formControlName="escenario" required>
+                  <mat-option *ngFor="let escenario of  escenarios" [value]="escenario.valor">
+                    {{ escenario.texto }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('escenario').invalid">
+                  Escenario es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label>Nombre Evento</mat-label>
+                <mat-select formControlName="nom_eve" required>
+                  <mat-option *ngFor="let nom_eve of  noms_eve" [value]="nom_eve">
+                    {{ nom_eve }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('nom_eve').invalid">
+                  Nombre Evento es requerido.
+                </mat-error>
+              </mat-form-field>
+            
+              <mat-form-field>
+                <mat-label >Nombre UPGD</mat-label>
+                <mat-select formControlName="nom_upgd" required>
+                  <mat-option *ngFor="let nom_upgd of  noms_upgd" [value]="nom_upgd">
+                    {{ nom_upgd }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('nom_upgd').invalid">
+                  Nombre UPGD es requerido.
+                </mat-error>
+              </mat-form-field>
 
               
-                <mat-form-field>
-                    <mat-label>Grupo Edad</mat-label>
-                    <mat-select formControlName="grupo_edad" required>
-                      <mat-option *ngFor="let grupoEdad of gruposEdad" [value]="grupoEdad">
-                        {{ grupoEdad }}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="formulario.get('grupo_edad').invalid">
-                      Grupo edad es requerido.
-                    </mat-error>
-                </mat-form-field>
-              
-              
-                <mat-form-field>
-                  <mat-label>Sexo</mat-label>
-                  <mat-select formControlName="sexo" required>
-                    <mat-option *ngFor="let sexo of sexos" [value]="sexo">
-                      {{ sexo }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('sexo').invalid">
-                    Sexo es requerido.
-                  </mat-error>
-                </mat-form-field>
+              <mat-form-field>
+                <mat-label>Sivigila</mat-label>
+                <mat-select formControlName="sivigila" required>
+                  <mat-option *ngFor="let sivigila of  sivigilas" [value]="sivigila.valor">
+                    {{ sivigila.texto}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="formulario.get('sivigila').invalid">
+                  Sivigila es requerido.
+                </mat-error>
+              </mat-form-field>
 
-                <mat-form-field>
-                  <mat-label>Area</mat-label>
-                  <mat-select formControlName="area" required>
-                    <mat-option *ngFor="let area of areas" [value]="area">
-                      {{ area }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('area').invalid">
-                    Area es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <mat-label>Comuna</mat-label>
-                  <mat-select formControlName="comuna" required>
-                    <mat-option *ngFor="let comuna of comunas" [value]="comuna">
-                      {{ comuna }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('comuna').invalid">
-                    Comuna es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                <mat-form-field>
-                  <mat-label>Tipo de Seguridad Social</mat-label>
-                  <mat-select formControlName="tipo_de_seguridad_social" required>
-                    <mat-option *ngFor="let tipo_de_seguridad_social of tiposDeSeguridadSocial" [value]="tipo_de_seguridad_social">
-                      {{ tipo_de_seguridad_social }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('tipo_de_seguridad_social').invalid">
-                    Tipo de Seguridad Social es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                <mat-form-field>
-                  <mat-label>Paciente Hospitalizado</mat-label>
-                  <mat-select formControlName="paciente_hospitalizado" required>
-                    <mat-option *ngFor="let paciente_hospitalizado of  tiposDePacienteHospitalizado" [value]="paciente_hospitalizado.valor">
-                      {{ paciente_hospitalizado.texto }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('paciente_hospitalizado').invalid">
-                    Paciente Hospitalizado es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                <mat-form-field>
-                  <mat-label>Condición Final</mat-label>
-                  <mat-select formControlName="condicion_final" required>
-                    <mat-option *ngFor="let condicion_final of  condicionesFinales" [value]="condicion_final.valor">
-                      {{ condicion_final.texto }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('condicion_final').invalid">
-                    Condición Final es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <mat-label>Actividad</mat-label>
-                  <mat-select formControlName="actividad" required>
-                    <mat-option *ngFor="let actividad of  actividades" [value]="actividad.valor">
-                      {{ actividad.texto }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('actividad').invalid">
-                    Actividad es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                
-                <mat-form-field>
-                  <mat-label>Edad Agresor</mat-label>
-                  <div class="slider-container">
-                    <input type="range" matInput formControlName="edad_agre" min="10" max="99" step="1" class="slider">
-                    <div class="slider-track"></div> <!-- Elemento de línea -->
-                  </div>
-                  <span>{{ formulario.get('edad_agre').value }}</span>
-                  <mat-error *ngIf="formulario.get('edad_agre').invalid">
-                    Edad Agresor es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <mat-label>Sexo Agresor</mat-label>
-                  <mat-select formControlName="sexo_agre" required>
-                    <mat-option *ngFor="let sexo_agre of  sexosAgre" [value]="sexo_agre">
-                      {{ sexo_agre }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('sexo_agre').invalid">
-                    Sexo Agresor es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <mat-label>Parentezco Víctima</mat-label>
-                  <mat-select formControlName="parentezco_vict" required>
-                    <mat-option *ngFor="let parentezco_vict of  parentezcosVict" [value]="parentezco_vict">
-                      {{ parentezco_vict}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('parentezco_vict').invalid">
-                    Parentezco Víctima es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                <mat-form-field>
-                  <mat-label>Sustancias Víctima</mat-label>
-                  <mat-select formControlName="sustancias_victima" required>
-                    <mat-option *ngFor="let sustancias_victima of  sustanciasVictima" [value]="sustancias_victima.valor">
-                      {{ sustancias_victima.texto }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('sustancias_victima').invalid">
-                    Sustancias Víctima es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field>
-                  <mat-label>Escenario</mat-label>
-                  <mat-select formControlName="escenario" required>
-                    <mat-option *ngFor="let escenario of  escenarios" [value]="escenario.valor">
-                      {{ escenario.texto }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('escenario').invalid">
-                    Escenario es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                <mat-form-field>
-                  <mat-label>Nombre Evento</mat-label>
-                  <mat-select formControlName="nom_eve" required>
-                    <mat-option *ngFor="let nom_eve of  noms_eve" [value]="nom_eve">
-                      {{ nom_eve }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('nom_eve').invalid">
-                    Nombre Evento es requerido.
-                  </mat-error>
-                </mat-form-field>
-              
-                <mat-form-field>
-                  <mat-label >Nombre UPGD</mat-label>
-                  <mat-select formControlName="nom_upgd" required>
-                    <mat-option *ngFor="let nom_upgd of  noms_upgd" [value]="nom_upgd">
-                      {{ nom_upgd }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('nom_upgd').invalid">
-                    Nombre UPGD es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                
-                <mat-form-field>
-                  <mat-label>Sivigila</mat-label>
-                  <mat-select formControlName="sivigila" required>
-                    <mat-option *ngFor="let sivigila of  sivigilas" [value]="sivigila.valor">
-                      {{ sivigila.texto}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('sivigila').invalid">
-                    Sivigila es requerido.
-                  </mat-error>
-                </mat-form-field>
-
-                <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
-              </form>
-            </cdk-virtual-scroll-viewport>
-          </div>
-          
-          <div class="col-lg-6 col-md-6 col-sm-12">
-           
-            <div class="card">
-              <div class="card-header card-header-primary">
-                <h3 id="prediccion">Predicción</h3>
-                <h3 *ngIf="!banderaVisibilidad"  class="card-title">{{ definicion }}</h3>
-              </div>
-              <div class="card-body">
-                <div *ngIf="prediccion==0 && !banderaVisibilidad">
-                  <p>La violencia física consiste en hacer uso de la fuerza para causar un daño 
-                    a la víctima. Las víctimas no tienen por qué pertenecer a un determinado colectivo,
-                    y tampoco se tiene por qué tener en cuenta su sexo o condición. Lo que caracteriza 
-                    a la violencia física es el uso de la fuerza, no la condición de la víctima.
-                    La violencia  psicológica  existe cuando se humilla o intenta degradar a una persona mediante insultos
-                    o palabras que provocan daño. El uso continuado de esta violencia le puede causar graves transtornos 
-                    a la víctima, pudiendo necesitar apoyo psicológico. Este tipo de violencia también se caracteriza
-                    por su método, no por el tipo de víctima</p>
-              </div>
-              <div *ngIf="prediccion==1 && !banderaVisibilidad">
-                <p>Una agresión sexual o abuso se refiere a cualquier contacto sexual no deseado.
-                  Sucede cuando alguien te fuerza o presiona (sea física o emocionalmente) a que hagas
-                  alguna cosa de tipo sexual. La violación es cuando alguien te fuerza o presiona para
-                  que tengas sexo</p>
-            </div>
-            <div *ngIf="prediccion==2 && !banderaVisibilidad">
-              <p>
-                implica descuido u omisión en la realización de determinadas atenciones o desamparo de una
-                   persona que depende de uno o por la cual uno tiene alguna obligación legal o moral.
-                   
-                </p>
-            </div>
-           
-              </div>
-          </div>
-              <div *ngIf="animacion" class="loading-animation"></div>
-              <canvas  [class.invisible]="banderaVisibilidad" id="graficoImportancia"></canvas>
+              <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
+            </form>
+          </cdk-virtual-scroll-viewport>
         </div>
+        
+        <div class="col-lg-6 col-md-6 col-sm-12">
+         
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h3 id="prediccion">Predicción</h3>
+              <h3 *ngIf="!banderaVisibilidad"  class="card-title">{{ definicion }}</h3>
+            </div>
+            <div class="card-body">
+              <div *ngIf="prediccion==0 && !banderaVisibilidad">
+                <p>La violencia física consiste en hacer uso de la fuerza para causar un daño 
+                  a la víctima. Las víctimas no tienen por qué pertenecer a un determinado colectivo,
+                  y tampoco se tiene por qué tener en cuenta su sexo o condición. Lo que caracteriza 
+                  a la violencia física es el uso de la fuerza, no la condición de la víctima.
+                  La violencia  psicológica  existe cuando se humilla o intenta degradar a una persona mediante insultos
+                  o palabras que provocan daño. El uso continuado de esta violencia le puede causar graves transtornos 
+                  a la víctima, pudiendo necesitar apoyo psicológico. Este tipo de violencia también se caracteriza
+                  por su método, no por el tipo de víctima</p>
+            </div>
+            <div *ngIf="prediccion==1 && !banderaVisibilidad">
+              <p>Una agresión sexual o abuso se refiere a cualquier contacto sexual no deseado.
+                Sucede cuando alguien te fuerza o presiona (sea física o emocionalmente) a que hagas
+                alguna cosa de tipo sexual. La violación es cuando alguien te fuerza o presiona para
+                que tengas sexo</p>
+          </div>
+          <div *ngIf="prediccion==2 && !banderaVisibilidad">
+            <p>
+              implica descuido u omisión en la realización de determinadas atenciones o desamparo de una
+                 persona que depende de uno o por la cual uno tiene alguna obligación legal o moral.
+                 
+              </p>
+          </div>
+         
+            </div>
         </div>
-    </div>
+        <div *ngIf="animacion" class="loading-animation"></div>
+        <div [class.invisible]="banderaCard" class="card">
+            <canvas  [class.invisible]="banderaVisibilidad" id="graficoImportancia"></canvas>
+          </div>
+      </div>
+      </div>
   </div>
-  
+</div>

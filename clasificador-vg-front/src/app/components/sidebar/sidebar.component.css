@@ -7,3 +7,8 @@
     margin-top: 10px; /* Puedes ajustar el valor según tus necesidades */
     margin-left: 10px;
 }
+.logo-img {
+  width: 35px !important;
+  top: 5px !important;
+  position: absolute !important;
+}

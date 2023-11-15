@@ -184,70 +184,78 @@
         <div class="card">
           <div class="card-header card-header-primary">
             <h4>Dataset</h4>
-            <p>En esta tabla se muestran los primeros 5 registros del Dataset</p>
+            <p>En esta tabla se muestran los registros del Dataset</p>
           </div>
           <div class="card-body table-responsive">
             <div class="table-container-data">
               <table class="table table-hover">
                 <thead class="text-primary">
                   <tr style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    <th >Departamento</th>
-                    <th >Municipio</th>
-                    <th >Semana</th>
-                    <th >Año</th>
-                    <th >Grupo edad</th>
-                    <th >Ciclo de vida</th>
-                    <th >Sexo</th>
-                    <th >Area</th>
-                    <th >Comuna</th>
-                    <th >Tipo de seguridad social</th>
-                    <th >Paciente hospitalizado</th>
-                    <th >Condicion final</th>
-                    <th >Naturaleza</th>
-                    <th >Actividad</th>
-                    <th >Edad del agresor</th>
-                    <th >Sexo del agresor</th>
-                    <th >Sustancias en la victima</th>
-                    <th >Escenario</th>
-                    <th >Nombre del evento</th>
-                    <th >Nombre de upgd</th>
-                    <th >Mes</th>
-                    <th >Sivigilas</th>
-                    <th >Trimestre</th>
+                    <th>Departamento</th>
+                    <th>Municipio</th>
+                    <th>Semana</th>
+                    <th>Año</th>
+                    <th>Grupo edad</th>
+                    <th>Ciclo de vida</th>
+                    <th>Sexo</th>
+                    <th>Area</th>
+                    <th>Comuna</th>
+                    <th>Tipo de seguridad social</th>
+                    <th>Paciente hospitalizado</th>
+                    <th>Condicion final</th>
+                    <th>Naturaleza</th>
+                    <th>Actividad</th>
+                    <th>Edad del agresor</th>
+                    <th>Sexo del agresor</th>
+                    <th>Sustancias en la victima</th>
+                    <th>Escenario</th>
+                    <th>Nombre del evento</th>
+                    <th>Nombre de upgd</th>
+                    <th>Mes</th>
+                    <th>Sivigilas</th>
+                    <th>Trimestre</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let row of dataRows" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                  <tr *ngFor="let row of getCurrentPageRows()"
+                      style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <td>{{ row.departamento }}</td>
                     <td>{{ row.municipio }}</td>
                     <td>{{ row.semana }}</td>
-                    <td>{{ row.anio}}</td>
+                    <td>{{ row.anio }}</td>
                     <td>{{ row.grupo_edad }}</td>
                     <td>{{ row.ciclo_de_vida }}</td>
                     <td>{{ row.sexo }}</td>
-                    <td >{{ row.area}}</td>
+                    <td>{{ row.area }}</td>
                     <td>{{ row.comuna }}</td>
                     <td>{{ row.tipo_de_seguridad_social }}</td>
                     <td>{{ row.paciente_hospitalizado }}</td>
-                    <td>{{ row.condicion_final}}</td>
+                    <td>{{ row.condicion_final }}</td>
                     <td>{{ row.naturaleza }}</td>
                     <td>{{ row.actividad }}</td>
                     <td>{{ row.edad_agre }}</td>
-                    <td>{{ row.sexo_agre}}</td>
-                    <td>{{ row.sustancias_victima}}</td>
+                    <td>{{ row.sexo_agre }}</td>
+                    <td>{{ row.sustancias_victima }}</td>
                     <td>{{ row.escenario }}</td>
-                    <td >{{ row.nom_eve }}</td>
-                    <td >{{ row.nom_upgd}}</td>
+                    <td>{{ row.nom_eve }}</td>
+                    <td>{{ row.nom_upgd }}</td>
                     <td>{{ row.mes }}</td>
                     <td>{{ row.sivigila }}</td>
-                    <td>{{ row.trimestre}}</td>
+                    <td>{{ row.trimestre }}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
+             <!-- Agrega botones de paginación -->
+          <div class="pagination-buttons d-flex justify-content-between position-sticky bottom-0">
+            <button mat-raised-button class="btn btn-primary" type="submit" (click)="prevPage()">Anterior</button>
+            <h3>{{ currentPage }}</h3>
+            <button mat-raised-button class="btn btn-primary" type="submit" (click)="nextPage()">Siguiente</button>
+          </div>
           </div>
         </div>
       </div>
+      
       <div class="col-lg-12 col-md-12">
         <div class="card">
           <div class="card-header card-header-primary">
@@ -297,9 +305,18 @@
           
         </div>
       </div>
-      <div class="col-lg-12 col-md-12">
-        <canvas #metrics width="400" height="200"></canvas>
-      </div>
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title">Gráfica Métricas</h4>
+            </div>
+            <div class="card-body">
+              <div  id="container" style="width: 100%; height:60vh;">
+                <canvas #metrics></canvas>
+              </div>
+            </div>
+        </div> 
       <div class="row">
         <div class="col-lg-6 col-md-6">
           <div class="card card-chart">

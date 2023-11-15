@@ -166,7 +166,6 @@ var GraficaDispersionComponent = /** @class */ (function () {
             }
         };
         var colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
-        
         // Create the scatter plot
         var ctx = document.getElementById("scatterChart");
         this.scatterChart = new chart_js_1.Chart(ctx, {
@@ -182,6 +181,8 @@ var GraficaDispersionComponent = /** @class */ (function () {
                 }); })
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         display: false

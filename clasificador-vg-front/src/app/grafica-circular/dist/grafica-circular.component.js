@@ -6,11 +6,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 exports.__esModule = true;
-exports.GraficaBarrasComponent = void 0;
+exports.GraficaCircularComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
-var GraficaBarrasComponent = /** @class */ (function () {
-    function GraficaBarrasComponent(service) {
+var GraficaCircularComponent = /** @class */ (function () {
+    function GraficaCircularComponent(service) {
         var _this = this;
         this.service = service;
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
@@ -87,56 +87,44 @@ var GraficaBarrasComponent = /** @class */ (function () {
             });
         };
     }
-    GraficaBarrasComponent.prototype.ngOnInit = function () {
+    GraficaCircularComponent.prototype.ngOnInit = function () {
         var _this = this;
         chart_js_1.Chart.register.apply(chart_js_1.Chart, chart_js_1.registerables);
         this.service.obtenerDF().subscribe(function (result) {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
-            _this.crearGraficoBarras(_this.columna1_selec, _this.columna2_selec);
+            console.log(_this.columnas);
+            _this.crearGraficaQueso(_this.columna_selec);
         });
     };
-    GraficaBarrasComponent.prototype.actualizarGrafica = function () {
+    GraficaCircularComponent.prototype.actualizarGraficaQueso = function () {
         console.log("se llama actualizar");
         if (this.myChart) {
             this.myChart.destroy(); // Destruye la gráfica anterior si existe
         }
-        this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+        this.crearGraficaQueso(this.columna_selec);
     };
-    GraficaBarrasComponent.prototype.crearGraficoBarras = function (columna1_selec, columna2_selec) {
+    GraficaCircularComponent.prototype.crearGraficaQueso = function (columna_selec) {
         var _this = this;
-        var data = this.dataframe;
+        // Obtener los valores
         console.log(this.dataframe);
-        console.log(columna1_selec);
-        console.log(columna2_selec);
-        // Obtener los valores únicos de grupo edad edad y sexo
-        var eje1 = Array.from(new Set(data.map(function (item) { return item[columna1_selec]; })));
-        var eje2 = Array.from(new Set(data.map(function (item) { return item[columna2_selec]; })));
-        // Contar el número de registros por combinación de edad y sexo
+        var datos = Array.from(new Set(this.dataframe.map(function (item) { return item[columna_selec]; })));
+        // Contar la frecuencia de cada categoría
         var contador = new Map();
-        data.forEach(function (item) {
-            var clave = item[columna1_selec] + "-" + item[columna2_selec];
-            contador.set(clave, (contador.get(clave) || 0) + 1);
+        this.dataframe.forEach(function (item) {
+            contador.set(item[columna_selec], (contador.get(item[columna_selec]) || 0) + 1);
         });
-        // Preparar los datos para el gráfico de barras
-        var datos = [];
-        eje1.forEach(function (columna1_selec) {
-            var fila = { columna1_selec: columna1_selec };
-            eje2.forEach(function (columna2_selec) {
-                var clave = columna1_selec + "-" + columna2_selec;
-                fila[columna2_selec] = contador.get(clave) || 0;
-            });
-            datos.push(fila);
-        });
-        // Ordenar los datos por edad ascendente
-        datos.sort(function (a, b) { return a.columna1_selec - b.columna2_selec; });
-        // Obtener los valores de edad y sexos
-        var etiquetas = datos.map(function (item) { return item.columna1_selec; });
-        var valores = eje2.map(function (columna2_selec) {
-            return datos.map(function (item) { return item[columna2_selec]; });
-        });
+        // Obtener los datos para la gráfica de queso
+        var etiquetas = datos;
+        var valores = datos.map(function (x) { return contador.get(x); });
+        if (columna_selec === "nom_upgd") {
+            var _a = this.filtrarEtiquetas(etiquetas, valores, contador), nuevasEtiquetas = _a.etiquetas, nuevosValores = _a.valores;
+            etiquetas = nuevasEtiquetas;
+            valores = nuevosValores;
+        }
         // Generar una lista de colores aleatorios
-        var colores = this.generarColoresAleatorios(valores.length);
+        var colores = this.generarColoresAleatorios(datos.length);
+        // Configuración del plugin htmlLegendPlugin
         var htmlLegendPlugin = {
             id: "htmlLegend",
             afterUpdate: function (chart, args, options) {
@@ -144,21 +132,21 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
             }
         };
-        var colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
-        // Crear el gráfico de barras
-        var delayed;
-        var ctx = document.getElementById("myChart");
+        // Crear la gráfica de queso
+        var ctx = document.getElementById("myChart2");
+        var chartContainer = document.querySelector(".chart-scroll-container");
         this.myChart = new chart_js_1.Chart(ctx, {
-            type: "bar",
+            type: "doughnut",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) { return ({
-                    label: sexo,
-                    data: valores[index],
-                    backgroundColor: [colors[index % colors.length]],
-                    borderColor: [colors[index % colors.length]],
-                    borderWidth: 1
-                }); })
+                datasets: [
+                    {
+                        data: valores,
+                        backgroundColor: colores,
+                        borderColor: colores,
+                        borderWidth: 1
+                    },
+                ]
             },
             options: {
                 responsive: true,
@@ -167,45 +155,34 @@ var GraficaBarrasComponent = /** @class */ (function () {
                     legend: {
                         display: false
                     },
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     htmlLegend: {
                         containerID: "legend-container"
-                    }
-                },
-                animation: {
-                    onComplete: function () {
-                        delayed = true;
-                    },
-                    delay: function (context) {
-                        var delay = 0;
-                        if (context.type === "data" &&
-                            context.mode === "default" &&
-                            !delayed) {
-                            delay = context.dataIndex * 300 + context.datasetIndex * 100;
-                        }
-                        return delay;
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0,
-                            maxTicksLimit: 5
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: columna1_selec + " - " + columna2_selec
-                        }
                     }
                 }
             },
             plugins: [htmlLegendPlugin]
         });
     };
-    GraficaBarrasComponent.prototype.generarColoresAleatorios = function (cantidad) {
+    GraficaCircularComponent.prototype.filtrarEtiquetas = function (etiquetas, valores, contador) {
+        var otrosEtiqueta = "Otros";
+        var etiquetasAgrupadas = etiquetas.filter(function (etiqueta) { return contador.get(etiqueta) < 20; });
+        var totalValoresOtros = 0;
+        var valoresFiltrados = valores.filter(function (valor, index) {
+            if (etiquetasAgrupadas.includes(etiquetas[index])) {
+                totalValoresOtros += valor;
+                return false;
+            }
+            return true;
+        });
+        etiquetas = etiquetas.filter(function (etiqueta) { return !etiquetasAgrupadas.includes(etiqueta); });
+        valores = valoresFiltrados;
+        etiquetas.push(otrosEtiqueta);
+        valores.push(totalValoresOtros);
+        return { etiquetas: etiquetas, valores: valores };
+    };
+    GraficaCircularComponent.prototype.generarColoresAleatorios = function (cantidad) {
         var colores = [];
         for (var i = 0; i < cantidad; i++) {
             var color = this.generarColorAleatorio();
@@ -213,7 +190,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
         }
         return colores;
     };
-    GraficaBarrasComponent.prototype.generarColorAleatorio = function () {
+    GraficaCircularComponent.prototype.generarColorAleatorio = function () {
         var letras = "0123456789ABCDEF";
         var color = "#";
         for (var i = 0; i < 6; i++) {
@@ -221,13 +198,13 @@ var GraficaBarrasComponent = /** @class */ (function () {
         }
         return color;
     };
-    GraficaBarrasComponent = __decorate([
+    GraficaCircularComponent = __decorate([
         core_1.Component({
-            selector: "app-grafica-barras",
-            templateUrl: "./grafica-barras.component.html",
-            styleUrls: ["./grafica-barras.component.scss"]
+            selector: "app-grafica-circular",
+            templateUrl: "./grafica-circular.component.html",
+            styleUrls: ["./grafica-circular.component.scss"]
         })
-    ], GraficaBarrasComponent);
-    return GraficaBarrasComponent;
+    ], GraficaCircularComponent);
+    return GraficaCircularComponent;
 }());
-exports.GraficaBarrasComponent = GraficaBarrasComponent;
+exports.GraficaCircularComponent = GraficaCircularComponent;

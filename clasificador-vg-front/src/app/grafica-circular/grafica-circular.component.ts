@@ -188,6 +188,8 @@ export class GraficaCircularComponent implements OnInit {
         ],
       },
       options: {
+        responsive:true,
+        maintainAspectRatio:false,
         plugins: {
           legend: {
             display: false,

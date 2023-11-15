@@ -4,7 +4,7 @@ import { RegistroDto } from "app/dto/registro-dto";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Chart } from "chart.js";
 import "chart.js/auto";
-import { startOfWeek, addWeeks, getMonth, getQuarter, format } from 'date-fns';
+import { startOfWeek, addWeeks, getMonth, getQuarter, format } from "date-fns";
 import { startWith } from "rxjs/operators";
 
 @Component({
@@ -23,8 +23,25 @@ export class PredictorComponent implements OnInit {
   formulario: FormGroup;
   departamentos: string[] = ["SANTANDER", "Otros"];
   municipios: string[] = ["BUCARAMANGA", "Otros"];
-  anios: string[] = ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"];
-  gruposEdad: string[] = ["0 a 6", "7  a 11", "12 a 17", "18 a 28", "29 a 59", "60 y mas"];
+  anios: string[] = [
+    "2015",
+    "2016",
+    "2017",
+    "2018",
+    "2019",
+    "2020",
+    "2021",
+    "2022",
+    "2023",
+  ];
+  gruposEdad: string[] = [
+    "0 a 6",
+    "7  a 11",
+    "12 a 17",
+    "18 a 28",
+    "29 a 59",
+    "60 y mas",
+  ];
   sexos: string[] = ["Femenino", "Masculino"];
   areas: string[] = ["CABECERA MUNICIPAL", "RURAL DISPERSO", "CENTRO POBLADO"];
   comunas: string[] = [
@@ -118,7 +135,7 @@ export class PredictorComponent implements OnInit {
     "UNIVERSIDAD INDUSTRIAL DE SANTANDER- UIS",
     "Otros",
   ];
-  
+
   sivigilas = [
     { valor: "1", texto: "sivigila_2012" },
     { valor: "2", texto: "sivigila_2014" },
@@ -159,7 +176,7 @@ export class PredictorComponent implements OnInit {
       nom_upgd: ["", Validators.required],
       sivigila: ["", Validators.required],
     });
-  
+
     this.formulario
       .get("departamento")
       .valueChanges.subscribe((departamento) => {
@@ -170,7 +187,10 @@ export class PredictorComponent implements OnInit {
           this.formulario.get("municipio").enable();
         }
       });
-      this.formulario.get('sexo_agre').valueChanges.pipe(startWith('')).subscribe((sexoAgresor) => {
+    this.formulario
+      .get("sexo_agre")
+      .valueChanges.pipe(startWith(""))
+      .subscribe((sexoAgresor) => {
         this.actualizarOpcionesParentezco(sexoAgresor);
       });
   }
@@ -179,7 +199,7 @@ export class PredictorComponent implements OnInit {
     this.banderaVisibilidad = true;
     this.banderaCard=true;
     if (this.formulario.valid) {
-      this.animacion=true;
+      this.animacion = true;
       const formularioValue = { ...this.formulario.value };
       formularioValue.semana = formularioValue.semana.toString();
       formularioValue.año = formularioValue.año.toString();
@@ -187,18 +207,26 @@ export class PredictorComponent implements OnInit {
       if (this.registroDTO.departamento == "Otros") {
         this.registroDTO.municipio = "Otros";
       }
-      this.registroDTO.mes= this.obtenerMesDesdeSemana(this.registroDTO.semana)
-      this.registroDTO.trimestre=this.obtenerTrimestreDesdeSemana(this.registroDTO.semana)
-      this.registroDTO.ciclo_de_vida=this.opcionesCicloDeVida(this.registroDTO.grupo_edad)
+      this.registroDTO.mes = this.obtenerMesDesdeSemana(
+        this.registroDTO.semana
+      );
+      this.registroDTO.trimestre = this.obtenerTrimestreDesdeSemana(
+        this.registroDTO.semana
+      );
+      this.registroDTO.ciclo_de_vida = this.opcionesCicloDeVida(
+        this.registroDTO.grupo_edad
+      );
       console.log(this.registroDTO);
-    
+
       this.service.predecir(this.registroDTO).subscribe((result) => {
         this.definicion = result.definicion;
         this.prediccion = result.prediccion;
         this.importancia_caracteristicas = result.importancia_caracteristicas;
         console.log(this.importancia_caracteristicas[this.prediccion]);
-        this.animacion=false;
-        this.graficaCaracteristicas(this.importancia_caracteristicas[this.prediccion]);
+        this.animacion = false;
+        this.graficaCaracteristicas(
+          this.importancia_caracteristicas[this.prediccion]
+        );
         this.banderaVisibilidad = false;
         this.banderaCard=false;
       });
@@ -219,20 +247,20 @@ export class PredictorComponent implements OnInit {
     const caracteristicasPositivas = importancia_caracteristicas.filter(
       (item) => item.importancia >= 0
     );
-  
+
     // Ordenar el arreglo de características positivas por importancia de manera descendente
     const sortedImportancia = caracteristicasPositivas.sort(
       (a, b) => b.importancia - a.importancia
     );
-  
+
     // Tomar los 10 elementos con mayor importancia
     const top10Importancia = sortedImportancia.slice(0, 10);
-  
+
     const etiquetas = top10Importancia.map((item) => item.nombre);
     const valores = top10Importancia.map((item) => item.importancia);
-  
+
     const colores = valores.map(() => "rgba(156, 39, 176, 1)"); // Colores para valores positivos
-  
+
     const existingChart = Chart.getChart("graficoImportancia");
     if (existingChart) {
       existingChart.destroy();
@@ -245,7 +273,7 @@ export class PredictorComponent implements OnInit {
         console.error("No se encontró el elemento canvas");
         return;
       }
-  
+
       const myChart = new Chart(ctx, {
         type: "bar",
         data: {
@@ -261,6 +289,8 @@ export class PredictorComponent implements OnInit {
           ],
         },
         options: {
+          responsive: true,
+          maintainAspectRatio: false,
           indexAxis: "y",
           scales: {
             y: {
@@ -283,31 +313,45 @@ export class PredictorComponent implements OnInit {
       console.error("Error al crear la gráfica:", error);
     }
   }
-  
+
   obtenerMesDesdeSemana(prmsemana: string): string {
     const semana: number = parseInt(prmsemana);
     if (semana < 1 || semana > 52) {
-      throw new Error("Número de semana fuera de rango (debe estar entre 1 y 52)");
+      throw new Error(
+        "Número de semana fuera de rango (debe estar entre 1 y 52)"
+      );
     }
-  
+
     const fechaInicioAño = new Date(2023, 0, 1); // 2023-01-01
     const fechaInicioSemana = startOfWeek(fechaInicioAño); // Primer día de la primera semana
     const fechaObjetivo = addWeeks(fechaInicioSemana, semana - 1); // Fecha correspondiente a la semana
     const mes = getMonth(fechaObjetivo);
-  
+
     const nombresMeses = [
-      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
     ];
-  
-    return `${(mes + 1).toString().padStart(2, '0')}. ${nombresMeses[mes]}`;
+
+    return `${(mes + 1).toString().padStart(2, "0")}. ${nombresMeses[mes]}`;
   }
- obtenerTrimestreDesdeSemana(prmsemana: string): string {
-  const semana: number = parseInt(prmsemana);
+  obtenerTrimestreDesdeSemana(prmsemana: string): string {
+    const semana: number = parseInt(prmsemana);
     if (semana < 1 || semana > 52) {
-      throw new Error("Número de semana fuera de rango (debe estar entre 1 y 52)");
+      throw new Error(
+        "Número de semana fuera de rango (debe estar entre 1 y 52)"
+      );
     }
-  
+
     const fechaInicioAño = new Date(2023, 0, 1); // 2023-01-01
     const fechaInicioSemana = startOfWeek(fechaInicioAño); // Primer día de la primera semana
     const fechaObjetivo = addWeeks(fechaInicioSemana, semana - 1); // Fecha correspondiente a la semana
@@ -316,51 +360,52 @@ export class PredictorComponent implements OnInit {
     return trimestrString;
   }
   opcionesCicloDeVida(grupoEdad: string): string {
-    let cicloDeVidaValue = '';
-  
+    let cicloDeVidaValue = "";
+
     switch (grupoEdad) {
-      case '0 a 6':
-        cicloDeVidaValue = 'Primera infancia';
+      case "0 a 6":
+        cicloDeVidaValue = "Primera infancia";
         break;
-      case '7  a 11':
-        cicloDeVidaValue = 'Infancia';
+      case "7  a 11":
+        cicloDeVidaValue = "Infancia";
         break;
-      case '12 a 17':
-        cicloDeVidaValue = 'Adolescencia';
+      case "12 a 17":
+        cicloDeVidaValue = "Adolescencia";
         break;
-      case '18 a 28':
-        cicloDeVidaValue = 'Jovenes';
+      case "18 a 28":
+        cicloDeVidaValue = "Jovenes";
         break;
-      case '29 a 59':
-        cicloDeVidaValue = 'Adultez';
+      case "29 a 59":
+        cicloDeVidaValue = "Adultez";
         break;
-      case '60 y mas':
-        cicloDeVidaValue = 'Persona Mayor';
+      case "60 y mas":
+        cicloDeVidaValue = "Persona Mayor";
         break;
       default:
-        cicloDeVidaValue = '';
+        cicloDeVidaValue = "";
         break;
     }
-  
+
     return cicloDeVidaValue;
   }
   actualizarOpcionesParentezco(sexoAgresor: string): void {
     // Restaura las opciones originales desde la copia de respaldo
     this.parentezcosVict = [...this.parentezcosVictBackup];
-  
+
     // Filtra las opciones de parentezco según el sexo del agresor
     if (sexoAgresor === "M") {
       // Si el sexo del agresor es masculino, excluye la opción "Madre"
-      this.parentezcosVict = this.parentezcosVict.filter((opcion) => opcion !== "Madre");
+      this.parentezcosVict = this.parentezcosVict.filter(
+        (opcion) => opcion !== "Madre"
+      );
     } else if (sexoAgresor === "F") {
       // Si el sexo del agresor es femenino, excluye las opciones "Padre" y "Esposo"
-      this.parentezcosVict = this.parentezcosVict.filter((opcion) => opcion !== "Padre" && opcion !== "Esposo");
+      this.parentezcosVict = this.parentezcosVict.filter(
+        (opcion) => opcion !== "Padre" && opcion !== "Esposo"
+      );
     }
-  
+
     // Establece las opciones filtradas en el formulario
     this.formulario.get("parentezco_vict").setValue("");
   }
-  
-  
-
 }

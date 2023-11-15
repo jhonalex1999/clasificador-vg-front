@@ -127,6 +127,8 @@ export class GraficaDispersionComponent implements OnInit {
         })),
       },
       options: {
+        responsive:true,
+        maintainAspectRatio:false,
         plugins: {
           legend: {
             display: false,

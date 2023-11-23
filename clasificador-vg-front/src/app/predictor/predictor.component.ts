@@ -13,6 +13,7 @@ import { startWith } from "rxjs/operators";
   styleUrls: ["./predictor.component.scss"],
 })
 export class PredictorComponent implements OnInit {
+  
   public registroDTO: RegistroDto;
   public definicion: any;
   public prediccion: any;
@@ -136,14 +137,7 @@ export class PredictorComponent implements OnInit {
     "Otros",
   ];
 
-  sivigilas = [
-    { valor: "1", texto: "sivigila_2012" },
-    { valor: "2", texto: "sivigila_2014" },
-    { valor: "3", texto: "sivigila_2015" },
-    { valor: "4", texto: "sivigila_2016" },
-    { valor: "5", texto: "sivigila_2017" },
-    { valor: "6", texto: "sivigila_2018" },
-  ];
+ 
 
   parentezcosVictBackup: string[] = [...this.parentezcosVict];
   constructor(private service: Service, private formBuilder: FormBuilder) {}
@@ -174,7 +168,6 @@ export class PredictorComponent implements OnInit {
       escenario: ["", Validators.required],
       nom_eve: ["", Validators.required],
       nom_upgd: ["", Validators.required],
-      sivigila: ["", Validators.required],
     });
 
     this.formulario
@@ -216,6 +209,15 @@ export class PredictorComponent implements OnInit {
       this.registroDTO.ciclo_de_vida = this.opcionesCicloDeVida(
         this.registroDTO.grupo_edad
       );
+      this.registroDTO.violencia_intrafamiliar=this.obtenerViolenciaIntrafamiliar(
+        this.registroDTO.parentezco_vict
+      );
+      this.registroDTO.victima_menor_de_edad=this.obtenerVictimaMenor(
+        this.registroDTO.grupo_edad
+      );
+      this.registroDTO.agresor_menor_de_edad=this.obtenerAgresorMenor(
+        this.registroDTO.edad_agre
+      );
       console.log(this.registroDTO);
 
       this.service.predecir(this.registroDTO).subscribe((result) => {
@@ -240,6 +242,31 @@ export class PredictorComponent implements OnInit {
       });
       return;
     }
+  }
+  obtenerAgresorMenor(edad_agre: number): string {
+    return edad_agre >= 18 ? "0" : "1";
+  }
+  obtenerVictimaMenor(grupoEdad: string): string {
+    switch (grupoEdad) {
+      case "0 a 6":
+        return "1"
+      case "7  a 11":
+        return "1"
+      case "12 a 17":
+        return "1"
+      case "18 a 28":
+        return "0"
+      case "29 a 59":
+        return "0"
+      case "60 y mas":
+        return "0";
+      default:
+        return "0";
+      }
+  }
+  obtenerViolenciaIntrafamiliar(parentezco_vict: string): string {
+    const valoresPermitidos = ["Madre", "Padre", "Familiar", "Pareja", "Ex pareja", "Esposo", "Compañero permanente", "Novio(a)", "Abuelo(a)"];
+    return valoresPermitidos.includes(parentezco_vict) ? "1" : "0";
   }
 
   graficaCaracteristicas(importancia_caracteristicas: any) {
@@ -408,4 +435,6 @@ export class PredictorComponent implements OnInit {
     // Establece las opciones filtradas en el formulario
     this.formulario.get("parentezco_vict").setValue("");
   }
+
+
 }

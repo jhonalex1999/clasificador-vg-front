@@ -21,4 +21,7 @@ nom_eve: string;
 nom_upgd: string;
 mes:string;
 trimestre:string;
+violencia_intrafamiliar:string;
+victima_menor_de_edad:string;
+agresor_menor_de_edad:string;
 }

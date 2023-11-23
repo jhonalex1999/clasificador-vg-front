@@ -237,17 +237,7 @@
               </mat-form-field>
 
               
-              <mat-form-field>
-                <mat-label>Sivigila</mat-label>
-                <mat-select formControlName="sivigila" required>
-                  <mat-option *ngFor="let sivigila of  sivigilas" [value]="sivigila.valor">
-                    {{ sivigila.texto}}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="formulario.get('sivigila').invalid">
-                  Sivigila es requerido.
-                </mat-error>
-              </mat-form-field>
+            
 
               <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
             </form>

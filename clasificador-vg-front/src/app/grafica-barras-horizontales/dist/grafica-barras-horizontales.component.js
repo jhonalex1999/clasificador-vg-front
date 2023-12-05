@@ -9,6 +9,7 @@ exports.__esModule = true;
 exports.GraficaBarrasHorizontalesComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
+var traductor_etiquetas_1 = require("../utils/traductor-etiquetas");
 var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
     function GraficaBarrasHorizontalesComponent(service) {
         var _this = this;
@@ -105,6 +106,10 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
     GraficaBarrasHorizontalesComponent.prototype.crearGraficaBarrasHorizontal = function (columna_selec) {
         var _this = this;
         // Obtener los valores
+        console.log("VIEJO");
+        console.log(this.dataframe);
+        traductor_etiquetas_1.TraductorEtiquetas.traducirColumnas(this.dataframe);
+        console.log("NUEVAS");
         console.log(this.dataframe);
         var datos = Array.from(new Set(this.dataframe.map(function (item) { return item[columna_selec]; })));
         // Contar la frecuencia de cada categoría

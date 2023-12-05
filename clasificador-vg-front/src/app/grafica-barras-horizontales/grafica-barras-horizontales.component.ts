@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
+import { TraductorEtiquetas } from "../utils/traductor-etiquetas";
 
 @Component({
   selector: "app-grafica-barras-horizontales",
@@ -121,7 +122,14 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
 
   private crearGraficaBarrasHorizontal(columna_selec: string) {
     // Obtener los valores
+    console.log("VIEJO")
     console.log(this.dataframe);
+
+    TraductorEtiquetas.traducirColumnas(this.dataframe);
+
+    console.log("NUEVAS");
+    console.log(this.dataframe);
+
     const datos = Array.from(
       new Set(this.dataframe.map((item) => item[columna_selec]))
     );

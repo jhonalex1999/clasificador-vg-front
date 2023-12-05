@@ -60,7 +60,6 @@ export class PredictorComponent implements OnInit {
   tiposDeSeguridadSocial: string[] = [
     "Subsidiado",
     "Contributivo",
-    "No asegurado",
     "Excepción",
     "Excepción",
     "Indeterminado",

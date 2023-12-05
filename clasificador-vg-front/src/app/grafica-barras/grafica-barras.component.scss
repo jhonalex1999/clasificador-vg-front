@@ -1,0 +1,7 @@
+.legend-container {
+    overflow-y: auto; /* Habilitar el scroll vertical */
+    max-height: 200px; /* Ajustar la altura máxima según sea necesario */
+    max-width: 100%; /* Asegurar que el div se ajuste dentro de la card */
+    white-space: nowrap; /* Evitar el ajuste de línea */
+    display: inline-block; /* Asegurarse de que el div ocupe el ancho del contenido */
+}

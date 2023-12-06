@@ -9,6 +9,7 @@ exports.__esModule = true;
 exports.GraficaDispersionComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
+var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
 var GraficaDispersionComponent = /** @class */ (function () {
     function GraficaDispersionComponent(service) {
         var _this = this;
@@ -35,6 +36,8 @@ var GraficaDispersionComponent = /** @class */ (function () {
             }
             // Generar elementos de leyenda personalizados
             var items = chart.options.plugins.legend.labels.generateLabels(chart);
+            console.log(items);
+            console.log(items.type);
             // Ordenar las etiquetas alfabéticamente o numéricamente
             items.sort(function (a, b) {
                 if (typeof a.text === "string" && typeof b.text === "string") {
@@ -128,6 +131,7 @@ var GraficaDispersionComponent = /** @class */ (function () {
     };
     GraficaDispersionComponent.prototype.crearGraficoDispersion = function (columna1_selec, columna2_selec) {
         var _this = this;
+        traductor_etiquetas_1.TraductorEtiquetas.traducirColumnas(this.dataframe);
         var data = this.dataframe;
         console.log(this.dataframe);
         console.log(columna1_selec);

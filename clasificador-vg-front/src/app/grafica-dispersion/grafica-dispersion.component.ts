@@ -2,6 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { Chart, registerables } from "chart.js";
+import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
+import { type } from "os";
 
 @Component({
   selector: "app-grafica-dispersion",
@@ -67,6 +69,7 @@ export class GraficaDispersionComponent implements OnInit {
     columna1_selec: string,
     columna2_selec: string
   ) {
+    TraductorEtiquetas.traducirColumnas(this.dataframe);
     const data = this.dataframe;
     console.log(this.dataframe);
     console.log(columna1_selec);
@@ -185,6 +188,10 @@ export class GraficaDispersionComponent implements OnInit {
 
     // Generar elementos de leyenda personalizados
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+    console.log(items);
+    console.log(items.type);
+
 
     // Ordenar las etiquetas alfabéticamente o numéricamente
     items.sort((a, b) => {

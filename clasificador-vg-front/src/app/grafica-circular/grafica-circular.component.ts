@@ -7,6 +7,7 @@ import { FormsModule } from "@angular/forms";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 
 @Component({
   selector: "app-grafica-circular",
@@ -132,6 +133,7 @@ export class GraficaCircularComponent implements OnInit {
   private crearGraficaQueso(columna_selec: string) {
     // Obtener los valores
     console.log(this.dataframe);
+    TraductorEtiquetas.traducirColumnas(this.dataframe);
     const datos = Array.from(
       new Set(this.dataframe.map((item) => item[columna_selec]))
     );

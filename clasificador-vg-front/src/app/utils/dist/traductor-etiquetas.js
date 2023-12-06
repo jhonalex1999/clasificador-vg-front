@@ -10,6 +10,10 @@ var TraductorEtiquetas = /** @class */ (function () {
         this.traducirNaturaleza(dataframe);
         this.traducirActividad(dataframe);
         this.traducirSustanciasVictima(dataframe);
+        this.traducirEscenario(dataframe);
+        this.traducirViolenciaIntrafamiliar(dataframe);
+        this.traducirVictimaMenorDeEdad(dataframe);
+        this.traducirAgresorMenorDeEdad(dataframe);
     };
     TraductorEtiquetas.traducirPacienteHospitalizado = function (dataframe) {
         var _a;
@@ -29,9 +33,6 @@ var TraductorEtiquetas = /** @class */ (function () {
             else if (valorOriginal === "2") {
                 item["paciente_hospitalizado"] = "No";
             }
-            else {
-                console.warn("Valor inesperado en la columna 'paciente_hospitalizado': " + valorOriginal);
-            }
         });
     };
     TraductorEtiquetas.traducirCondicionFinal = function (dataframe) {
@@ -45,42 +46,38 @@ var TraductorEtiquetas = /** @class */ (function () {
         dataframe.forEach(function (item) {
             var valorOriginal = item["condicion_final"];
             switch (valorOriginal) {
-                case '0':
+                case "0":
                     item["condicion_final"] = "Vivo";
                     break;
-                case '1':
+                case "1":
                     item["condicion_final"] = "Muerto";
                     break;
-                case '2':
+                case "2":
                     item["condicion_final"] = "No sabe-no responde";
                     break;
-                default:
-                    console.warn("Valor inesperado en la columna 'condicion_final': " + valorOriginal);
             }
         });
     };
     TraductorEtiquetas.traducirNaturaleza = function (dataframe) {
         var _a;
         // Verificar si la columna 'naturaleza' existe en el dataframe
-        if (!((_a = dataframe[0]) === null || _a === void 0 ? void 0 : _a.hasOwnProperty('naturaleza'))) {
+        if (!((_a = dataframe[0]) === null || _a === void 0 ? void 0 : _a.hasOwnProperty("naturaleza"))) {
             console.error('La columna "naturaleza" no existe en el dataframe.');
             return;
         }
         // Mapear los valores de la columna 'naturaleza'
         dataframe.forEach(function (item) {
-            var valorOriginal = item['naturaleza'];
+            var valorOriginal = item["naturaleza"];
             switch (valorOriginal) {
                 case 0:
-                    item['naturaleza'] = '1. Violencia física o psicológica';
+                    item["naturaleza"] = "1. Violencia física o psicológica";
                     break;
                 case 1:
-                    item['naturaleza'] = '2. Abuso sexual';
+                    item["naturaleza"] = "2. Abuso sexual";
                     break;
                 case 2:
-                    item['naturaleza'] = '3. Negligencia y abandono';
+                    item["naturaleza"] = "3. Negligencia y abandono";
                     break;
-                default:
-                    console.warn("Valor inesperado en la columna 'naturaleza': " + valorOriginal);
             }
         });
     };
@@ -130,8 +127,6 @@ var TraductorEtiquetas = /** @class */ (function () {
                 case "8":
                     item["actividad"] = "Reciclador(a)";
                     break;
-                default:
-                    console.warn("Valor inesperado en la columna 'actividad': " + valorOriginal);
             }
         });
     };
@@ -153,8 +148,83 @@ var TraductorEtiquetas = /** @class */ (function () {
             else if (valorOriginal === "2") {
                 item["sustancias_victima"] = "No";
             }
-            else {
-                console.warn("Valor inesperado en la columna 'sustancias_victima': " + valorOriginal);
+        });
+    };
+    TraductorEtiquetas.traducirEscenario = function (dataframe) {
+        var _a;
+        // Verificar si la columna 'escenario' existe en el dataframe
+        if (!((_a = dataframe[0]) === null || _a === void 0 ? void 0 : _a.hasOwnProperty("escenario"))) {
+            console.error('La columna "escenario" no existe en el dataframe.');
+            return;
+        }
+        /* Se mapean los valores de las columnas para que en lugar de mostrar
+          valores numéricos muestre etiquetas más descriptivas
+        */
+        dataframe.forEach(function (item) {
+            var valorOriginal = item["escenario"];
+            switch (valorOriginal) {
+                case "1":
+                    item["escenario"] = "Vía pública";
+                    break;
+                case "10":
+                    item["escenario"] =
+                        "Lugares de esparcimiento con expendido de alcohol";
+                    break;
+                case "11":
+                    item["escenario"] = "Institución de salud";
+                    break;
+                case "12":
+                    item["escenario"] = "Área deportiva y recreativa";
+                    break;
+                case "2":
+                    item["escenario"] = "Vivienda";
+                    break;
+                case "3":
+                    item["escenario"] = "Establecimiento educativo";
+                    break;
+                case "4":
+                    item["escenario"] = "Lugar de trabajo";
+                    break;
+                case "7":
+                    item["escenario"] = "Otro";
+                    break;
+                case "8":
+                    item["escenario"] =
+                        "Comercio y áreas de servicios (Tienda, centro comercial, etc)";
+                    break;
+                case "9":
+                    item["escenario"] =
+                        "Otros espacios abiertos (bosques, potreros, etc)";
+                    break;
+            }
+        });
+    };
+    TraductorEtiquetas.traducirViolenciaIntrafamiliar = function (dataframe) {
+        this.traducirBooleano(dataframe, "violencia_intrafamiliar");
+    };
+    TraductorEtiquetas.traducirVictimaMenorDeEdad = function (dataframe) {
+        this.traducirBooleano(dataframe, "victima_menor_de_edad");
+    };
+    TraductorEtiquetas.traducirAgresorMenorDeEdad = function (dataframe) {
+        this.traducirBooleano(dataframe, "agresor_menor_de_edad");
+    };
+    TraductorEtiquetas.traducirBooleano = function (dataframe, columna) {
+        var _a;
+        // Verificar si la columna existe en el dataframe
+        if (!((_a = dataframe[0]) === null || _a === void 0 ? void 0 : _a.hasOwnProperty(columna))) {
+            console.error("La columna \"" + columna + "\" no existe en el dataframe.");
+            return;
+        }
+        // Mapear los valores booleanos usando switch
+        dataframe.forEach(function (item) {
+            var valorOriginal = item[columna];
+            switch (valorOriginal) {
+                case "0":
+                    item[columna] = "Sí";
+                    break;
+                case "1":
+                    item[columna] = "No";
+                    break;
             }
         });
     };

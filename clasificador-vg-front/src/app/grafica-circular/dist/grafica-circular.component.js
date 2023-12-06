@@ -9,6 +9,7 @@ exports.__esModule = true;
 exports.GraficaCircularComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
+var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
 var GraficaCircularComponent = /** @class */ (function () {
     function GraficaCircularComponent(service) {
         var _this = this;
@@ -108,6 +109,7 @@ var GraficaCircularComponent = /** @class */ (function () {
         var _this = this;
         // Obtener los valores
         console.log(this.dataframe);
+        traductor_etiquetas_1.TraductorEtiquetas.traducirColumnas(this.dataframe);
         var datos = Array.from(new Set(this.dataframe.map(function (item) { return item[columna_selec]; })));
         // Contar la frecuencia de cada categoría
         var contador = new Map();

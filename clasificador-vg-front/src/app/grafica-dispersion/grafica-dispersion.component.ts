@@ -41,9 +41,10 @@ export class GraficaDispersionComponent implements OnInit {
 
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
-      this.columnasIndep = this.columnas.filter((columna) =>
-        valoresPermitidos.includes(columna)
-      );
+      this.columnasIndep = Object.keys(this.dataframe[0]);
+      // this.columnas.filter((columna) =>
+      //   valoresPermitidos.includes(columna)
+      // );
       this.crearGraficoDispersion(this.columna1_selec, this.columna2_selec);
     });
   }
@@ -113,25 +114,33 @@ export class GraficaDispersionComponent implements OnInit {
       },
     };
 
-    const colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
+    const color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
 
     // Create the scatter plot
     const ctx = document.getElementById("scatterChart") as HTMLCanvasElement;
+    // Cambiar el tipo de gráfico a 'line'
     this.scatterChart = new Chart(ctx, {
-      type: "scatter",
+      type: "line", // Cambiado a tipo de gráfico de líneas
       data: {
         labels: etiquetas,
-        datasets: eje2.map((sexo, index) => ({
-          label: sexo,
-          data: valores[index],
-          backgroundColor: [colors[index % colors.length]], // Usar colores intercalados
-          borderColor: [colors[index % colors.length]], // Usar colores intercalados
-          borderWidth: 1,
-        })),
+        datasets: eje2.map((sexo, index) => {
+          const color = this.getRandomColorWithOpacity(0.5); // Color aleatorio con opacidad 0.2
+
+          return {
+            label: sexo,
+            data: valores[index],
+            backgroundColor: color,
+            borderColor: color,
+            borderWidth: 1,
+            fill: true,
+            tension: 0.4,
+            spanGaps: true,
+          };
+        }),
       },
       options: {
-        responsive:true,
-        maintainAspectRatio:false,
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false,
@@ -158,6 +167,19 @@ export class GraficaDispersionComponent implements OnInit {
       },
       plugins: [htmlLegendPlugin],
     });
+  }
+  private getRandomColorWithOpacity(opacity: number) {
+    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
+
+    let color;
+    do {
+      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+    } while (
+      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+      parseInt(color.substr(1), 16) < parseInt("444444", 16)
+    );
+
+    return `${color}${Math.round(opacity * 255).toString(16)}`;
   }
 
   getOrCreateLegendList = (chart, id) => {
@@ -190,8 +212,6 @@ export class GraficaDispersionComponent implements OnInit {
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
     console.log(items);
-    console.log(items.type);
-
 
     // Ordenar las etiquetas alfabéticamente o numéricamente
     items.sort((a, b) => {
@@ -250,4 +270,11 @@ export class GraficaDispersionComponent implements OnInit {
       ul.appendChild(li);
     });
   };
+}
+
+function retornarEtiqueta(sexo: any): any {
+  console.log();
+  if (sexo === "semana") {
+    return "prueba";
+  }
 }

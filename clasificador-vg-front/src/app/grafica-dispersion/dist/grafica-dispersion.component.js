@@ -37,7 +37,6 @@ var GraficaDispersionComponent = /** @class */ (function () {
             // Generar elementos de leyenda personalizados
             var items = chart.options.plugins.legend.labels.generateLabels(chart);
             console.log(items);
-            console.log(items.type);
             // Ordenar las etiquetas alfabéticamente o numéricamente
             items.sort(function (a, b) {
                 if (typeof a.text === "string" && typeof b.text === "string") {
@@ -108,9 +107,10 @@ var GraficaDispersionComponent = /** @class */ (function () {
             ];
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
-            _this.columnasIndep = _this.columnas.filter(function (columna) {
-                return valoresPermitidos.includes(columna);
-            });
+            _this.columnasIndep = Object.keys(_this.dataframe[0]);
+            // this.columnas.filter((columna) =>
+            //   valoresPermitidos.includes(columna)
+            // );
             _this.crearGraficoDispersion(_this.columna1_selec, _this.columna2_selec);
         });
     };
@@ -169,20 +169,27 @@ var GraficaDispersionComponent = /** @class */ (function () {
                 _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
             }
         };
-        var colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
+        var color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
         // Create the scatter plot
         var ctx = document.getElementById("scatterChart");
+        // Cambiar el tipo de gráfico a 'line'
         this.scatterChart = new chart_js_1.Chart(ctx, {
-            type: "scatter",
+            type: "line",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) { return ({
-                    label: sexo,
-                    data: valores[index],
-                    backgroundColor: [colors[index % colors.length]],
-                    borderColor: [colors[index % colors.length]],
-                    borderWidth: 1
-                }); })
+                datasets: eje2.map(function (sexo, index) {
+                    var color = _this.getRandomColorWithOpacity(0.5); // Color aleatorio con opacidad 0.2
+                    return {
+                        label: sexo,
+                        data: valores[index],
+                        backgroundColor: color,
+                        borderColor: color,
+                        borderWidth: 1,
+                        fill: true,
+                        tension: 0.4,
+                        spanGaps: true
+                    };
+                })
             },
             options: {
                 responsive: true,
@@ -214,6 +221,16 @@ var GraficaDispersionComponent = /** @class */ (function () {
             plugins: [htmlLegendPlugin]
         });
     };
+    GraficaDispersionComponent.prototype.getRandomColorWithOpacity = function (opacity) {
+        var getRandomHex = function () { return Math.floor(Math.random() * 256).toString(16); };
+        var color;
+        do {
+            color = "#" + getRandomHex() + getRandomHex() + getRandomHex();
+        } while (
+        // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+        parseInt(color.substr(1), 16) < parseInt("444444", 16));
+        return "" + color + Math.round(opacity * 255).toString(16);
+    };
     GraficaDispersionComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-dispersion",
@@ -224,3 +241,9 @@ var GraficaDispersionComponent = /** @class */ (function () {
     return GraficaDispersionComponent;
 }());
 exports.GraficaDispersionComponent = GraficaDispersionComponent;
+function retornarEtiqueta(sexo) {
+    console.log();
+    if (sexo === "semana") {
+        return "prueba";
+    }
+}

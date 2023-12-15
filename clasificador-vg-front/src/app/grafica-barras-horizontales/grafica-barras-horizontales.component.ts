@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
-import { TraductorEtiquetas } from "../utils/traductor-etiquetas";
+import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 
 @Component({
   selector: "app-grafica-barras-horizontales",

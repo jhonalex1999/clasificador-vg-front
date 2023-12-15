@@ -9,7 +9,7 @@ exports.__esModule = true;
 exports.GraficaBarrasHorizontalesComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
-var traductor_etiquetas_1 = require("../utils/traductor-etiquetas");
+var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
 var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
     function GraficaBarrasHorizontalesComponent(service) {
         var _this = this;

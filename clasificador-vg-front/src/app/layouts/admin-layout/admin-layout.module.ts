@@ -10,9 +10,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSelectModule} from '@angular/material/select';
 import { PredictorComponent } from '../../predictor/predictor.component';
-import { GraficaCircularComponent } from '../../grafica-circular/grafica-circular.component';
+import { GraficaDonaComponent } from '../../grafica-dona/grafica-dona.component';
 import { GraficaBarrasComponent } from '../../grafica-barras/grafica-barras.component';
-import { GraficaDispersionComponent } from '../../grafica-dispersion/grafica-dispersion.component';
+import { GraficaLineaComponent } from '../../grafica-linea/grafica-linea.component';
 
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatCardModule } from '@angular/material/card';
@@ -38,9 +38,9 @@ import { GraficaBarrasHorizontalesComponent } from '../../grafica-barras-horizon
   ],
   declarations: [
     PredictorComponent,
-    GraficaCircularComponent,
+    GraficaDonaComponent,
     GraficaBarrasComponent,
-    GraficaDispersionComponent,
+    GraficaLineaComponent,
     ModeloInfoComponent,
     GraficaBarrasHorizontalesComponent
   ]

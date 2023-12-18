@@ -13,16 +13,16 @@ var __decorate = void 0 && (void 0).__decorate || function (decorators, target, 
 };
 
 exports.__esModule = true;
-exports.GraficaDispersionComponent = void 0;
+exports.GraficaLineaComponent = void 0;
 
 var core_1 = require("@angular/core");
 
 var chart_js_1 = require("chart.js");
 
-var GraficaDispersionComponent =
+var GraficaLineaComponent =
 /** @class */
 function () {
-  function GraficaDispersionComponent(service) {
+  function GraficaLineaComponent(service) {
     var _this = this;
 
     this.service = service;
@@ -109,7 +109,7 @@ function () {
     };
   }
 
-  GraficaDispersionComponent.prototype.ngOnInit = function () {
+  GraficaLineaComponent.prototype.ngOnInit = function () {
     var _this = this;
 
     chart_js_1.Chart.register.apply(chart_js_1.Chart, chart_js_1.registerables);
@@ -121,21 +121,21 @@ function () {
         return valoresPermitidos.includes(columna);
       });
 
-      _this.crearGraficoDispersion(_this.columna1_selec, _this.columna2_selec);
+      _this.crearGraficoLinea(_this.columna1_selec, _this.columna2_selec);
     });
   };
 
-  GraficaDispersionComponent.prototype.actualizarGraficoScatter = function () {
+  GraficaLineaComponent.prototype.actualizarGraficoScatter = function () {
     console.log("se llama actualizar");
 
     if (this.scatterChart) {
       this.scatterChart.destroy(); // Destruye la gráfica anterior si existe
     }
 
-    this.crearGraficoDispersion(this.columna1_selec, this.columna2_selec);
+    this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
   };
 
-  GraficaDispersionComponent.prototype.generarColorAleatorio = function () {
+  GraficaLineaComponent.prototype.generarColorAleatorio = function () {
     var letters = "0123456789ABCDEF";
     var color = "#";
 
@@ -146,7 +146,7 @@ function () {
     return color;
   };
 
-  GraficaDispersionComponent.prototype.crearGraficoDispersion = function (columna1_selec, columna2_selec) {
+  GraficaLineaComponent.prototype.crearGraficoLinea = function (columna1_selec, columna2_selec) {
     var _this = this;
 
     var data = this.dataframe;
@@ -245,12 +245,12 @@ function () {
     });
   };
 
-  GraficaDispersionComponent = __decorate([core_1.Component({
-    selector: "app-grafica-dispersion",
-    templateUrl: "./grafica-dispersion.component.html",
-    styleUrls: ["./grafica-dispersion.component.scss"]
-  })], GraficaDispersionComponent);
-  return GraficaDispersionComponent;
+  GraficaLineaComponent = __decorate([core_1.Component({
+    selector: "app-grafica-linea",
+    templateUrl: "./grafica-linea.component.html",
+    styleUrls: ["./grafica-linea.component.scss"]
+  })], GraficaLineaComponent);
+  return GraficaLineaComponent;
 }();
 
-exports.GraficaDispersionComponent = GraficaDispersionComponent;
+exports.GraficaLineaComponent = GraficaLineaComponent;

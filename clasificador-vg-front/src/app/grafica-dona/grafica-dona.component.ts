@@ -10,11 +10,11 @@ import { MatSelectModule } from "@angular/material/select";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 
 @Component({
-  selector: "app-grafica-circular",
-  templateUrl: "./grafica-circular.component.html",
-  styleUrls: ["./grafica-circular.component.scss"],
+  selector: "app-grafica-dona",
+  templateUrl: "./grafica-dona.component.html",
+  styleUrls: ["./grafica-dona.component.scss"],
 })
-export class GraficaCircularComponent implements OnInit {
+export class GraficaDonaComponent implements OnInit {
   public registroDTO: RegistroDto;
   public definicion: any;
   public prediccion: any;

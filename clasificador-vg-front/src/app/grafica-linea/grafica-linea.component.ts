@@ -7,17 +7,17 @@ import { type } from "os";
 
 @Component({
   selector: "app-grafica-dispersion",
-  templateUrl: "./grafica-dispersion.component.html",
-  styleUrls: ["./grafica-dispersion.component.scss"],
+  templateUrl: "./grafica-linea.component.html",
+  styleUrls: ["./grafica-linea.component.scss"],
 })
-export class GraficaDispersionComponent implements OnInit {
+export class GraficaLineaComponent implements OnInit {
   public columnas: string[];
   private dataframe: any[];
 
   public columna1_selec: string;
   public columna2_selec: string;
 
-  scatterChart: any;
+  linearChart: any;
   public columnasIndep: string[];
 
   constructor(private service: Service) {}
@@ -42,19 +42,16 @@ export class GraficaDispersionComponent implements OnInit {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
       this.columnasIndep = Object.keys(this.dataframe[0]);
-      // this.columnas.filter((columna) =>
-      //   valoresPermitidos.includes(columna)
-      // );
-      this.crearGraficoDispersion(this.columna1_selec, this.columna2_selec);
+      this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
     });
   }
 
-  actualizarGraficoScatter() {
+  actualizarGraficoLinear() {
     console.log("se llama actualizar");
-    if (this.scatterChart) {
-      this.scatterChart.destroy(); // Destruye la gráfica anterior si existe
+    if (this.linearChart) {
+      this.linearChart.destroy(); // Destruye la gráfica anterior si existe
     }
-    this.crearGraficoDispersion(this.columna1_selec, this.columna2_selec);
+    this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
   }
 
   private generarColorAleatorio(): string {
@@ -66,7 +63,7 @@ export class GraficaDispersionComponent implements OnInit {
     return color;
   }
 
-  private crearGraficoDispersion(
+  private crearGraficoLinea(
     columna1_selec: string,
     columna2_selec: string
   ) {
@@ -117,9 +114,9 @@ export class GraficaDispersionComponent implements OnInit {
     const color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
 
     // Create the scatter plot
-    const ctx = document.getElementById("scatterChart") as HTMLCanvasElement;
+    const ctx = document.getElementById("linearChart") as HTMLCanvasElement;
     // Cambiar el tipo de gráfico a 'line'
-    this.scatterChart = new Chart(ctx, {
+    this.linearChart = new Chart(ctx, {
       type: "line", // Cambiado a tipo de gráfico de líneas
       data: {
         labels: etiquetas,

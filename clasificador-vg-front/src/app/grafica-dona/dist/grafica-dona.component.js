@@ -6,14 +6,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 exports.__esModule = true;
-exports.GraficaDispersionComponent = void 0;
+exports.GraficaDonaComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
 var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
-var GraficaDispersionComponent = /** @class */ (function () {
-    function GraficaDispersionComponent(service) {
+var GraficaDonaComponent = /** @class */ (function () {
+    function GraficaDonaComponent(service) {
         var _this = this;
         this.service = service;
+        // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
             var listContainer = legendContainer.querySelector("ul");
@@ -36,7 +37,6 @@ var GraficaDispersionComponent = /** @class */ (function () {
             }
             // Generar elementos de leyenda personalizados
             var items = chart.options.plugins.legend.labels.generateLabels(chart);
-            console.log(items);
             // Ordenar las etiquetas alfabéticamente o numéricamente
             items.sort(function (a, b) {
                 if (typeof a.text === "string" && typeof b.text === "string") {
@@ -88,80 +88,45 @@ var GraficaDispersionComponent = /** @class */ (function () {
             });
         };
     }
-    GraficaDispersionComponent.prototype.ngOnInit = function () {
+    GraficaDonaComponent.prototype.ngOnInit = function () {
         var _this = this;
         chart_js_1.Chart.register.apply(chart_js_1.Chart, chart_js_1.registerables);
         this.service.obtenerDF().subscribe(function (result) {
-            var valoresPermitidos = [
-                "semana",
-                "año",
-                "pac_hospitalizado",
-                "condicion final",
-                "naturaleza",
-                "actividad",
-                "edad_agre",
-                "sustancias vict",
-                "escenario",
-                "sivigila",
-                "trimestre",
-            ];
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
-            _this.columnasIndep = Object.keys(_this.dataframe[0]);
-            // this.columnas.filter((columna) =>
-            //   valoresPermitidos.includes(columna)
-            // );
-            _this.crearGraficoDispersion(_this.columna1_selec, _this.columna2_selec);
+            console.log(_this.columnas);
+            _this.crearGraficaQueso(_this.columna_selec);
         });
     };
-    GraficaDispersionComponent.prototype.actualizarGraficoScatter = function () {
+    GraficaDonaComponent.prototype.actualizarGraficaQueso = function () {
         console.log("se llama actualizar");
-        if (this.scatterChart) {
-            this.scatterChart.destroy(); // Destruye la gráfica anterior si existe
+        if (this.myChart) {
+            this.myChart.destroy(); // Destruye la gráfica anterior si existe
         }
-        this.crearGraficoDispersion(this.columna1_selec, this.columna2_selec);
+        this.crearGraficaQueso(this.columna_selec);
     };
-    GraficaDispersionComponent.prototype.generarColorAleatorio = function () {
-        var letters = "0123456789ABCDEF";
-        var color = "#";
-        for (var i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    };
-    GraficaDispersionComponent.prototype.crearGraficoDispersion = function (columna1_selec, columna2_selec) {
+    GraficaDonaComponent.prototype.crearGraficaQueso = function (columna_selec) {
         var _this = this;
-        traductor_etiquetas_1.TraductorEtiquetas.traducirColumnas(this.dataframe);
-        var data = this.dataframe;
+        // Obtener los valores
         console.log(this.dataframe);
-        console.log(columna1_selec);
-        console.log(columna2_selec);
-        // Obtener los valores únicos de grupo edad edad y sexo
-        var eje1 = Array.from(new Set(data.map(function (item) { return item[columna1_selec]; })));
-        var eje2 = Array.from(new Set(data.map(function (item) { return item[columna2_selec]; })));
-        // Contar el número de registros por combinación de edad y sexo
+        traductor_etiquetas_1.TraductorEtiquetas.traducirColumnas(this.dataframe);
+        var datos = Array.from(new Set(this.dataframe.map(function (item) { return item[columna_selec]; })));
+        // Contar la frecuencia de cada categoría
         var contador = new Map();
-        data.forEach(function (item) {
-            var clave = item[columna1_selec] + "-" + item[columna2_selec];
-            contador.set(clave, (contador.get(clave) || 0) + 1);
+        this.dataframe.forEach(function (item) {
+            contador.set(item[columna_selec], (contador.get(item[columna_selec]) || 0) + 1);
         });
-        // Preparar los datos para el gráfico de barras
-        var datos = [];
-        eje1.forEach(function (columna1_selec) {
-            var fila = { columna1_selec: columna1_selec };
-            eje2.forEach(function (columna2_selec) {
-                var clave = columna1_selec + "-" + columna2_selec;
-                fila[columna2_selec] = contador.get(clave) || 0;
-            });
-            datos.push(fila);
-        });
-        // Ordenar los datos por edad ascendente
-        datos.sort(function (a, b) { return a.columna1_selec - b.columna2_selec; });
-        // Obtener los valores de edad y sexos
-        var etiquetas = datos.map(function (item) { return item.columna1_selec; });
-        var valores = eje2.map(function (columna2_selec) {
-            return datos.map(function (item) { return item[columna2_selec]; });
-        });
+        // Obtener los datos para la gráfica de queso
+        var etiquetas = datos;
+        var valores = datos.map(function (x) { return contador.get(x); });
+        if (columna_selec === "nom_upgd") {
+            var _a = this.filtrarEtiquetas(etiquetas, valores, contador), nuevasEtiquetas = _a.etiquetas, nuevosValores = _a.valores;
+            etiquetas = nuevasEtiquetas;
+            valores = nuevosValores;
+        }
+        // Generar una lista de colores aleatorios
+        var colores = this.generarColoresAleatorios(datos.length);
+        // Configuración del plugin htmlLegendPlugin
         var htmlLegendPlugin = {
             id: "htmlLegend",
             afterUpdate: function (chart, args, options) {
@@ -169,27 +134,21 @@ var GraficaDispersionComponent = /** @class */ (function () {
                 _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
             }
         };
-        var color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
-        // Create the scatter plot
-        var ctx = document.getElementById("scatterChart");
-        // Cambiar el tipo de gráfico a 'line'
-        this.scatterChart = new chart_js_1.Chart(ctx, {
-            type: "line",
+        // Crear la gráfica de queso
+        var ctx = document.getElementById("myChart2");
+        var chartContainer = document.querySelector(".chart-scroll-container");
+        this.myChart = new chart_js_1.Chart(ctx, {
+            type: "doughnut",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) {
-                    var color = _this.getRandomColorWithOpacity(0.5); // Color aleatorio con opacidad 0.2
-                    return {
-                        label: sexo,
-                        data: valores[index],
-                        backgroundColor: color,
-                        borderColor: color,
-                        borderWidth: 1,
-                        fill: true,
-                        tension: 0.4,
-                        spanGaps: true
-                    };
-                })
+                datasets: [
+                    {
+                        data: valores,
+                        backgroundColor: colores,
+                        borderColor: colores,
+                        borderWidth: 1
+                    },
+                ]
             },
             options: {
                 responsive: true,
@@ -198,52 +157,56 @@ var GraficaDispersionComponent = /** @class */ (function () {
                     legend: {
                         display: false
                     },
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     htmlLegend: {
                         containerID: "legend-container"
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: columna1_selec
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: columna2_selec
-                        }
                     }
                 }
             },
             plugins: [htmlLegendPlugin]
         });
     };
-    GraficaDispersionComponent.prototype.getRandomColorWithOpacity = function (opacity) {
-        var getRandomHex = function () { return Math.floor(Math.random() * 256).toString(16); };
-        var color;
-        do {
-            color = "#" + getRandomHex() + getRandomHex() + getRandomHex();
-        } while (
-        // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
-        parseInt(color.substr(1), 16) < parseInt("444444", 16));
-        return "" + color + Math.round(opacity * 255).toString(16);
+    GraficaDonaComponent.prototype.filtrarEtiquetas = function (etiquetas, valores, contador) {
+        var otrosEtiqueta = "Otros";
+        var etiquetasAgrupadas = etiquetas.filter(function (etiqueta) { return contador.get(etiqueta) < 20; });
+        var totalValoresOtros = 0;
+        var valoresFiltrados = valores.filter(function (valor, index) {
+            if (etiquetasAgrupadas.includes(etiquetas[index])) {
+                totalValoresOtros += valor;
+                return false;
+            }
+            return true;
+        });
+        etiquetas = etiquetas.filter(function (etiqueta) { return !etiquetasAgrupadas.includes(etiqueta); });
+        valores = valoresFiltrados;
+        etiquetas.push(otrosEtiqueta);
+        valores.push(totalValoresOtros);
+        return { etiquetas: etiquetas, valores: valores };
     };
-    GraficaDispersionComponent = __decorate([
+    GraficaDonaComponent.prototype.generarColoresAleatorios = function (cantidad) {
+        var colores = [];
+        for (var i = 0; i < cantidad; i++) {
+            var color = this.generarColorAleatorio();
+            colores.push(color);
+        }
+        return colores;
+    };
+    GraficaDonaComponent.prototype.generarColorAleatorio = function () {
+        var letras = "0123456789ABCDEF";
+        var color = "#";
+        for (var i = 0; i < 6; i++) {
+            color += letras[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+    GraficaDonaComponent = __decorate([
         core_1.Component({
-            selector: "app-grafica-dispersion",
-            templateUrl: "./grafica-dispersion.component.html",
-            styleUrls: ["./grafica-dispersion.component.scss"]
+            selector: "app-grafica-dona",
+            templateUrl: "./grafica-dona.component.html",
+            styleUrls: ["./grafica-dona.component.scss"]
         })
-    ], GraficaDispersionComponent);
-    return GraficaDispersionComponent;
+    ], GraficaDonaComponent);
+    return GraficaDonaComponent;
 }());
-exports.GraficaDispersionComponent = GraficaDispersionComponent;
-function retornarEtiqueta(sexo) {
-    console.log();
-    if (sexo === "semana") {
-        return "prueba";
-    }
-}
+exports.GraficaDonaComponent = GraficaDonaComponent;

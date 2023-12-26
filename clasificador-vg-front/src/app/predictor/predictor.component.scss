@@ -67,6 +67,18 @@ font-weight: bold;
   /* Ajusta el espacio entre el círculo y el contenedor */
   margin-top: 10px; /* Ajusta según sea necesario */
 }
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

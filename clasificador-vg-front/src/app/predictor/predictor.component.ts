@@ -20,6 +20,7 @@ export class PredictorComponent implements OnInit {
   public importancia_caracteristicas: any;
   public banderaVisibilidad: boolean = false;
   public animacion;
+  public mostrarOverlay: boolean = false;
   public banderaCard: boolean=true;
   formulario: FormGroup;
   departamentos: string[] = ["SANTANDER", "Otros"];
@@ -192,6 +193,7 @@ export class PredictorComponent implements OnInit {
     this.banderaCard=true;
     if (this.formulario.valid) {
       this.animacion = true;
+      this.mostrarOverlay = true;
       const formularioValue = { ...this.formulario.value };
       formularioValue.semana = formularioValue.semana.toString();
       formularioValue.año = formularioValue.año.toString();
@@ -225,6 +227,7 @@ export class PredictorComponent implements OnInit {
         this.importancia_caracteristicas = result.importancia_caracteristicas;
         console.log(this.importancia_caracteristicas[this.prediccion]);
         this.animacion = false;
+        this.mostrarOverlay = false;
         this.graficaCaracteristicas(
           this.importancia_caracteristicas[this.prediccion]
         );

@@ -37,6 +37,8 @@ var PredictorComponent = /** @class */ (function () {
         this.service = service;
         this.formBuilder = formBuilder;
         this.banderaVisibilidad = false;
+        this.mostrarOverlay = false;
+        this.banderaCard = true;
         this.departamentos = ["SANTANDER", "Otros"];
         this.municipios = ["BUCARAMANGA", "Otros"];
         this.anios = [
@@ -75,7 +77,6 @@ var PredictorComponent = /** @class */ (function () {
         this.tiposDeSeguridadSocial = [
             "Subsidiado",
             "Contributivo",
-            "No asegurado",
             "Excepción",
             "Excepción",
             "Indeterminado",
@@ -151,14 +152,6 @@ var PredictorComponent = /** @class */ (function () {
             "UNIVERSIDAD INDUSTRIAL DE SANTANDER- UIS",
             "Otros",
         ];
-        this.sivigilas = [
-            { valor: "1", texto: "sivigila_2012" },
-            { valor: "2", texto: "sivigila_2014" },
-            { valor: "3", texto: "sivigila_2015" },
-            { valor: "4", texto: "sivigila_2016" },
-            { valor: "5", texto: "sivigila_2017" },
-            { valor: "6", texto: "sivigila_2018" },
-        ];
         this.parentezcosVictBackup = __spreadArrays(this.parentezcosVict);
     }
     PredictorComponent.prototype.ngOnInit = function () {
@@ -186,8 +179,7 @@ var PredictorComponent = /** @class */ (function () {
             sustancias_victima: ["", forms_1.Validators.required],
             escenario: ["", forms_1.Validators.required],
             nom_eve: ["", forms_1.Validators.required],
-            nom_upgd: ["", forms_1.Validators.required],
-            sivigila: ["", forms_1.Validators.required]
+            nom_upgd: ["", forms_1.Validators.required]
         });
         this.formulario
             .get("departamento")
@@ -210,8 +202,10 @@ var PredictorComponent = /** @class */ (function () {
     PredictorComponent.prototype.predecir = function () {
         var _this = this;
         this.banderaVisibilidad = true;
+        this.banderaCard = true;
         if (this.formulario.valid) {
             this.animacion = true;
+            this.mostrarOverlay = true;
             var formularioValue = __assign({}, this.formulario.value);
             formularioValue.semana = formularioValue.semana.toString();
             formularioValue.año = formularioValue.año.toString();
@@ -222,6 +216,9 @@ var PredictorComponent = /** @class */ (function () {
             this.registroDTO.mes = this.obtenerMesDesdeSemana(this.registroDTO.semana);
             this.registroDTO.trimestre = this.obtenerTrimestreDesdeSemana(this.registroDTO.semana);
             this.registroDTO.ciclo_de_vida = this.opcionesCicloDeVida(this.registroDTO.grupo_edad);
+            this.registroDTO.violencia_intrafamiliar = this.obtenerViolenciaIntrafamiliar(this.registroDTO.parentezco_vict);
+            this.registroDTO.victima_menor_de_edad = this.obtenerVictimaMenor(this.registroDTO.grupo_edad);
+            this.registroDTO.agresor_menor_de_edad = this.obtenerAgresorMenor(this.registroDTO.edad_agre);
             console.log(this.registroDTO);
             this.service.predecir(this.registroDTO).subscribe(function (result) {
                 _this.definicion = result.definicion;
@@ -229,8 +226,10 @@ var PredictorComponent = /** @class */ (function () {
                 _this.importancia_caracteristicas = result.importancia_caracteristicas;
                 console.log(_this.importancia_caracteristicas[_this.prediccion]);
                 _this.animacion = false;
+                _this.mostrarOverlay = false;
                 _this.graficaCaracteristicas(_this.importancia_caracteristicas[_this.prediccion]);
                 _this.banderaVisibilidad = false;
+                _this.banderaCard = false;
             });
         }
         else {
@@ -243,6 +242,31 @@ var PredictorComponent = /** @class */ (function () {
             });
             return;
         }
+    };
+    PredictorComponent.prototype.obtenerAgresorMenor = function (edad_agre) {
+        return edad_agre >= 18 ? "0" : "1";
+    };
+    PredictorComponent.prototype.obtenerVictimaMenor = function (grupoEdad) {
+        switch (grupoEdad) {
+            case "0 a 6":
+                return "1";
+            case "7  a 11":
+                return "1";
+            case "12 a 17":
+                return "1";
+            case "18 a 28":
+                return "0";
+            case "29 a 59":
+                return "0";
+            case "60 y mas":
+                return "0";
+            default:
+                return "0";
+        }
+    };
+    PredictorComponent.prototype.obtenerViolenciaIntrafamiliar = function (parentezco_vict) {
+        var valoresPermitidos = ["Madre", "Padre", "Familiar", "Pareja", "Ex pareja", "Esposo", "Compañero permanente", "Novio(a)", "Abuelo(a)"];
+        return valoresPermitidos.includes(parentezco_vict) ? "1" : "0";
     };
     PredictorComponent.prototype.graficaCaracteristicas = function (importancia_caracteristicas) {
         // Filtrar solo las características con importancia positiva

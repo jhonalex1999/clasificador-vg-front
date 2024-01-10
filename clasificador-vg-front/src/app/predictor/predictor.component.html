@@ -279,8 +279,9 @@
             </div>
           </div>
         </div>
-        <div *ngIf="mostrarOverlay" class="loading-overlay"></div>
+        <div *ngIf="mostrarOverlay" class="loading-overlay">
           <div *ngIf="animacion" class="loading-animation"></div>
+        </div>
           <div [class.invisible]="banderaCard" class="card">
             <canvas [class.invisible]="banderaVisibilidad" id="graficoImportancia"></canvas>
           </div>

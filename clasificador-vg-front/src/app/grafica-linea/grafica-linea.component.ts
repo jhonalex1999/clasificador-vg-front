@@ -103,11 +103,17 @@ export class GraficaLineaComponent implements OnInit {
       datos.map((item) => item[columna2_selec])
     );
 
-    const htmlLegendPlugin = {
-      id: "htmlLegend",
+    const htmlLegendPlugin1 = {
+      id: "htmlLegend1",
       afterUpdate: (chart, args, options) => {
         // Cambio a función de flecha
         this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+      },
+    };
+    const htmlLegendPlugin2 = {
+      id: "htmlLegend2",
+      afterUpdate: (chart, args, options) => {
+        this.createCustomLegendItems2(chart, options);
       },
     };
 
@@ -143,9 +149,13 @@ export class GraficaLineaComponent implements OnInit {
             display: false,
           },
           // @ts-ignore
-          htmlLegend: {
-            containerID: "legend-container",
+          htmlLegend1: {
+            containerID: "legend-container-1",
           },
+          htmlLegend2: {
+            containerID: "legend-container-2",
+          },
+          
         },
         scales: {
           x: {
@@ -162,7 +172,7 @@ export class GraficaLineaComponent implements OnInit {
           },
         },
       },
-      plugins: [htmlLegendPlugin],
+      plugins: [htmlLegendPlugin1,htmlLegendPlugin2],
     });
   }
   private getRandomColorWithOpacity(opacity: number) {
@@ -196,30 +206,16 @@ export class GraficaLineaComponent implements OnInit {
     return listContainer;
   };
 
-  // Función para crear los elementos de la leyenda HTML personalizada
   createCustomLegendItems = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
-
+  
     // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
       ul.firstChild.remove();
     }
-
-    // Generar elementos de leyenda personalizados
+  
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
-
-    console.log(items);
-
-    // Ordenar las etiquetas alfabéticamente o numéricamente
-    items.sort((a, b) => {
-      if (typeof a.text === "string" && typeof b.text === "string") {
-        return a.text.localeCompare(b.text); // Orden alfabético
-      } else if (typeof a.text === "number" && typeof b.text === "number") {
-        return a.text - b.text; // Orden numérico ascendente
-      }
-      return 0; // No se cambia el orden si los tipos son diferentes
-    });
-
+  
     items.forEach((item) => {
       const li = document.createElement("li");
       li.style.alignItems = "center";
@@ -227,7 +223,7 @@ export class GraficaLineaComponent implements OnInit {
       li.style.display = "flex";
       li.style.flexDirection = "row";
       li.style.marginLeft = "10px";
-
+  
       li.onclick = () => {
         const { type } = chart.config;
         if (type === "pie" || type === "doughnut") {
@@ -240,7 +236,7 @@ export class GraficaLineaComponent implements OnInit {
         }
         chart.update();
       };
-
+  
       // Color box
       const boxSpan = document.createElement("span");
       boxSpan.style.background = item.fillStyle;
@@ -251,22 +247,60 @@ export class GraficaLineaComponent implements OnInit {
       boxSpan.style.height = "20px";
       boxSpan.style.marginRight = "10px";
       boxSpan.style.width = "20px";
-
+  
       // Texto
       const textContainer = document.createElement("p");
       textContainer.style.color = item.fontColor;
       textContainer.style.margin = "0";
       textContainer.style.padding = "0";
       textContainer.style.textDecoration = item.hidden ? "line-through" : "";
-
+  
       const text = document.createTextNode(item.text);
       textContainer.appendChild(text);
-
+  
       li.appendChild(boxSpan);
       li.appendChild(textContainer);
       ul.appendChild(li);
     });
   };
+  
+  createCustomLegendItems2 = (chart, options) => {
+    const ul = this.getOrCreateLegendList(chart, options.containerID);
+  
+    // Limpiar los elementos de la leyenda anteriores
+    while (ul.firstChild) {
+      ul.firstChild.remove();
+    }
+  
+    // Generar elementos de leyenda personalizados para el eje x
+    const labels = chart.data.labels;
+  
+    labels.forEach((label) => {
+      const li = document.createElement("li");
+      li.style.alignItems = "center";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.flexDirection = "row";
+      li.style.marginLeft = "10px";
+  
+      li.onclick = () => {
+        // Realizar acciones al hacer clic en una etiqueta del eje x
+        console.log(`Clic en la etiqueta del eje x: ${label}`);
+      };
+  
+      // Puedes personalizar el contenido del elemento li según tus necesidades
+      const textContainer = document.createElement("p");
+      textContainer.style.margin = "0";
+      const text = document.createTextNode(label);
+      textContainer.appendChild(text);
+  
+      li.appendChild(textContainer);
+      ul.appendChild(li);
+    });
+  };
+  
+  
+  
 }
 
 function retornarEtiqueta(sexo: any): any {

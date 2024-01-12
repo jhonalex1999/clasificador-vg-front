@@ -282,8 +282,16 @@
         <div *ngIf="mostrarOverlay" class="loading-overlay">
           <div *ngIf="animacion" class="loading-animation"></div>
         </div>
-          <div [class.invisible]="banderaCard" class="card">
+          <div [class.invisible]="banderaCard" class="card card-grafico">
+            <div class="card-header card-header-primary">
+              <h4 >Importancia de las caracteristicas
+              <i class="fa fa-question-circle"  matTooltip="
+              En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana."aria-label="Button that displays a tooltip when focused or hovered over"></i>
+            </h4>
+            </div>
+            <div class="card-body">
             <canvas [class.invisible]="banderaVisibilidad" id="graficoImportancia"></canvas>
+          </div>
           </div>
       </div>
     </div>

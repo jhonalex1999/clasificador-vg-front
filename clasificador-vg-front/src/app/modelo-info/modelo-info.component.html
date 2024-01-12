@@ -408,5 +408,9 @@
         </div>
       </div>
     </div>
+    <div *ngIf="mostrarOverlay" class="loading-overlay">
+          <h2>Hola</h2>
+          <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Enviar</button>
+        </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener} from '@angular/core';
 import { Service } from '../service/service';
 import { Chart} from 'chart.js';
 
@@ -20,7 +20,8 @@ export class ModeloInfoComponent implements OnInit {
   itemsPerPage: number = 10;
   currentPage: number = 1;
   chart: any;
- 
+  mostrarOverlay: boolean ;
+  primerCarga = false;
   constructor(private service: Service) { }
 
   ngOnInit(): void {
@@ -57,6 +58,15 @@ export class ModeloInfoComponent implements OnInit {
 
     // Crear la gráfica
     this.createChart();
+    if (!localStorage.getItem('primerCarga')) {
+      this.mostrarOverlay = true;
+      localStorage.setItem('primerCarga', 'true');
+    }
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  beforeunloadHandler(event: Event) {
+    // Borrar la clave del localStorage al cerrar la pestaña
+    localStorage.removeItem('primerCarga');
   }
   createChart(): void {
     const ctx = this.metricCanvas.nativeElement.getContext('2d');
@@ -128,5 +138,8 @@ prevPage() {
   if (this.currentPage > 1) {
     this.currentPage--;
   }
+}
+ocultarOverlay() {
+  this.mostrarOverlay = false;
 }
 }

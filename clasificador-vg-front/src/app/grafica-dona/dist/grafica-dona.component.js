@@ -14,6 +14,7 @@ var GraficaDonaComponent = /** @class */ (function () {
     function GraficaDonaComponent(service) {
         var _this = this;
         this.service = service;
+        this.columna_selec = 'Selecciona una columna primero';
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -95,7 +96,9 @@ var GraficaDonaComponent = /** @class */ (function () {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
             console.log(_this.columnas);
-            _this.crearGraficaQueso(_this.columna_selec);
+            if (_this.columna_selec != 'Selecciona una columna primero') {
+                _this.crearGraficaQueso(_this.columna_selec);
+            }
         });
     };
     GraficaDonaComponent.prototype.actualizarGraficaQueso = function () {

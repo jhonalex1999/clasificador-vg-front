@@ -11,8 +11,8 @@ export class GraficaBarrasComponent implements OnInit {
   private dataframe: any[];
   public columnas: string[];
 
-  public columna1_selec: string;
-  public columna2_selec: string;
+  public columna1_selec: string = 'Selecciona una columna primero';
+  public columna2_selec: string = 'Selecciona una columna primero';
 
   myChart: Chart<"bar", any[], any>;
 
@@ -23,7 +23,9 @@ export class GraficaBarrasComponent implements OnInit {
     this.service.obtenerDF().subscribe((result) => {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
-      this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+      if (this.columna1_selec !== 'Selecciona una columna primero' || this.columna2_selec !== 'Selecciona una columna primero') {
+        this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+      }
     });
   }
 
@@ -32,7 +34,10 @@ export class GraficaBarrasComponent implements OnInit {
     if (this.myChart) {
       this.myChart.destroy(); // Destruye la gráfica anterior si existe
     }
-    this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+    if (this.columna1_selec !== 'Selecciona una columna primero' && this.columna2_selec !== 'Selecciona una columna primero') {
+      this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+    }
+    
   }
 
   private crearGraficoBarras(columna1_selec: string, columna2_selec: string) {
@@ -74,11 +79,17 @@ export class GraficaBarrasComponent implements OnInit {
     // Generar una lista de colores aleatorios
     const colores = this.generarColoresAleatorios(valores.length);
 
-    const htmlLegendPlugin = {
-      id: "htmlLegend",
+    const htmlLegendPlugin1 = {
+      id: "htmlLegend1",
       afterUpdate: (chart, args, options) => {
         // Cambio a función de flecha
         this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+      },
+    };
+    const htmlLegendPlugin2 = {
+      id: "htmlLegend2",
+      afterUpdate: (chart, args, options) => {
+        this.createCustomLegendItems2(chart, options);
       },
     };
 
@@ -107,24 +118,11 @@ export class GraficaBarrasComponent implements OnInit {
             display: false,
           },
           // @ts-ignore
-          htmlLegend: {
-            containerID: "legend-container",
+          htmlLegend1: {
+            containerID: "legend-container-1",
           },
-        },
-        animation: {
-          onComplete: () => {
-            delayed = true;
-          },
-          delay: (context) => {
-            let delay = 0;
-            if (
-              context.type === "data" &&
-              context.mode === "default" &&
-              !delayed
-            ) {
-              delay = context.dataIndex * 300 + context.datasetIndex * 100;
-            }
-            return delay;
+          htmlLegend2: {
+            containerID: "legend-container-2",
           },
         },
         scales: {
@@ -143,7 +141,7 @@ export class GraficaBarrasComponent implements OnInit {
           },
         },
       },
-      plugins: [htmlLegendPlugin],
+      plugins: [htmlLegendPlugin1,htmlLegendPlugin2],
     });
   }
 
@@ -248,6 +246,40 @@ export class GraficaBarrasComponent implements OnInit {
       textContainer.appendChild(text);
 
       li.appendChild(boxSpan);
+      li.appendChild(textContainer);
+      ul.appendChild(li);
+    });
+  };
+  createCustomLegendItems2 = (chart, options) => {
+    const ul = this.getOrCreateLegendList(chart, options.containerID);
+  
+    // Limpiar los elementos de la leyenda anteriores
+    while (ul.firstChild) {
+      ul.firstChild.remove();
+    }
+  
+    // Generar elementos de leyenda personalizados para el eje x
+    const labels = chart.data.labels;
+  
+    labels.forEach((label) => {
+      const li = document.createElement("li");
+      li.style.alignItems = "center";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.flexDirection = "row";
+      li.style.marginLeft = "10px";
+  
+      li.onclick = () => {
+        // Realizar acciones al hacer clic en una etiqueta del eje x
+        console.log(`Clic en la etiqueta del eje x: ${label}`);
+      };
+  
+      // Puedes personalizar el contenido del elemento li según tus necesidades
+      const textContainer = document.createElement("p");
+      textContainer.style.margin = "0";
+      const text = document.createTextNode(label);
+      textContainer.appendChild(text);
+  
       li.appendChild(textContainer);
       ul.appendChild(li);
     });

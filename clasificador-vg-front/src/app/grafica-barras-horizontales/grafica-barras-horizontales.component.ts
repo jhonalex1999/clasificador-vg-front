@@ -11,7 +11,7 @@ import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 export class GraficaBarrasHorizontalesComponent implements OnInit {
   private dataframe: any[];
   public columnas: string[];
-  public columna_selec: string;
+  public columna_selec = "Selecciona una columna primero";
   myChart: Chart<"bar", any[], any>;
 
   constructor(private service: Service) {}
@@ -21,7 +21,9 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
     this.service.obtenerDF().subscribe((result) => {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
-      this.crearGraficaBarrasHorizontal(this.columna_selec);
+      if (this.columna_selec != "Selecciona una columna primero") {
+        this.crearGraficaBarrasHorizontal(this.columna_selec);
+      }
     });
   }
 
@@ -122,7 +124,7 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
 
   private crearGraficaBarrasHorizontal(columna_selec: string) {
     // Obtener los valores
-    console.log("VIEJO")
+    console.log("VIEJO");
     console.log(this.dataframe);
 
     TraductorEtiquetas.traducirColumnas(this.dataframe);
@@ -179,8 +181,8 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
         ],
       },
       options: {
-        responsive:true,
-        maintainAspectRatio:false,
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false,

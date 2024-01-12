@@ -13,6 +13,8 @@ var GraficaBarrasComponent = /** @class */ (function () {
     function GraficaBarrasComponent(service) {
         var _this = this;
         this.service = service;
+        this.columna1_selec = 'Selecciona una columna primero';
+        this.columna2_selec = 'Selecciona una columna primero';
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -86,6 +88,34 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 ul.appendChild(li);
             });
         };
+        this.createCustomLegendItems2 = function (chart, options) {
+            var ul = _this.getOrCreateLegendList(chart, options.containerID);
+            // Limpiar los elementos de la leyenda anteriores
+            while (ul.firstChild) {
+                ul.firstChild.remove();
+            }
+            // Generar elementos de leyenda personalizados para el eje x
+            var labels = chart.data.labels;
+            labels.forEach(function (label) {
+                var li = document.createElement("li");
+                li.style.alignItems = "center";
+                li.style.cursor = "pointer";
+                li.style.display = "flex";
+                li.style.flexDirection = "row";
+                li.style.marginLeft = "10px";
+                li.onclick = function () {
+                    // Realizar acciones al hacer clic en una etiqueta del eje x
+                    console.log("Clic en la etiqueta del eje x: " + label);
+                };
+                // Puedes personalizar el contenido del elemento li según tus necesidades
+                var textContainer = document.createElement("p");
+                textContainer.style.margin = "0";
+                var text = document.createTextNode(label);
+                textContainer.appendChild(text);
+                li.appendChild(textContainer);
+                ul.appendChild(li);
+            });
+        };
     }
     GraficaBarrasComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -93,7 +123,9 @@ var GraficaBarrasComponent = /** @class */ (function () {
         this.service.obtenerDF().subscribe(function (result) {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
-            _this.crearGraficoBarras(_this.columna1_selec, _this.columna2_selec);
+            if (_this.columna1_selec !== 'Selecciona una columna primero' || _this.columna2_selec !== 'Selecciona una columna primero') {
+                _this.crearGraficoBarras(_this.columna1_selec, _this.columna2_selec);
+            }
         });
     };
     GraficaBarrasComponent.prototype.actualizarGrafica = function () {
@@ -101,7 +133,9 @@ var GraficaBarrasComponent = /** @class */ (function () {
         if (this.myChart) {
             this.myChart.destroy(); // Destruye la gráfica anterior si existe
         }
-        this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+        if (this.columna1_selec !== 'Selecciona una columna primero' && this.columna2_selec !== 'Selecciona una columna primero') {
+            this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
+        }
     };
     GraficaBarrasComponent.prototype.crearGraficoBarras = function (columna1_selec, columna2_selec) {
         var _this = this;
@@ -137,11 +171,17 @@ var GraficaBarrasComponent = /** @class */ (function () {
         });
         // Generar una lista de colores aleatorios
         var colores = this.generarColoresAleatorios(valores.length);
-        var htmlLegendPlugin = {
-            id: "htmlLegend",
+        var htmlLegendPlugin1 = {
+            id: "htmlLegend1",
             afterUpdate: function (chart, args, options) {
                 // Cambio a función de flecha
                 _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+            }
+        };
+        var htmlLegendPlugin2 = {
+            id: "htmlLegend2",
+            afterUpdate: function (chart, args, options) {
+                _this.createCustomLegendItems2(chart, options);
             }
         };
         var colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
@@ -168,22 +208,11 @@ var GraficaBarrasComponent = /** @class */ (function () {
                         display: false
                     },
                     // @ts-ignore
-                    htmlLegend: {
-                        containerID: "legend-container"
-                    }
-                },
-                animation: {
-                    onComplete: function () {
-                        delayed = true;
+                    htmlLegend1: {
+                        containerID: "legend-container-1"
                     },
-                    delay: function (context) {
-                        var delay = 0;
-                        if (context.type === "data" &&
-                            context.mode === "default" &&
-                            !delayed) {
-                            delay = context.dataIndex * 300 + context.datasetIndex * 100;
-                        }
-                        return delay;
+                    htmlLegend2: {
+                        containerID: "legend-container-2"
                     }
                 },
                 scales: {
@@ -202,7 +231,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
                     }
                 }
             },
-            plugins: [htmlLegendPlugin]
+            plugins: [htmlLegendPlugin1, htmlLegendPlugin2]
         });
     };
     GraficaBarrasComponent.prototype.generarColoresAleatorios = function (cantidad) {

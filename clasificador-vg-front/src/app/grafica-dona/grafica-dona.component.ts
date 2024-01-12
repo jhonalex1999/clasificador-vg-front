@@ -20,7 +20,7 @@ export class GraficaDonaComponent implements OnInit {
   public prediccion: any;
   private dataframe: any[];
   public columnas: string[];
-  public columna_selec: string;
+  public columna_selec = 'Selecciona una columna primero';
   myChart: Chart<"doughnut", any[], any>;
 
   constructor(private service: Service) {}
@@ -31,7 +31,9 @@ export class GraficaDonaComponent implements OnInit {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
       console.log(this.columnas);
-      this.crearGraficaQueso(this.columna_selec);
+      if(this.columna_selec != 'Selecciona una columna primero'){
+        this.crearGraficaQueso(this.columna_selec);
+      }
     });
   }
   actualizarGraficaQueso() {

@@ -14,6 +14,7 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
     function GraficaBarrasHorizontalesComponent(service) {
         var _this = this;
         this.service = service;
+        this.columna_selec = "Selecciona una columna primero";
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -93,7 +94,9 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
         this.service.obtenerDF().subscribe(function (result) {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
-            _this.crearGraficaBarrasHorizontal(_this.columna_selec);
+            if (_this.columna_selec != "Selecciona una columna primero") {
+                _this.crearGraficaBarrasHorizontal(_this.columna_selec);
+            }
         });
     };
     GraficaBarrasHorizontalesComponent.prototype.actualizarGraficaHorizontal = function () {

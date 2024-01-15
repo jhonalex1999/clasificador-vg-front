@@ -5,7 +5,7 @@ import { Chart} from 'chart.js';
 @Component({
   selector: 'app-modelo-info',
   templateUrl: './modelo-info.component.html',
-  styleUrls: ['./modelo-info.component.scss']
+  styleUrls: ['./modelo-info.component.scss', './background-animado.css']
 })
 export class ModeloInfoComponent implements OnInit {
   @ViewChild('metrics', { static: true }) metricCanvas: ElementRef;

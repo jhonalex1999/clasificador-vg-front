@@ -1,32 +1,42 @@
+@charset "UTF-8";
 #encabezado {
   color: white;
 }
+
 #primero {
   width: 20px;
   height: 20px;
 }
+
 #segundo {
   width: 24px;
   height: 24px;
 }
+
 #tercero {
   width: 24px;
   height: 24px;
 }
+
 #ImgHeader {
   width: 220px;
   height: 220px;
   display: block;
   margin: 0 auto;
 }
+
 .card {
-  min-height: 400px; /* Ajusta la altura mínima según tus necesidades */
-  max-height: 500px; /* Ajusta la altura máxima según tus necesidades */
+  min-height: 400px;
+  /* Ajusta la altura mínima según tus necesidades */
+  max-height: 500px;
+  /* Ajusta la altura máxima según tus necesidades */
 }
 
 .card-body {
-  overflow-y: auto; /* Agregar una barra de desplazamiento vertical si el contenido es demasiado largo */
+  overflow-y: auto;
+  /* Agregar una barra de desplazamiento vertical si el contenido es demasiado largo */
 }
+
 .loading-overlay {
   @import "../modelo-info/background-animado.css";
   position: fixed;
@@ -34,8 +44,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgb(109, 2, 127);
-  background: linear-gradient(0deg, rgba(109, 2, 127, 1) 35%, rgba(145, 36, 163, 1) 100%);
+  background: #6d027f;
+  background: linear-gradient(0deg, #6d027f 35%, #9124a3 100%);
   z-index: 9999;
   display: flex;
   justify-content: center;

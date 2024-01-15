@@ -20,6 +20,9 @@ var ModeloInfoComponent = /** @class */ (function () {
         this.precisiones = [];
         this.sensibilidades = [];
         this.puntuacionesF1 = [];
+        this.itemsPerPage = 10;
+        this.currentPage = 1;
+        this.primerCarga = false;
     }
     ModeloInfoComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -35,10 +38,10 @@ var ModeloInfoComponent = /** @class */ (function () {
             { modelo: 'Random Forest', exactitud: 0.849, precision: 0.842, sensibilidad: 0.837, puntuacion_F1: 0.839 },
             { modelo: 'LightGBM', exactitud: 0.854, precision: 0.846, sensibilidad: 0.846, puntuacion_F1: 0.846 },
             { modelo: 'XGBoost', exactitud: 0.851, precision: 0.843, sensibilidad: 0.842, puntuacion_F1: 0.842 },
-            { modelo: 'XGBoost Optimizado', exactitud: 0.856, precision: 0.848, sensibilidad: 0.848, puntuacion_F1: 0.847 }];
+            { modelo: 'XGBoost Optimizado', exactitud: 0.859, precision: 0.851, sensibilidad: 0.847, puntuacion_F1: 0.848 }];
         this.service.obtenerDF().subscribe(function (result) {
             _this.dataframe = JSON.parse(result.dataframe);
-            _this.dataRows = Object.values(_this.dataframe).slice(0, 5);
+            _this.dataRows = Object.values(_this.dataframe);
             console.log(_this.dataRows);
             _this.dataRows.forEach(function (row) {
                 row.anio = row.año;
@@ -53,6 +56,14 @@ var ModeloInfoComponent = /** @class */ (function () {
         });
         // Crear la gráfica
         this.createChart();
+        if (!localStorage.getItem('primerCarga')) {
+            this.mostrarOverlay = true;
+            localStorage.setItem('primerCarga', 'true');
+        }
+    };
+    ModeloInfoComponent.prototype.beforeunloadHandler = function (event) {
+        // Borrar la clave del localStorage al cerrar la pestaña
+        localStorage.removeItem('primerCarga');
     };
     ModeloInfoComponent.prototype.createChart = function () {
         var ctx = this.metricCanvas.nativeElement.getContext('2d');
@@ -92,24 +103,48 @@ var ModeloInfoComponent = /** @class */ (function () {
                 ]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true
                     }
-                }
+                },
+                responsive: true,
+                maintainAspectRatio: false
             }
         });
+    };
+    // Función para obtener los elementos de la página actual
+    ModeloInfoComponent.prototype.getCurrentPageRows = function () {
+        var startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        var endIndex = startIndex + this.itemsPerPage;
+        return this.dataRows.slice(startIndex, endIndex);
+    };
+    // Función para cambiar a la siguiente página
+    ModeloInfoComponent.prototype.nextPage = function () {
+        if ((this.currentPage * this.itemsPerPage) < this.dataRows.length) {
+            this.currentPage++;
+        }
+    };
+    // Función para cambiar a la página anterior
+    ModeloInfoComponent.prototype.prevPage = function () {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
+    };
+    ModeloInfoComponent.prototype.ocultarOverlay = function () {
+        this.mostrarOverlay = false;
     };
     __decorate([
         core_1.ViewChild('metrics', { static: true })
     ], ModeloInfoComponent.prototype, "metricCanvas");
+    __decorate([
+        core_1.HostListener('window:beforeunload', ['$event'])
+    ], ModeloInfoComponent.prototype, "beforeunloadHandler");
     ModeloInfoComponent = __decorate([
         core_1.Component({
             selector: 'app-modelo-info',
             templateUrl: './modelo-info.component.html',
-            styleUrls: ['./modelo-info.component.scss']
+            styleUrls: ['./modelo-info.component.scss', './background-animado.css']
         })
     ], ModeloInfoComponent);
     return ModeloInfoComponent;

@@ -413,24 +413,42 @@
             </div>
           </div>
         </div>
-        <div *ngIf="mostrarOverlay" class="loading-overlay">
-          <h2>Hola</h2>
-          <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Enviar</button>
-          <!-- Background Animado-->
-          <div class="area">
-            <ul class="circles">
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
-            </ul>
-          </div>
+      </div>
+    </div>
+    <div *ngIf="mostrarOverlay" class="loading-overlay">
+      <mat-card class="custom-card">
+        <div class="left-side">
+          <mat-card-title>Bienvenidos </mat-card-title>
+          <mat-card-content>
+            <p>En esta herramienta podras encontrar el modelo desarrollado para la violencia
+              de genero divido en las siguientes secciones:
+            </p>
+            <img src="/assets/img/informacion.png" alt="Imagen" />
+            <img src="/assets/img/diagrama.png" alt="Imagen" />
+            <img src="/assets/img/predictor.png" alt="Imagen" />
+            <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Comenzar</button>
+          </mat-card-content>
+        </div>
+        <div class="right-side">
+          <img src="/assets/img/icono.png" alt="Imagen" />
+          
+        </div>
+      </mat-card>
+      <!-- Background Animado-->
+      <div class="area">
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div>
         </div>
       </div>
     </div>

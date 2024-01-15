@@ -41,3 +41,24 @@
   justify-content: center;
   align-items: center;
 }
+.custom-card {
+  display: flex;
+  height: 80%;
+  width: 70%;
+  margin: 20px auto;
+}
+
+.left-side {
+  flex: 1;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.right-side {
+  max-width: 100%; /* Ajusta el ancho de la parte derecha según tus necesidades */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}

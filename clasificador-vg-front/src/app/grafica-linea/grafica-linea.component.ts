@@ -1,10 +1,16 @@
-import { Component, OnInit ,  ElementRef, Renderer2, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+} from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { Chart, registerables } from "chart.js";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 import { type } from "os";
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatTooltip } from "@angular/material/tooltip";
 @Component({
   selector: "app-grafica-dispersion",
   templateUrl: "./grafica-linea.component.html",
@@ -12,19 +18,20 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class GraficaLineaComponent implements OnInit {
   @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
+  @ViewChild("tooltipIcon") tooltipIcon: ElementRef;
   public columnas: string[];
   private dataframe: any[];
 
-  public columna1_selec= 'Selecciona una columna primero';
-  public columna2_selec= 'Selecciona una columna primero';
- 
-  tooltipContent = 'En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas.';
+  public columna1_selec = "Selecciona una columna primero";
+  public columna2_selec = "Selecciona una columna primero";
+
+  tooltipContent =
+    "En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas.";
 
   linearChart: any;
   public columnasIndep: string[];
 
-  constructor(private service: Service,private renderer: Renderer2) {}
+  constructor(private service: Service, private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
@@ -46,7 +53,12 @@ export class GraficaLineaComponent implements OnInit {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
       this.columnasIndep = Object.keys(this.dataframe[0]);
-      this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
+      if (
+        this.columna1_selec !== "Selecciona una columna primero" ||
+        this.columna2_selec !== "Selecciona una columna primero"
+      ) {
+        this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
+      }
     });
   }
 
@@ -55,7 +67,12 @@ export class GraficaLineaComponent implements OnInit {
     if (this.linearChart) {
       this.linearChart.destroy(); // Destruye la gráfica anterior si existe
     }
-    this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
+    if (
+      this.columna1_selec !== "Selecciona una columna primero" &&
+      this.columna2_selec !== "Selecciona una columna primero"
+    ) {
+      this.crearGraficoLinea(this.columna1_selec, this.columna2_selec);
+    }
   }
 
   private generarColorAleatorio(): string {
@@ -67,16 +84,13 @@ export class GraficaLineaComponent implements OnInit {
     return color;
   }
 
-  private crearGraficoLinea(
-    columna1_selec: string,
-    columna2_selec: string
-  ) {
+  private crearGraficoLinea(columna1_selec: string, columna2_selec: string) {
     TraductorEtiquetas.traducirColumnas(this.dataframe);
     const data = this.dataframe;
     console.log(this.dataframe);
     console.log(columna1_selec);
     console.log(columna2_selec);
-    
+
     // Obtener los valores únicos de grupo edad edad y sexo
     const eje1 = Array.from(new Set(data.map((item) => item[columna1_selec])));
     const eje2 = Array.from(new Set(data.map((item) => item[columna2_selec])));
@@ -160,7 +174,6 @@ export class GraficaLineaComponent implements OnInit {
           htmlLegend2: {
             containerID: "legend-container-2",
           },
-          
         },
         scales: {
           x: {
@@ -177,7 +190,7 @@ export class GraficaLineaComponent implements OnInit {
           },
         },
       },
-      plugins: [htmlLegendPlugin1,htmlLegendPlugin2],
+      plugins: [htmlLegendPlugin1, htmlLegendPlugin2],
     });
   }
   private getRandomColorWithOpacity(opacity: number) {
@@ -213,14 +226,14 @@ export class GraficaLineaComponent implements OnInit {
 
   createCustomLegendItems = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
-  
+
     // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
       ul.firstChild.remove();
     }
-  
+
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
-  
+
     items.forEach((item) => {
       const li = document.createElement("li");
       li.style.alignItems = "center";
@@ -228,7 +241,7 @@ export class GraficaLineaComponent implements OnInit {
       li.style.display = "flex";
       li.style.flexDirection = "row";
       li.style.marginLeft = "10px";
-  
+
       li.onclick = () => {
         const { type } = chart.config;
         if (type === "pie" || type === "doughnut") {
@@ -241,7 +254,7 @@ export class GraficaLineaComponent implements OnInit {
         }
         chart.update();
       };
-  
+
       // Color box
       const boxSpan = document.createElement("span");
       boxSpan.style.background = item.fillStyle;
@@ -252,34 +265,34 @@ export class GraficaLineaComponent implements OnInit {
       boxSpan.style.height = "20px";
       boxSpan.style.marginRight = "10px";
       boxSpan.style.width = "20px";
-  
+
       // Texto
       const textContainer = document.createElement("p");
       textContainer.style.color = item.fontColor;
       textContainer.style.margin = "0";
       textContainer.style.padding = "0";
       textContainer.style.textDecoration = item.hidden ? "line-through" : "";
-  
+
       const text = document.createTextNode(item.text);
       textContainer.appendChild(text);
-  
+
       li.appendChild(boxSpan);
       li.appendChild(textContainer);
       ul.appendChild(li);
     });
   };
-  
+
   createCustomLegendItems2 = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
-  
+
     // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
       ul.firstChild.remove();
     }
-  
+
     // Generar elementos de leyenda personalizados para el eje x
     const labels = chart.data.labels;
-  
+
     labels.forEach((label) => {
       const li = document.createElement("li");
       li.style.alignItems = "center";
@@ -287,18 +300,18 @@ export class GraficaLineaComponent implements OnInit {
       li.style.display = "flex";
       li.style.flexDirection = "row";
       li.style.marginLeft = "10px";
-  
+
       li.onclick = () => {
         // Realizar acciones al hacer clic en una etiqueta del eje x
         console.log(`Clic en la etiqueta del eje x: ${label}`);
       };
-  
+
       // Puedes personalizar el contenido del elemento li según tus necesidades
       const textContainer = document.createElement("p");
       textContainer.style.margin = "0";
       const text = document.createTextNode(label);
       textContainer.appendChild(text);
-  
+
       li.appendChild(textContainer);
       ul.appendChild(li);
     });
@@ -310,9 +323,8 @@ export class GraficaLineaComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+    this.renderer.listen(this.tooltipIcon.nativeElement, "click", () => {
       this.showTooltip();
     });
   }
 }
-

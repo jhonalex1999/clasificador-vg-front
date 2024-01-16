@@ -47,12 +47,18 @@
   height: 85%;
   width: 70%;
   margin: 20px auto;
+  overflow: auto; /* Habilita el scrollbar en pantallas pequeñas */
+  max-height: 100%; /* Establece una altura máxima para evitar que la tarjeta crezca infinitamente */
 }
 
 .left-side {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 16px;
   box-sizing: border-box;
+  height: 100%;
+  justify-content: space-between; 
 }
 
 .right-side {
@@ -89,10 +95,17 @@ img {
   text-align: center;
 }
 .etiqueta-pequena {
-  font-size: smaller;
+  font-size:medium;
   color: gray;
   font-weight: normal; /* Para quitar la negrita */
+  padding-left: 20%;
+  padding-right: 20%;
 }
+.par{
+  text-align: center;
+  align-content: center;
+}
+
 @media screen and (max-width: 600px) {
   .left-side {
     order: 2; /* Cambia el orden en pantallas pequeñas, moviendo el contenido izquierdo debajo del contenido derecho */

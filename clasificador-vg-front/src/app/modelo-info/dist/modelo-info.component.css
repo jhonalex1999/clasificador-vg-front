@@ -115,7 +115,7 @@ img {
 }
 
 .etiqueta-pequena {
-  font-size: medium;
+  font-size: small;
   color: gray;
   font-weight: normal;
   /* Para quitar la negrita */

@@ -285,8 +285,8 @@
           <div [class.invisible]="banderaCard" class="card card-grafico">
             <div class="card-header card-header-primary">
               <h4 >Importancia de las caracteristicas
-              <i class="fa fa-question-circle"  matTooltip="
-              En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana."aria-label="Button that displays a tooltip when focused or hovered over"></i>
+              <i #tooltipIcon  class="fa fa-question-circle" [matTooltip]="tooltipContent"
+              aria-label="Button that displays a tooltip when focused or clicked"></i>
             </h4>
             </div>
             <div class="card-body">

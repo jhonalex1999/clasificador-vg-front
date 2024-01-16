@@ -22,6 +22,7 @@ export class GraficaDonaComponent implements OnInit {
   public columnas: string[];
   public columna_selec = 'Selecciona una columna primero';
   myChart: Chart<"doughnut", any[], any>;
+  tooltipContent = 'En esta gráfica de dona, al seleccionar una variable específica, se habilita la visualización detallada de la cantidad de registros asociados a cada valor de la variable. Al desplazar el puntero sobre cada porción, se revela el número exacto de registros correspondientes a esa categoría. Esta funcionalidad permite una exploración más detallada y una comprensión precisa de la distribución de datos, brindando una experiencia interactiva que facilita la identificación de patrones y la toma de decisiones informada basada en los valores numéricos asociados a cada valor de la variable seleccionada.';
 
   constructor(private service: Service) {}
 
@@ -253,4 +254,5 @@ export class GraficaDonaComponent implements OnInit {
     }
     return color;
   }
+  
 }

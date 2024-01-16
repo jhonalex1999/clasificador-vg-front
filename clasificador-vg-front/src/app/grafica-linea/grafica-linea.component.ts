@@ -16,6 +16,8 @@ export class GraficaLineaComponent implements OnInit {
 
   public columna1_selec: string;
   public columna2_selec: string;
+ 
+  tooltipContent = `En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas.`;
 
   linearChart: any;
   public columnasIndep: string[];
@@ -72,6 +74,7 @@ export class GraficaLineaComponent implements OnInit {
     console.log(this.dataframe);
     console.log(columna1_selec);
     console.log(columna2_selec);
+    
     // Obtener los valores únicos de grupo edad edad y sexo
     const eje1 = Array.from(new Set(data.map((item) => item[columna1_selec])));
     const eje2 = Array.from(new Set(data.map((item) => item[columna2_selec])));
@@ -303,9 +306,3 @@ export class GraficaLineaComponent implements OnInit {
   
 }
 
-function retornarEtiqueta(sexo: any): any {
-  console.log();
-  if (sexo === "semana") {
-    return "prueba";
-  }
-}

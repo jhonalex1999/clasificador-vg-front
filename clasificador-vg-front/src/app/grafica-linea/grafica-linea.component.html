@@ -43,11 +43,10 @@
             </div>
             <div class="col-lg-9 col-md-6 col-sm-6">
                 <div class="card">
-                    <div class="card-header card-header-primary">
+                    <div class="card-header card-header-primary " >
                         <h4 class="card-title">Grafica de linea
-                            <i class="fa fa-question-circle"  matTooltip="
-                            En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas."
-                            aria-label="Button that displays a tooltip when focused or hovered over"></i>
+                            <i  class="fa fa-question-circle" [matTooltip]="tooltipContent"
+                            aria-label="Button that displays a tooltip when focused or clicked"></i>
                         </h4>
                     </div>
                     <div class="card-body">

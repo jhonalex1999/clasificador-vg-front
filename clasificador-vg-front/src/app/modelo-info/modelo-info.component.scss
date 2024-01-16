@@ -1,3 +1,4 @@
+@import "../modelo-info/background-animado.css";
 #encabezado {
   color: white;
 }
@@ -28,7 +29,7 @@
   overflow-y: auto; /* Agregar una barra de desplazamiento vertical si el contenido es demasiado largo */
 }
 .loading-overlay {
-  @import "../modelo-info/background-animado.css";
+  
   position: fixed;
   top: 0;
   left: 0;
@@ -43,7 +44,7 @@
 }
 .custom-card {
   display: flex;
-  height: 80%;
+  height: 85%;
   width: 70%;
   margin: 20px auto;
 }
@@ -55,10 +56,61 @@
 }
 
 .right-side {
-  max-width: 100%; /* Ajusta el ancho de la parte derecha según tus necesidades */
+  width: 35%; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 img {
   max-width: 100%;
   height: auto;
+}
+#icono{
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 4px;
+}
+.center {
+  text-align: center;
+}
+.boton-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ajusta según sea necesario para centrar verticalmente */
+}
+.titulo {
+  color: #8e24aa; /* Color morado */
+  margin-top: 2px; /* Ajusta según sea necesario */
+  text-align: center;
+}
+.etiqueta-pequena {
+  font-size: smaller;
+  color: gray;
+  font-weight: normal; /* Para quitar la negrita */
+}
+@media screen and (max-width: 600px) {
+  .left-side {
+    order: 2; /* Cambia el orden en pantallas pequeñas, moviendo el contenido izquierdo debajo del contenido derecho */
+  }
+
+  .right-side {
+    order: 1; /* Cambia el orden en pantallas pequeñas, moviendo el contenido derecho encima del contenido izquierdo */
+  }
+
+  .descripcion {
+    padding-left: 0; /* Elimina el espacio a la izquierda en pantallas pequeñas */
+  }
+  .custom-card {
+    flex-direction: column; /* Cambia a dirección de columna en pantallas pequeñas */
+    overflow: auto; /* Habilita el scrollbar en pantallas pequeñas */
+    max-height: 300px; /* Establece una altura máxima para evitar que la tarjeta crezca infinitamente */
+  }
+  .right-side {
+    width: 100%; /* Ajusta el ancho de la parte derecha según tus necesidades */
+  }
 }

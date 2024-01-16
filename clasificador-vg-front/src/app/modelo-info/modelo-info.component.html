@@ -418,20 +418,55 @@
     <div *ngIf="mostrarOverlay" class="loading-overlay">
       <mat-card class="custom-card">
         <div class="left-side">
-          <mat-card-title>Bienvenidos </mat-card-title>
-          <mat-card-content>
-            <p>En esta herramienta podras encontrar el modelo desarrollado para la violencia
-              de genero divido en las siguientes secciones:
-            </p>
-            <img src="/assets/img/informacion.png" alt="Imagen" />
-            <img src="/assets/img/diagrama.png" alt="Imagen" />
-            <img src="/assets/img/predictor.png" alt="Imagen" />
-            <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Comenzar</button>
+          <mat-card-title class="center titulo">BIENVENIDOS</mat-card-title>
+          <p >En esta pagina podrás encontrar la herramienta desarrollada para la violencia
+            de género dividida en las siguientes secciones:</p>
+          <mat-card-content class="card-content">
+            <div fxLayout="column" fxLayout.xs="column">
+              <!-- Primer par imagen-descripción -->
+              <div fxLayout="row" fxLayout.xs="column" class="par">
+                <div fxFlex="30%" fxLayoutAlign="center center">
+                  <img src="/assets/img/informacion.png" alt="Imagen" id="icono" />
+                  <H6 class="titulo">INFORMACION</H6>
+                </div>
+                <div fxFlex="70%" class="descripcion">
+                  <small class="etiqueta-pequena">Sección con la información del conjunto de datos y del modelo de aprendizaje automático.</small>
+                </div>
+              </div>
+      
+              <!-- Segundo par imagen-descripción -->
+              <div fxLayout="row" fxLayout.xs="column" class="par">
+                <div fxFlex="30%" fxLayoutAlign="center center">
+                  <img src="/assets/img/diagrama.png" alt="Imagen" id="icono" />
+                  <H6 class="titulo">DIAGRAMAS</H6>
+                </div>
+                <div fxFlex="70%" class="descripcion">
+                  <small class="etiqueta-pequena">sección de 4 opciones que ofrece la posibilidad de generar gráficas de dona, barras verticales y
+                     horizontales, así como gráficas lineales basadas en los datos proporcionados por el conjunto de datos.</small>
+                </div>
+              </div>
+      
+              <!-- Tercer par imagen-descripción -->
+              <div fxLayout="row" fxLayout.xs="column" class="par">
+                <div fxFlex="30%" fxLayoutAlign="center center">
+                  <img src="/assets/img/predictor.png" alt="Imagen" id="icono" />
+                  <H6 class="titulo">PREDICTOR</H6>
+                </div>
+                <div fxFlex="70%" class="descripcion">
+                  <small class="etiqueta-pequena">Sección donde obtendrás una predicción según las
+                    características seleccionadas mediante el modelo previamente entrenado y optimizado.</small>
+                </div>
+              </div>
+              <div fxFlex="100%" class="boton boton-container">
+                <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Comenzar</button>
+              </div>
+            </div>
           </mat-card-content>
         </div>
-        <div class="right-side">
+      
+        <!-- Right-side con imagen -->
+        <div class="right-side" fxLayoutAlign="center center" >
           <img src="/assets/img/icono.png" alt="Imagen" />
-          
         </div>
       </mat-card>
       <!-- Background Animado-->

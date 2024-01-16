@@ -1,20 +1,22 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit ,  ElementRef, Renderer2, ViewChild } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
-
+import { MatTooltip } from '@angular/material/tooltip';
 @Component({
   selector: "app-grafica-barras-horizontales",
   templateUrl: "./grafica-barras-horizontales.component.html",
   styleUrls: ["./grafica-barras-horizontales.component.scss"],
 })
 export class GraficaBarrasHorizontalesComponent implements OnInit {
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
   private dataframe: any[];
   public columnas: string[];
   public columna_selec = "Selecciona una columna primero";
   myChart: Chart<"bar", any[], any>;
-
-  constructor(private service: Service) {}
+  tooltipContent = 'En este gráfico de barras horizontales interactivo, se ofrece la capacidad de seleccionar una variable específica. Al elegir la variable de interés, la visualización se adapta dinámicamente, mostrando la distribución de las categorías asociadas a esa variable en el eje horizontal. Al desplazar el cursor sobre cada barra, se despliega información detallada, incluyendo los valores numéricos correspondientes a cada categoría. Esta funcionalidad proporciona una herramienta efectiva para explorar y comparar la distribución de una variable particular, facilitando la identificación de patrones y tendencias dentro de los datos.';
+  constructor(private service: Service,private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
@@ -247,5 +249,16 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       color += letras[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+  showTooltip() {
+    if (!this.tooltip.disabled) {
+      this.tooltip.show();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+      this.showTooltip();
+    });
   }
 }

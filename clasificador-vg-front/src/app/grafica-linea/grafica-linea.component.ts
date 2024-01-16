@@ -1,28 +1,30 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit ,  ElementRef, Renderer2, ViewChild } from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { Chart, registerables } from "chart.js";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 import { type } from "os";
-
+import { MatTooltip } from '@angular/material/tooltip';
 @Component({
   selector: "app-grafica-dispersion",
   templateUrl: "./grafica-linea.component.html",
   styleUrls: ["./grafica-linea.component.scss"],
 })
 export class GraficaLineaComponent implements OnInit {
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
   public columnas: string[];
   private dataframe: any[];
 
-  public columna1_selec: string;
-  public columna2_selec: string;
+  public columna1_selec= 'Selecciona una columna primero';
+  public columna2_selec= 'Selecciona una columna primero';
  
-  tooltipContent = `En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas.`;
+  tooltipContent = 'En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas.';
 
   linearChart: any;
   public columnasIndep: string[];
 
-  constructor(private service: Service) {}
+  constructor(private service: Service,private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
@@ -301,8 +303,16 @@ export class GraficaLineaComponent implements OnInit {
       ul.appendChild(li);
     });
   };
-  
-  
-  
+  showTooltip() {
+    if (!this.tooltip.disabled) {
+      this.tooltip.show();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+      this.showTooltip();
+    });
+  }
 }
 

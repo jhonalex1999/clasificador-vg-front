@@ -1,22 +1,25 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,  ElementRef, Renderer2, ViewChild } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
-
+import { MatTooltip } from '@angular/material/tooltip';
 @Component({
   selector: "app-grafica-barras",
   templateUrl: "./grafica-barras.component.html",
   styleUrls: ["./grafica-barras.component.scss"],
 })
 export class GraficaBarrasComponent implements OnInit {
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
   private dataframe: any[];
   public columnas: string[];
 
   public columna1_selec: string = 'Selecciona una columna primero';
   public columna2_selec: string = 'Selecciona una columna primero';
+  tooltipContent = 'En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.';
 
   myChart: Chart<"bar", any[], any>;
 
-  constructor(private service: Service) {}
+  constructor(private service: Service,private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
@@ -284,4 +287,15 @@ export class GraficaBarrasComponent implements OnInit {
       ul.appendChild(li);
     });
   };
+  showTooltip() {
+    if (!this.tooltip.disabled) {
+      this.tooltip.show();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+      this.showTooltip();
+    });
+  }
 }

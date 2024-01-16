@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit ,  ElementRef, Renderer2, ViewChild} from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { Chart, registerables } from "chart.js";
@@ -8,13 +8,15 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
-
+import { MatTooltip } from '@angular/material/tooltip';
 @Component({
   selector: "app-grafica-dona",
   templateUrl: "./grafica-dona.component.html",
   styleUrls: ["./grafica-dona.component.scss"],
 })
 export class GraficaDonaComponent implements OnInit {
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
   public registroDTO: RegistroDto;
   public definicion: any;
   public prediccion: any;
@@ -24,7 +26,7 @@ export class GraficaDonaComponent implements OnInit {
   myChart: Chart<"doughnut", any[], any>;
   tooltipContent = 'En esta gráfica de dona, al seleccionar una variable específica, se habilita la visualización detallada de la cantidad de registros asociados a cada valor de la variable. Al desplazar el puntero sobre cada porción, se revela el número exacto de registros correspondientes a esa categoría. Esta funcionalidad permite una exploración más detallada y una comprensión precisa de la distribución de datos, brindando una experiencia interactiva que facilita la identificación de patrones y la toma de decisiones informada basada en los valores numéricos asociados a cada valor de la variable seleccionada.';
 
-  constructor(private service: Service) {}
+  constructor(private service: Service,private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
@@ -254,5 +256,15 @@ export class GraficaDonaComponent implements OnInit {
     }
     return color;
   }
-  
+  showTooltip() {
+    if (!this.tooltip.disabled) {
+      this.tooltip.show();
+    }
+  }
+
+  ngAfterViewInit() {
+    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+      this.showTooltip();
+    });
+  }
 }

@@ -68,6 +68,13 @@ export class ModeloInfoComponent implements OnInit {
     // Borrar la clave del localStorage al cerrar la pestaña
     localStorage.removeItem('primerCarga');
   }
+  @HostListener('document:visibilitychange', ['$event'])
+  visibilitychangeHandler(event: Event) {
+    if (document.hidden) {
+      // La pestaña ha perdido visibilidad (puede estar cerrándose)
+      localStorage.removeItem('primerCarga');
+    }
+  }
   createChart(): void {
     const ctx = this.metricCanvas.nativeElement.getContext('2d');
   

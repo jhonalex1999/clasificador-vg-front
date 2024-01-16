@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit,  ElementRef, Renderer2, ViewChild } from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -6,14 +6,15 @@ import { Chart } from "chart.js";
 import "chart.js/auto";
 import { startOfWeek, addWeeks, getMonth, getQuarter, format } from "date-fns";
 import { startWith } from "rxjs/operators";
-
+import { MatTooltip } from '@angular/material/tooltip';
 @Component({
   selector: "app-predictor",
   templateUrl: "./predictor.component.html",
   styleUrls: ["./predictor.component.scss"],
 })
 export class PredictorComponent implements OnInit {
-  
+  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
   public registroDTO: RegistroDto;
   public definicion: any;
   public prediccion: any;
@@ -137,10 +138,10 @@ export class PredictorComponent implements OnInit {
     "Otros",
   ];
 
- 
+  tooltipContent ='En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana';
 
   parentezcosVictBackup: string[] = [...this.parentezcosVict];
-  constructor(private service: Service, private formBuilder: FormBuilder) {}
+  constructor(private service: Service, private formBuilder: FormBuilder,private renderer: Renderer2) {}
 
   ngOnInit(): void {
     this.registroDTO = new RegistroDto();
@@ -437,6 +438,16 @@ export class PredictorComponent implements OnInit {
     // Establece las opciones filtradas en el formulario
     this.formulario.get("parentezco_vict").setValue("");
   }
+  showTooltip() {
+    if (!this.tooltip.disabled) {
+      this.tooltip.show();
+    }
+  }
 
+  ngAfterViewInit() {
+    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+      this.showTooltip();
+    });
+  }
 
 }

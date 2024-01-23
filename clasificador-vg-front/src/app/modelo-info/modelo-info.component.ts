@@ -25,19 +25,19 @@ export class ModeloInfoComponent implements OnInit {
   constructor(private service: Service) { }
 
   ngOnInit(): void {
-    this.metric=[{modelo:'GaussianNB',exactitud:0.648,precision:0.676,sensibilidad:0.664,puntuacion_F1:0.611},
-                 {modelo:'SVM',exactitud:0.81,precision:0.802,sensibilidad:0.777,puntuacion_F1:0.786},
-                 {modelo:'KNN',exactitud:0.775,precision:0.754,sensibilidad:0.742,puntuacion_F1:0.747},
-                 {modelo:'Neural Networks',exactitud:0.811,precision:0.801,sensibilidad:0.796,puntuacion_F1:0.798},
-                 {modelo:'Decision Trees',exactitud:0.782,precision:0.769,sensibilidad:0.768,puntuacion_F1:0.768},
-                 {modelo:'AdaBoost',exactitud:0.823,precision:0.815,sensibilidad:0.809,puntuacion_F1:0.812},
-                 {modelo:'Regresión Logística',exactitud:0.833,precision:0.825,sensibilidad:0.82,puntuacion_F1:0.822},
-                 {modelo:'Gradient Boosting',exactitud:0.835,precision:0.815,sensibilidad:0.815,puntuacion_F1:0.82},
-                 {modelo:'Extra Trees',exactitud:0.847,precision:0.839,sensibilidad:0.834,puntuacion_F1:0.836},
-                 {modelo:'Random Forest',exactitud:0.849,precision:0.842,sensibilidad:0.837,puntuacion_F1:0.839},
-                 {modelo:'LightGBM',exactitud:0.854,precision:0.846,sensibilidad:0.846,puntuacion_F1:0.846},
-                 {modelo:'XGBoost',exactitud:0.851,precision:0.843,sensibilidad:0.842,puntuacion_F1:0.842},
-                 {modelo:'XGBoost Optimizado',exactitud:0.859,precision:0.851,sensibilidad:0.847,puntuacion_F1:0.848}]
+    this.metric=[{modelo:'GaussianNB',exactitud:0.658,precision:0.686,sensibilidad:0.682,puntuacion_F1:0.624},
+                 {modelo:'SVM',exactitud:0.816,precision:0.805,sensibilidad:0.789,puntuacion_F1:0.796},
+                 {modelo:'KNN',exactitud:0.793,precision:0.774,sensibilidad:0.766,puntuacion_F1:0.769},
+                 {modelo:'Neural Networks',exactitud:0.810,precision:0.80,sensibilidad:0.799,puntuacion_F1:0.799},
+                 {modelo:'Decision Trees',exactitud:0.783,precision:0.771,sensibilidad:0.769,puntuacion_F1:0.770},
+                 {modelo:'AdaBoost',exactitud:0.825,precision:0.817,sensibilidad:0.812,puntuacion_F1:0.814},
+                 {modelo:'Regresión Logística',exactitud:0.835,precision:0.827,sensibilidad:0.822,puntuacion_F1:0.825},
+                 {modelo:'Gradient Boosting',exactitud:0.836,precision:0.827,sensibilidad:0.819,puntuacion_F1:0.822},
+                 {modelo:'Extra Trees',exactitud:0.847,precision:0.837,sensibilidad:0.836,puntuacion_F1:0.836},
+                 {modelo:'Random Forest',exactitud:0.850,precision:0.840,sensibilidad:0.840,puntuacion_F1:0.839},
+                 {modelo:'LightGBM',exactitud:0.850,precision:0.841,sensibilidad:0.840,puntuacion_F1:0.840},
+                 {modelo:'XGBoost',exactitud:0.850,precision:0.842,sensibilidad:0.840,puntuacion_F1:0.841},
+                 {modelo:'XGBoost Optimizado',exactitud:0.855,precision:0.845,sensibilidad:0.846,puntuacion_F1:0.845}]
     this.service.obtenerDF().subscribe(
       result => {
         this.dataframe = JSON.parse(result.dataframe);

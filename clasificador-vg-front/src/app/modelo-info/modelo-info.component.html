@@ -369,40 +369,43 @@
               <div class="card-body card-container">
                 <h4 class="card-title">Configuracion de los parametros </h4>
                 <p class="card-category" style="color: black;">
-                  xgb.XGBClassifier(learning_rate= 0.06223362642651399, max_depth= 10, colsample_bytree=
-                  0.43647471109946273,
-                  n_estimators= 363, reg_alpha= 0.5601315011270463, reg_lambda= 0.05445159550791859, min_child_weight=
-                  1,
-                  gamma= 0.643238494538452, subsample= 0.9047512569336327, colsample_bylevel= 0.5088157757755716) </p>
-                <ul>
-                  <li><strong>learning_rate:</strong> La tasa de aprendizaje controla la contribución de cada árbol al
-                    modelo final. Un valor menor significa una contribución más pequeña y permite una convergencia más
-                    lenta pero estable.</li>
-                  <li><strong>max_depth:</strong> La profundidad máxima de cada árbol en el modelo. Controla la cantidad
-                    de divisiones que un árbol puede hacer, lo que puede influir en la complejidad y el sobreajuste del
-                    modelo.</li>
-                  <li><strong>colsample_bytree:</strong> La proporción de características que se considera al construir
-                    cada árbol. Controla la cantidad de diversidad entre los árboles, lo que puede ayudar a prevenir el
-                    sobreajuste.</li>
-                  <li><strong>n_estimators:</strong> El número total de árboles en el modelo. Cuantos más árboles, más
-                    complejo será el modelo y más probable será que se ajuste a los datos.</li>
-                  <li><strong>reg_alpha:</strong> Parámetro de regularización L1 que penaliza las características con
-                    coeficientes grandes. Ayuda a prevenir el sobreajuste.</li>
-                  <li><strong>reg_lambda:</strong> Parámetro de regularización L2 que penaliza los valores grandes de
-                    los
-                    coeficientes de las características. También ayuda a evitar el sobreajuste.</li>
-                  <li><strong>min_child_weight:</strong> La suma mínima de instancias necesarias en un nodo hoja.
-                    Controla
-                    la partición de los datos y puede evitar particiones con muy pocas instancias.</li>
-                  <li><strong>gamma:</strong> Parámetro de regularización que especifica una reducción mínima requerida
-                    en
-                    la función de pérdida para que ocurra una partición. Ayuda a controlar la complejidad del modelo.
-                  </li>
-                  <li><strong>subsample:</strong> La proporción de instancias de entrenamiento que se muestrean al
-                    construir cada árbol. Ayuda a prevenir el sobreajuste y a mejorar la generalización.</li>
-                  <li><strong>colsample_bylevel:</strong> Similar a colsample_bytree, pero controla la proporción de
-                    características utilizadas en cada nivel de un árbol, en lugar de en todo el árbol.</li>
-                </ul>
+                  xgb.XGBClassifier( objective= 'multi:softmax',  
+                  num_class = 3,
+                  importance_type='gain',
+                  learning_rate=0.030958241241393895, 
+                  max_depth=7, 
+                  colsample_bytree=0.5330554532179588, 
+                  n_estimators=568, 
+                  reg_alpha=4.1084086686936143e-08, 
+                  reg_lambda=0.00024280802318611656, 
+                  min_child_weight=1, 
+                  gamma=0.23340955083195258, 
+                  subsample=0.8458562164387711) </p>
+                  <ul>
+                    <li><strong>Objective:</strong> La función objetivo utilizada por el algoritmo es "multi:softmax", implicando una clasificación multi-clase.</li>
+                    
+                    <li><strong>Num_class:</strong> Número de clases en el problema de clasificación. Configurado en 3, indicando tres clases distintas.</li>
+                    
+                    <li><strong>Importance_type:</strong> Tipo de importancia utilizado para evaluar la relevancia de las características. Configurado en 'gain', que se refiere a la ganancia de información.</li>
+                    
+                    <li><strong>Learning_rate:</strong> Tasa de aprendizaje que controla la contribución de cada árbol al modelo final. Configurado en 0.030958241241393895, sugiriendo una convergencia más lenta pero estable.</li>
+                    
+                    <li><strong>Max_depth:</strong> Profundidad máxima de cada árbol en el modelo. Configurado en 7, controlando la cantidad de divisiones y afectando la complejidad y el sobreajuste del modelo.</li>
+                    
+                    <li><strong>Colsample_bytree:</strong> Proporción de características consideradas al construir cada árbol. Configurado en 0.5330554532179588, controlando la diversidad entre los árboles y previniendo el sobreajuste.</li>
+                    
+                    <li><strong>N_estimators:</strong> Número total de árboles en el modelo. Configurado en 568, implicando un modelo más complejo con mayor capacidad de ajuste a los datos.</li>
+                    
+                    <li><strong>Reg_alpha:</strong> Parámetro de regularización L1 que penaliza características con coeficientes grandes. Configurado en 4.1084086686936143e-08, previniendo el sobreajuste.</li>
+                    
+                    <li><strong>Reg_lambda:</strong> Parámetro de regularización L2 que penaliza valores grandes de coeficientes. Configurado en 0.00024280802318611656, ayudando a evitar el sobreajuste.</li>
+                    
+                    <li><strong>Min_child_weight:</strong> Suma mínima de instancias necesarias en un nodo hoja. Configurado en 1, controlando la partición de datos y evitando particiones con pocas instancias.</li>
+                    
+                    <li><strong>Gamma:</strong> Parámetro de regularización que especifica una reducción mínima requerida en la función de pérdida para que ocurra una partición. Configurado en 0.23340955083195258, controlando la complejidad del modelo.</li>
+                    
+                    <li><strong>Subsample:</strong> Proporción de instancias de entrenamiento que se muestrean al construir cada árbol. Configurado en 0.8458562164387711, previniendo el sobreajuste y mejorando la generalización.</li>
+                  </ul>
               </div>
               <div class="card-footer">
                 <div class="stats">

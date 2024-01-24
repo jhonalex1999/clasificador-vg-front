@@ -5,3 +5,58 @@
     white-space: nowrap; /* Evitar el ajuste de línea */
     display: inline-block; /* Asegurarse de que el div ocupe el ancho del contenido */
 }
+
+.columna1 .card-body-labels,
+.columna2 .card-body-labels {
+    height: calc(50vh - 20px);
+    overflow-y: auto;
+    max-width: 100%;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Asegura que el row de esta sección ocupe toda la altura disponible */
+.section-row {
+    display: flex;
+    height: 100%;
+}
+
+/* Columna izquierda de esta sección */
+.section-col-lg-3 {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0px !important;
+}
+
+/* Cartas en la columna izquierda de esta sección */
+.section-col-lg-3 .section-card {
+    flex: 1; /* Hace que las cartas en la primera columna ocupen todo el espacio disponible */
+    margin-bottom: 15px; /* Ajusta según sea necesario */
+}
+
+/* Columna derecha de esta sección */
+.section-col-lg-9 {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenido de las cartas en la columna derecha de esta sección */
+.section-col-lg-9 .section-card-body {
+    flex: 1; /* Hace que el contenido de las cartas en la segunda columna ocupe todo el espacio disponible */
+    overflow-y: auto; /* Habilita el desplazamiento vertical si es necesario */
+}
+
+.custom-card-body {
+    flex: 1; /* Hace que el contenido de las cartas en la segunda columna ocupe todo el espacio disponible */
+    overflow-y: auto; /* Habilita el desplazamiento vertical si es necesario */
+    
+}
+
+.col-graph{
+    display: flex;
+    flex-direction: column;
+    padding-right: 0px !important;
+}
+.card{
+    margin-bottom: 15px !important;
+}

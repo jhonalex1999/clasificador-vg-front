@@ -1,18 +1,17 @@
 <div class="main-content">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="card">
-                    <div class="card-header card-header-primary ">
+        <div class="section-row">
+            <div class="col-lg-3 col-md-6 col-sm-6 section-col-lg-3">
+                <div class="card section-card">
+                    <div class="card-header card-header-primary">
                         <h4 class="card-title">Elige la columna independiente</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body section-card-body">
                         Escoge una de las columnas disponibles para que se genere la gráfica de barras vertical.
                         <form>
                             <mat-form-field>
                                 <mat-label>Columna 1</mat-label>
-                                <mat-select [(ngModel)]="columna1_selec" name="columna1"
-                                    (selectionChange)="actualizarGrafica()">
+                                <mat-select [(ngModel)]="columna1_selec" name="columna1" (selectionChange)="actualizarGrafica()">
                                     <mat-option *ngFor="let columna of columnas" [value]="columna">
                                         {{columna}}
                                     </mat-option>
@@ -21,17 +20,16 @@
                         </form>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card section-card">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title">Elige la columna dependiente</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body section-card-body">
                         Escoge una de las columnas disponibles para que se genere la gráfica de barras vertical.
                         <form>
                             <mat-form-field>
                                 <mat-label>Columna 2</mat-label>
-                                <mat-select [(ngModel)]="columna2_selec" name="columna2"
-                                    (selectionChange)="actualizarGrafica()">
+                                <mat-select [(ngModel)]="columna2_selec" name="columna2" (selectionChange)="actualizarGrafica()">
                                     <mat-option *ngFor="let columna of columnas" [value]="columna">
                                         {{columna}}
                                     </mat-option>
@@ -41,25 +39,26 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 col-md-6 col-sm-6">
-                <div class="card">
+            <div class="col-lg-9 col-md-6 col-sm-6 col-graph">
+                <div class="card section-card">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title">Gráfica de barras vertical
-                            <i #tooltipIcon  class="fa fa-question-circle" [matTooltip]="tooltipContent"
-                            aria-label="Button that displays a tooltip when focused or clicked"></i>
+                            <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipContent"
+                                aria-label="Button that displays a tooltip when focused or clicked"></i>
                         </h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body custom-card-body section-card-body">
                         <div class="chart-container" style="width: 100%; height:60vh;">
-                            <canvas id="myChart"></canvas>
+                            <canvas id="myChart" ></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card card-stats">
+                <div class="card card-stats columna1">
                     <div class="card-header card-header-icon card-header-primary">
                         <div class="card-icon">
                             <i class="material-icons">bar_chart</i>
@@ -67,14 +66,13 @@
                         <p class="card-category">Valores variable independiente: </p>
                         <h3 class="card-title">{{columna1_selec}}</h3>
                     </div>
-                    <div class="card-body">
-                        <div id="legend-container-2" class="legend-container">
-                        </div>
+                    <div class="card-body card-body-labels legend-container" id="legend-container-2">
+                        <!-- Contenido dinámico aquí -->
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card card-stats">
+                <div class="card card-stats columna2">
                     <div class="card-header card-header-icon card-header-primary">
                         <div class="card-icon">
                             <i class="material-icons">bar_chart</i>
@@ -82,12 +80,13 @@
                         <p class="card-category">Valores de la variable dependiente:</p>
                         <h3 class="card-title">{{columna2_selec}}</h3>
                     </div>
-                    <div class="card-body">
-                        <div id="legend-container-1" class="legend-container">
-                        </div>
+                    <div class="card-body card-body-labels legend-container" id="legend-container-1">
+                        <!-- Contenido dinámico aquí -->
                     </div>
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>

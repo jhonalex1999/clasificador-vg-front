@@ -1,0 +1,24 @@
+@charset "UTF-8";
+.legend-container {
+  overflow-y: auto;
+  /* Habilitar el scroll vertical */
+  max-height: 200px;
+  /* Ajustar la altura máxima según sea necesario */
+  max-width: 100%;
+  /* Asegurar que el div se ajuste dentro de la card */
+  white-space: nowrap;
+  /* Evitar el ajuste de línea */
+  display: inline-block;
+  /* Asegurarse de que el div ocupe el ancho del contenido */
+}
+
+/* Asegura que el contenido dentro de la clase .chart-scroll-container se ajuste al 100% de altura */
+.chart-scroll-container {
+  height: 100%;
+}
+
+/* Puedes agregar estilos adicionales según sea necesario para otros elementos */
+#myChart2 {
+  width: 100%;
+  height: 100%;
+}

@@ -1,13 +1,13 @@
 <div class="main-content">
     <div class="container-fluid">
-        <div class="section-row">
-            <div class="col-lg-3 col-md-6 col-sm-6 section-col-lg-3">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="row h-50">
-                    <div class="card section-card">
+                    <div class="card">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">Elige la columna independiente</h4>
                         </div>
-                        <div class="card-body section-card-body">
+                        <div class="card-body">
                             Escoge una de las columnas disponibles para que se genere la gráfica de barras vertical.
                             <form>
                                 <mat-form-field>
@@ -24,7 +24,7 @@
                 </div>
                 
                 <div class="row h-50">
-                    <div class="card section-card">
+                    <div class="card">
                         <div class="card-header card-header-primary">
                             <h4 class="card-title">Elige la columna dependiente</h4>
                         </div>
@@ -46,14 +46,14 @@
                 
             </div>
             <div class="col-lg-9 col-md-6 col-sm-6 col-graph">
-                <div class="card section-card">
+                <div class="card">
                     <div class="card-header card-header-primary">
                         <h4 class="card-title">Gráfica de barras vertical
                             <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipContent"
                                 aria-label="Button that displays a tooltip when focused or clicked"></i>
                         </h4>
                     </div>
-                    <div class="card-body custom-card-body section-card-body">
+                    <div class="card-body custom-card-body">
                         <div class="chart-container" style="width: 100%; height:60vh;">
                             <canvas id="myChart" ></canvas>
                         </div>

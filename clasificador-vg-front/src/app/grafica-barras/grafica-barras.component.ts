@@ -1,7 +1,13 @@
-import { Component, OnInit,  ElementRef, Renderer2, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+} from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatTooltip } from "@angular/material/tooltip";
 @Component({
   selector: "app-grafica-barras",
   templateUrl: "./grafica-barras.component.html",
@@ -9,23 +15,27 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class GraficaBarrasComponent implements OnInit {
   @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
+  @ViewChild("tooltipIcon") tooltipIcon: ElementRef;
   private dataframe: any[];
   public columnas: string[];
-  public columna1_selec: string = 'Selecciona una columna primero';
-  public columna2_selec: string = 'Selecciona una columna primero';
-  tooltipContent = 'En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.';
-  originalData = null; 
+  public columna1_selec: string = "Selecciona una columna primero";
+  public columna2_selec: string = "Selecciona una columna primero";
+  tooltipContent =
+    "En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.";
+  originalData = null;
   myChart: Chart<"bar", any[], any>;
 
-  constructor(private service: Service,private renderer: Renderer2) {}
+  constructor(private service: Service, private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
     this.service.obtenerDF().subscribe((result) => {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
-      if (this.columna1_selec !== 'Selecciona una columna primero' || this.columna2_selec !== 'Selecciona una columna primero') {
+      if (
+        this.columna1_selec !== "Selecciona una columna primero" ||
+        this.columna2_selec !== "Selecciona una columna primero"
+      ) {
         this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
       }
     });
@@ -36,10 +46,12 @@ export class GraficaBarrasComponent implements OnInit {
     if (this.myChart) {
       this.myChart.destroy(); // Destruye la gráfica anterior si existe
     }
-    if (this.columna1_selec !== 'Selecciona una columna primero' && this.columna2_selec !== 'Selecciona una columna primero') {
+    if (
+      this.columna1_selec !== "Selecciona una columna primero" &&
+      this.columna2_selec !== "Selecciona una columna primero"
+    ) {
       this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
     }
-    
   }
 
   private crearGraficoBarras(columna1_selec: string, columna2_selec: string) {
@@ -94,8 +106,6 @@ export class GraficaBarrasComponent implements OnInit {
         this.createCustomLegendItems2(chart, options);
       },
     };
-    
-    const colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
 
     // Crear el gráfico de barras
     let delayed;
@@ -107,14 +117,13 @@ export class GraficaBarrasComponent implements OnInit {
         datasets: eje2.map((sexo, index) => ({
           label: sexo,
           data: valores[index],
-          backgroundColor: [colors[index % colors.length]], // Usar colores intercalados
-          borderColor: [colors[index % colors.length]], // Usar colores intercalados
+          backgroundColor: this.getRandomColorWithOpacity(0.5),
           borderWidth: 1,
         })),
       },
       options: {
-        responsive:true,
-        maintainAspectRatio:false,
+        responsive: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false,
@@ -143,8 +152,22 @@ export class GraficaBarrasComponent implements OnInit {
           },
         },
       },
-      plugins: [htmlLegendPlugin1,htmlLegendPlugin2],
+      plugins: [htmlLegendPlugin1, htmlLegendPlugin2],
     });
+  }
+
+  private getRandomColorWithOpacity(opacity: number) {
+    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
+
+    let color;
+    do {
+      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+    } while (
+      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+      parseInt(color.substr(1), 16) < parseInt("444444", 16)
+    );
+
+    return `${color}${Math.round(opacity * 255).toString(16)}`;
   }
 
   private generarColoresAleatorios(cantidad: number): string[] {
@@ -252,59 +275,63 @@ export class GraficaBarrasComponent implements OnInit {
       ul.appendChild(li);
     });
   };
- 
+
   createCustomLegendItems2 = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
 
     // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
-        ul.firstChild.remove();
+      ul.firstChild.remove();
     }
 
     // Si originalData es null, guarda los datos originales
     if (this.originalData === null) {
-        this.originalData = chart.data.datasets.map((dataset) => [...dataset.data]);
+      this.originalData = chart.data.datasets.map((dataset) => [
+        ...dataset.data,
+      ]);
     }
 
     // Generar elementos de leyenda personalizados para el eje x
     const labels = chart.data.labels;
 
     labels.forEach((label, index) => {
-        const li = document.createElement("li");
-        li.style.alignItems = "center";
-        li.style.cursor = "pointer";
-        li.style.display = "flex";
-        li.style.flexDirection = "row";
-        li.style.marginLeft = "10px";
+      const li = document.createElement("li");
+      li.style.alignItems = "center";
+      li.style.cursor = "pointer";
+      li.style.display = "flex";
+      li.style.flexDirection = "row";
+      li.style.marginLeft = "10px";
 
-        li.onclick = () => {
-          // Verificar si el valor actual es 0 y restablecerlo, de lo contrario, establecerlo en 0
-          chart.data.datasets.forEach((dataset) => {
-              const datasetIndex = chart.data.datasets.indexOf(dataset); // Obtener el índice del conjunto de datos actual
-      
-              if (dataset.data[index] === 0) {
-                  // Restablecer a valores originales
-                  dataset.data[index] = this.originalData[datasetIndex][index];
-              } else {
-                  // Establecer en 0
-                  dataset.data[index] = 0;
-              }
-          });
-      
-          chart.update(); // Actualizar el gráfico después de cambiar los valores
+      li.onclick = () => {
+        // Verificar si el valor actual es 0 y restablecerlo, de lo contrario, establecerlo en 0
+        chart.data.datasets.forEach((dataset) => {
+          const datasetIndex = chart.data.datasets.indexOf(dataset); // Obtener el índice del conjunto de datos actual
+
+          if (dataset.data[index] === 0) {
+            // Restablecer a valores originales
+            dataset.data[index] = this.originalData[datasetIndex][index];
+          } else {
+            // Establecer en 0
+            dataset.data[index] = 0;
+          }
+        });
+
+        chart.update(); // Actualizar el gráfico después de cambiar los valores
       };
 
-        // Puedes personalizar el contenido del elemento li según tus necesidades
-        const textContainer = document.createElement("p");
-        textContainer.style.margin = "0";
-        const text = document.createTextNode(label);
-        textContainer.appendChild(text);
+      // Puedes personalizar el contenido del elemento li según tus necesidades
+      const textContainer = document.createElement("p");
+      textContainer.style.color = label.fontColor;
+      textContainer.style.margin = "0";
+      textContainer.style.padding = "0";
+      textContainer.style.textDecoration = chart.data.datasets.some(dataset => dataset.data[index] === 0) ? "line-through" : "";
+      const text = document.createTextNode(label);
+      textContainer.appendChild(text);
 
-        li.appendChild(textContainer);
-        ul.appendChild(li);
+      li.appendChild(textContainer);
+      ul.appendChild(li);
     });
-};
-
+  };
 
   showTooltip() {
     if (!this.tooltip.disabled) {
@@ -313,7 +340,7 @@ export class GraficaBarrasComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+    this.renderer.listen(this.tooltipIcon.nativeElement, "click", () => {
       this.showTooltip();
     });
   }

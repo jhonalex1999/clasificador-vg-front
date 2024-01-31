@@ -5,6 +5,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 exports.GraficaBarrasComponent = void 0;
 var core_1 = require("@angular/core");
@@ -15,9 +22,10 @@ var GraficaBarrasComponent = /** @class */ (function () {
         var _this = this;
         this.service = service;
         this.renderer = renderer;
-        this.columna1_selec = 'Selecciona una columna primero';
-        this.columna2_selec = 'Selecciona una columna primero';
-        this.tooltipContent = 'En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.';
+        this.columna1_selec = "Selecciona una columna primero";
+        this.columna2_selec = "Selecciona una columna primero";
+        this.tooltipContent = "En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.";
+        this.originalData = null;
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -97,9 +105,13 @@ var GraficaBarrasComponent = /** @class */ (function () {
             while (ul.firstChild) {
                 ul.firstChild.remove();
             }
+            // Si originalData es null, guarda los datos originales
+            if (_this.originalData === null) {
+                _this.originalData = chart.data.datasets.map(function (dataset) { return __spreadArrays(dataset.data); });
+            }
             // Generar elementos de leyenda personalizados para el eje x
             var labels = chart.data.labels;
-            labels.forEach(function (label) {
+            labels.forEach(function (label, index) {
                 var li = document.createElement("li");
                 li.style.alignItems = "center";
                 li.style.cursor = "pointer";
@@ -107,12 +119,26 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 li.style.flexDirection = "row";
                 li.style.marginLeft = "10px";
                 li.onclick = function () {
-                    // Realizar acciones al hacer clic en una etiqueta del eje x
-                    console.log("Clic en la etiqueta del eje x: " + label);
+                    // Verificar si el valor actual es 0 y restablecerlo, de lo contrario, establecerlo en 0
+                    chart.data.datasets.forEach(function (dataset) {
+                        var datasetIndex = chart.data.datasets.indexOf(dataset); // Obtener el índice del conjunto de datos actual
+                        if (dataset.data[index] === 0) {
+                            // Restablecer a valores originales
+                            dataset.data[index] = _this.originalData[datasetIndex][index];
+                        }
+                        else {
+                            // Establecer en 0
+                            dataset.data[index] = 0;
+                        }
+                    });
+                    chart.update(); // Actualizar el gráfico después de cambiar los valores
                 };
                 // Puedes personalizar el contenido del elemento li según tus necesidades
                 var textContainer = document.createElement("p");
+                textContainer.style.color = label.fontColor;
                 textContainer.style.margin = "0";
+                textContainer.style.padding = "0";
+                textContainer.style.textDecoration = chart.data.datasets.some(function (dataset) { return dataset.data[index] === 0; }) ? "line-through" : "";
                 var text = document.createTextNode(label);
                 textContainer.appendChild(text);
                 li.appendChild(textContainer);
@@ -126,7 +152,8 @@ var GraficaBarrasComponent = /** @class */ (function () {
         this.service.obtenerDF().subscribe(function (result) {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
-            if (_this.columna1_selec !== 'Selecciona una columna primero' || _this.columna2_selec !== 'Selecciona una columna primero') {
+            if (_this.columna1_selec !== "Selecciona una columna primero" ||
+                _this.columna2_selec !== "Selecciona una columna primero") {
                 _this.crearGraficoBarras(_this.columna1_selec, _this.columna2_selec);
             }
         });
@@ -136,7 +163,8 @@ var GraficaBarrasComponent = /** @class */ (function () {
         if (this.myChart) {
             this.myChart.destroy(); // Destruye la gráfica anterior si existe
         }
-        if (this.columna1_selec !== 'Selecciona una columna primero' && this.columna2_selec !== 'Selecciona una columna primero') {
+        if (this.columna1_selec !== "Selecciona una columna primero" &&
+            this.columna2_selec !== "Selecciona una columna primero") {
             this.crearGraficoBarras(this.columna1_selec, this.columna2_selec);
         }
     };
@@ -172,6 +200,8 @@ var GraficaBarrasComponent = /** @class */ (function () {
         var valores = eje2.map(function (columna2_selec) {
             return datos.map(function (item) { return item[columna2_selec]; });
         });
+        // Generar una lista de colores aleatorios
+        var colores = this.generarColoresAleatorios(valores.length);
         var htmlLegendPlugin1 = {
             id: "htmlLegend1",
             afterUpdate: function (chart, args, options) {
@@ -185,21 +215,19 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 _this.createCustomLegendItems2(chart, options);
             }
         };
-        var color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
         // Crear el gráfico de barras
+        var delayed;
         var ctx = document.getElementById("myChart");
         this.myChart = new chart_js_1.Chart(ctx, {
             type: "bar",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) {
-                    var color = _this.getRandomColorWithOpacity(0.5);
-                    return {
-                        label: sexo,
-                        data: valores[index],
-                        backgroundColor: color
-                    };
-                })
+                datasets: eje2.map(function (sexo, index) { return ({
+                    label: sexo,
+                    data: valores[index],
+                    backgroundColor: _this.getRandomColorWithOpacity(0.5),
+                    borderWidth: 1
+                }); })
             },
             options: {
                 responsive: true,
@@ -245,6 +273,22 @@ var GraficaBarrasComponent = /** @class */ (function () {
         parseInt(color.substr(1), 16) < parseInt("444444", 16));
         return "" + color + Math.round(opacity * 255).toString(16);
     };
+    GraficaBarrasComponent.prototype.generarColoresAleatorios = function (cantidad) {
+        var colores = [];
+        for (var i = 0; i < cantidad; i++) {
+            var color = this.generarColorAleatorio();
+            colores.push(color);
+        }
+        return colores;
+    };
+    GraficaBarrasComponent.prototype.generarColorAleatorio = function () {
+        var letras = "0123456789ABCDEF";
+        var color = "#";
+        for (var i = 0; i < 6; i++) {
+            color += letras[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
     GraficaBarrasComponent.prototype.showTooltip = function () {
         if (!this.tooltip.disabled) {
             this.tooltip.show();
@@ -252,7 +296,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
     };
     GraficaBarrasComponent.prototype.ngAfterViewInit = function () {
         var _this = this;
-        this.renderer.listen(this.tooltipIcon.nativeElement, 'click', function () {
+        this.renderer.listen(this.tooltipIcon.nativeElement, "click", function () {
             _this.showTooltip();
         });
     };
@@ -260,7 +304,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
         core_1.ViewChild(tooltip_1.MatTooltip)
     ], GraficaBarrasComponent.prototype, "tooltip");
     __decorate([
-        core_1.ViewChild('tooltipIcon')
+        core_1.ViewChild("tooltipIcon")
     ], GraficaBarrasComponent.prototype, "tooltipIcon");
     GraficaBarrasComponent = __decorate([
         core_1.Component({

@@ -5,9 +5,8 @@
   overflow-y: auto;
 }
 
-.card {
-  width: 500px;
-  margin: 50px auto auto auto;
+.card-grafico {
+  min-height: 350px;
 }
 
 .expandable-content {
@@ -94,6 +93,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#MensajeCarga {
+  color: purple;
+  /* Otros estilos que desees aplicar */
 }
 
 @keyframes spin {

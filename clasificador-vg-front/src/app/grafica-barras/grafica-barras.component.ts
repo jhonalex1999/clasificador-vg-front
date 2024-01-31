@@ -1,13 +1,8 @@
-import {
-  Component,
-  OnInit,
-  ElementRef,
-  Renderer2,
-  ViewChild,
-} from "@angular/core";
+import { Component, OnInit, ElementRef, Renderer2, ViewChild } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
 import { MatTooltip } from "@angular/material/tooltip";
+
 @Component({
   selector: "app-grafica-barras",
   templateUrl: "./grafica-barras.component.html",
@@ -23,6 +18,7 @@ export class GraficaBarrasComponent implements OnInit {
   tooltipContent =
     "En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.";
   originalData = null;
+  lastSelectedColumns = { columna1: null, columna2: null };
   myChart: Chart<"bar", any[], any>;
 
   constructor(private service: Service, private renderer: Renderer2) {}
@@ -59,11 +55,12 @@ export class GraficaBarrasComponent implements OnInit {
     console.log(this.dataframe);
     console.log(columna1_selec);
     console.log(columna2_selec);
-    // Obtener los valores únicos de grupo edad edad y sexo
+
+    // Obtener los valores únicos de los ejes
     const eje1 = Array.from(new Set(data.map((item) => item[columna1_selec])));
     const eje2 = Array.from(new Set(data.map((item) => item[columna2_selec])));
 
-    // Contar el número de registros por combinación de edad y sexo
+    // Contar el número de registros por combinación de ejes
     const contador = new Map();
     data.forEach((item) => {
       const clave = item[columna1_selec] + "-" + item[columna2_selec];
@@ -81,10 +78,10 @@ export class GraficaBarrasComponent implements OnInit {
       datos.push(fila);
     });
 
-    // Ordenar los datos por edad ascendente
+    // Ordenar los datos por la primera columna
     datos.sort((a, b) => a.columna1_selec - b.columna2_selec);
 
-    // Obtener los valores de edad y sexos
+    // Obtener los valores de los ejes
     const etiquetas = datos.map((item) => item.columna1_selec);
     const valores = eje2.map((columna2_selec) =>
       datos.map((item) => item[columna2_selec])
@@ -96,8 +93,7 @@ export class GraficaBarrasComponent implements OnInit {
     const htmlLegendPlugin1 = {
       id: "htmlLegend1",
       afterUpdate: (chart, args, options) => {
-        // Cambio a función de flecha
-        this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+        this.createCustomLegendItems(chart, options);
       },
     };
     const htmlLegendPlugin2 = {
@@ -108,14 +104,13 @@ export class GraficaBarrasComponent implements OnInit {
     };
 
     // Crear el gráfico de barras
-    let delayed;
     const ctx = document.getElementById("myChart") as HTMLCanvasElement;
     this.myChart = new Chart(ctx, {
       type: "bar",
       data: {
         labels: etiquetas,
-        datasets: eje2.map((sexo, index) => ({
-          label: sexo,
+        datasets: eje2.map((item, index) => ({
+          label: item,
           data: valores[index],
           backgroundColor: this.getRandomColorWithOpacity(0.5),
           borderWidth: 1,
@@ -141,7 +136,7 @@ export class GraficaBarrasComponent implements OnInit {
             beginAtZero: true,
             ticks: {
               precision: 0,
-              maxTicksLimit: 5, // Limita el número máximo de etiquetas en el eje Y
+              maxTicksLimit: 5,
             },
           },
           x: {
@@ -162,10 +157,7 @@ export class GraficaBarrasComponent implements OnInit {
     let color;
     do {
       color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
-    } while (
-      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
-      parseInt(color.substr(1), 16) < parseInt("444444", 16)
-    );
+    } while (parseInt(color.substr(1), 16) < parseInt("444444", 16));
 
     return `${color}${Math.round(opacity * 255).toString(16)}`;
   }
@@ -188,7 +180,6 @@ export class GraficaBarrasComponent implements OnInit {
     return color;
   }
 
-  // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
   getOrCreateLegendList = (chart, id) => {
     const legendContainer = document.getElementById(id);
     let listContainer = legendContainer.querySelector("ul");
@@ -206,26 +197,22 @@ export class GraficaBarrasComponent implements OnInit {
     return listContainer;
   };
 
-  // Función para crear los elementos de la leyenda HTML personalizada
   createCustomLegendItems = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
 
-    // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
       ul.firstChild.remove();
     }
 
-    // Generar elementos de leyenda personalizados
     const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
-    // Ordenar las etiquetas alfabéticamente o numéricamente
     items.sort((a, b) => {
       if (typeof a.text === "string" && typeof b.text === "string") {
-        return a.text.localeCompare(b.text); // Orden alfabético
+        return a.text.localeCompare(b.text);
       } else if (typeof a.text === "number" && typeof b.text === "number") {
-        return a.text - b.text; // Orden numérico ascendente
+        return a.text - b.text;
       }
-      return 0; // No se cambia el orden si los tipos son diferentes
+      return 0;
     });
 
     items.forEach((item) => {
@@ -249,7 +236,6 @@ export class GraficaBarrasComponent implements OnInit {
         chart.update();
       };
 
-      // Color box
       const boxSpan = document.createElement("span");
       boxSpan.style.background = item.fillStyle;
       boxSpan.style.borderColor = item.strokeStyle;
@@ -260,7 +246,6 @@ export class GraficaBarrasComponent implements OnInit {
       boxSpan.style.marginRight = "10px";
       boxSpan.style.width = "20px";
 
-      // Texto
       const textContainer = document.createElement("p");
       textContainer.style.color = item.fontColor;
       textContainer.style.margin = "0";
@@ -279,19 +264,23 @@ export class GraficaBarrasComponent implements OnInit {
   createCustomLegendItems2 = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
 
-    // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
       ul.firstChild.remove();
     }
 
-    // Si originalData es null, guarda los datos originales
-    if (this.originalData === null) {
+    if (
+      this.originalData === null ||
+      this.lastSelectedColumns.columna1 !== this.columna1_selec ||
+      this.lastSelectedColumns.columna2 !== this.columna2_selec
+    ) {
       this.originalData = chart.data.datasets.map((dataset) => [
         ...dataset.data,
       ]);
+      // Actualiza las últimas columnas seleccionadas
+      this.lastSelectedColumns.columna1 = this.columna1_selec;
+      this.lastSelectedColumns.columna2 = this.columna2_selec;
     }
 
-    // Generar elementos de leyenda personalizados para el eje x
     const labels = chart.data.labels;
 
     labels.forEach((label, index) => {
@@ -303,28 +292,25 @@ export class GraficaBarrasComponent implements OnInit {
       li.style.marginLeft = "10px";
 
       li.onclick = () => {
-        // Verificar si el valor actual es 0 y restablecerlo, de lo contrario, establecerlo en 0
         chart.data.datasets.forEach((dataset) => {
-          const datasetIndex = chart.data.datasets.indexOf(dataset); // Obtener el índice del conjunto de datos actual
+          const datasetIndex = chart.data.datasets.indexOf(dataset);
 
-          if (dataset.data[index] === 0) {
-            // Restablecer a valores originales
+          if (dataset.data[index] === null) {
             dataset.data[index] = this.originalData[datasetIndex][index];
           } else {
-            // Establecer en 0
-            dataset.data[index] = 0;
+            dataset.data[index] = null;
           }
         });
 
-        chart.update(); // Actualizar el gráfico después de cambiar los valores
+        chart.update();
       };
 
-      // Puedes personalizar el contenido del elemento li según tus necesidades
+      
       const textContainer = document.createElement("p");
       textContainer.style.color = label.fontColor;
       textContainer.style.margin = "0";
       textContainer.style.padding = "0";
-      textContainer.style.textDecoration = chart.data.datasets.some(dataset => dataset.data[index] === 0) ? "line-through" : "";
+      textContainer.style.textDecoration = chart.data.datasets.some(dataset => dataset.data[index] === null) ? "line-through" : "";
       const text = document.createTextNode(label);
       textContainer.appendChild(text);
 

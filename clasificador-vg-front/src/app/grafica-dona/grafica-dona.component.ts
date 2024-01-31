@@ -47,6 +47,83 @@ export class GraficaDonaComponent implements OnInit {
     this.crearGraficaQueso(this.columna_selec);
   }
 
+  private crearGraficaQueso(columna_selec: string) {
+    // Obtener los valores
+    console.log(this.dataframe);
+    TraductorEtiquetas.traducirColumnas(this.dataframe);
+    const datos = Array.from(
+      new Set(this.dataframe.map((item) => item[columna_selec]))
+    );
+
+    // Contar la frecuencia de cada categoría
+    const contador = new Map();
+    this.dataframe.forEach((item) => {
+      contador.set(
+        item[columna_selec],
+        (contador.get(item[columna_selec]) || 0) + 1
+      );
+    });
+
+    // Obtener los datos para la gráfica de queso
+    let etiquetas = datos;
+    let valores = datos.map((x) => contador.get(x));
+
+    if (columna_selec === "nom_upgd") {
+      const { etiquetas: nuevasEtiquetas, valores: nuevosValores } =
+        this.filtrarEtiquetas(etiquetas, valores, contador);
+      etiquetas = nuevasEtiquetas;
+      valores = nuevosValores;
+    }
+
+    // Generar una lista de colores aleatorios
+    const colores = this.generarColoresAleatorios(datos.length);
+
+    // Configuración del plugin htmlLegendPlugin
+    const htmlLegendPlugin = {
+      id: "htmlLegend",
+      afterUpdate: (chart, args, options) => {
+        // Cambio a función de flecha
+        this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+      },
+    };
+
+    // Crear la gráfica de queso
+    const ctx = document.getElementById("myChart2") as HTMLCanvasElement;
+    const chartContainer = document.querySelector(
+      ".chart-scroll-container"
+    ) as HTMLElement;
+
+    this.myChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: etiquetas,
+        datasets: [
+          {
+            data: valores,
+            backgroundColor: colores,
+            borderColor: colores,
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive:true,
+        maintainAspectRatio:false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          htmlLegend: {
+            containerID: "legend-container",
+          },
+        },
+      },
+      plugins: [htmlLegendPlugin],
+    });
+  }
+
   // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
   getOrCreateLegendList = (chart, id) => {
     const legendContainer = document.getElementById(id);
@@ -134,84 +211,7 @@ export class GraficaDonaComponent implements OnInit {
       ul.appendChild(li);
     });
   };
-
-  private crearGraficaQueso(columna_selec: string) {
-    // Obtener los valores
-    console.log(this.dataframe);
-    TraductorEtiquetas.traducirColumnas(this.dataframe);
-    const datos = Array.from(
-      new Set(this.dataframe.map((item) => item[columna_selec]))
-    );
-
-    // Contar la frecuencia de cada categoría
-    const contador = new Map();
-    this.dataframe.forEach((item) => {
-      contador.set(
-        item[columna_selec],
-        (contador.get(item[columna_selec]) || 0) + 1
-      );
-    });
-
-    // Obtener los datos para la gráfica de queso
-    let etiquetas = datos;
-    let valores = datos.map((x) => contador.get(x));
-
-    if (columna_selec === "nom_upgd") {
-      const { etiquetas: nuevasEtiquetas, valores: nuevosValores } =
-        this.filtrarEtiquetas(etiquetas, valores, contador);
-      etiquetas = nuevasEtiquetas;
-      valores = nuevosValores;
-    }
-
-    // Generar una lista de colores aleatorios
-    const colores = this.generarColoresAleatorios(datos.length);
-
-    // Configuración del plugin htmlLegendPlugin
-    const htmlLegendPlugin = {
-      id: "htmlLegend",
-      afterUpdate: (chart, args, options) => {
-        // Cambio a función de flecha
-        this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
-      },
-    };
-
-    // Crear la gráfica de queso
-    const ctx = document.getElementById("myChart2") as HTMLCanvasElement;
-    const chartContainer = document.querySelector(
-      ".chart-scroll-container"
-    ) as HTMLElement;
-
-    this.myChart = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: etiquetas,
-        datasets: [
-          {
-            data: valores,
-            backgroundColor: colores,
-            borderColor: colores,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive:true,
-        maintainAspectRatio:false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          htmlLegend: {
-            containerID: "legend-container",
-          },
-        },
-      },
-      plugins: [htmlLegendPlugin],
-    });
-  }
-
+  
   private filtrarEtiquetas(etiquetas, valores, contador) {
     const otrosEtiqueta = "Otros";
 

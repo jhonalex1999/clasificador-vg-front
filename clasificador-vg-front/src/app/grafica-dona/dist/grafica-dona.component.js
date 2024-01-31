@@ -10,11 +10,14 @@ exports.GraficaDonaComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
 var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
+var tooltip_1 = require("@angular/material/tooltip");
 var GraficaDonaComponent = /** @class */ (function () {
-    function GraficaDonaComponent(service) {
+    function GraficaDonaComponent(service, renderer) {
         var _this = this;
         this.service = service;
+        this.renderer = renderer;
         this.columna_selec = 'Selecciona una columna primero';
+        this.tooltipContent = 'En esta gráfica de dona, al seleccionar una variable específica, se habilita la visualización detallada de la cantidad de registros asociados a cada valor de la variable. Al desplazar el puntero sobre cada porción, se revela el número exacto de registros correspondientes a esa categoría. Esta funcionalidad permite una exploración más detallada y una comprensión precisa de la distribución de datos, brindando una experiencia interactiva que facilita la identificación de patrones y la toma de decisiones informada basada en los valores numéricos asociados a cada valor de la variable seleccionada.';
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -203,6 +206,23 @@ var GraficaDonaComponent = /** @class */ (function () {
         }
         return color;
     };
+    GraficaDonaComponent.prototype.showTooltip = function () {
+        if (!this.tooltip.disabled) {
+            this.tooltip.show();
+        }
+    };
+    GraficaDonaComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.renderer.listen(this.tooltipIcon.nativeElement, 'click', function () {
+            _this.showTooltip();
+        });
+    };
+    __decorate([
+        core_1.ViewChild(tooltip_1.MatTooltip)
+    ], GraficaDonaComponent.prototype, "tooltip");
+    __decorate([
+        core_1.ViewChild('tooltipIcon')
+    ], GraficaDonaComponent.prototype, "tooltipIcon");
     GraficaDonaComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-dona",

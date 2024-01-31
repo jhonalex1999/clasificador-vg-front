@@ -1,8 +1,14 @@
-import { Component, OnInit ,  ElementRef, Renderer2, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+} from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatTooltip } from "@angular/material/tooltip";
 @Component({
   selector: "app-grafica-barras-horizontales",
   templateUrl: "./grafica-barras-horizontales.component.html",
@@ -10,13 +16,14 @@ import { MatTooltip } from '@angular/material/tooltip';
 })
 export class GraficaBarrasHorizontalesComponent implements OnInit {
   @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
+  @ViewChild("tooltipIcon") tooltipIcon: ElementRef;
   private dataframe: any[];
   public columnas: string[];
   public columna_selec = "Selecciona una columna primero";
   myChart: Chart<"bar", any[], any>;
-  tooltipContent = 'En este gráfico de barras horizontales interactivo, se ofrece la capacidad de seleccionar una variable específica. Al elegir la variable de interés, la visualización se adapta dinámicamente, mostrando la distribución de las categorías asociadas a esa variable en el eje horizontal. Al desplazar el cursor sobre cada barra, se despliega información detallada, incluyendo los valores numéricos correspondientes a cada categoría. Esta funcionalidad proporciona una herramienta efectiva para explorar y comparar la distribución de una variable particular, facilitando la identificación de patrones y tendencias dentro de los datos.';
-  constructor(private service: Service,private renderer: Renderer2) {}
+  tooltipContent =
+    "En este gráfico de barras horizontales interactivo, se ofrece la capacidad de seleccionar una variable específica. Al elegir la variable de interés, la visualización se adapta dinámicamente, mostrando la distribución de las categorías asociadas a esa variable en el eje horizontal. Al desplazar el cursor sobre cada barra, se despliega información detallada, incluyendo los valores numéricos correspondientes a cada categoría. Esta funcionalidad proporciona una herramienta efectiva para explorar y comparar la distribución de una variable particular, facilitando la identificación de patrones y tendencias dentro de los datos.";
+  constructor(private service: Service, private renderer: Renderer2) {}
 
   ngOnInit() {
     Chart.register(...registerables);
@@ -35,6 +42,92 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       this.myChart.destroy(); // Destruye la gráfica anterior si existe
     }
     this.crearGraficaBarrasHorizontal(this.columna_selec);
+  }
+
+  private crearGraficaBarrasHorizontal(columna_selec: string) {
+    const data = this.dataframe;
+    console.log(this.dataframe);
+    console.log(columna_selec);
+
+    // Obtener los valores únicos de la columna seleccionada
+    const eje1 = Array.from(new Set(data.map((item) => item[columna_selec])));
+
+    // Contar el número de registros por valor de la columna seleccionada
+    const contador = new Map();
+    data.forEach((item) => {
+      const clave = item[columna_selec];
+      contador.set(clave, (contador.get(clave) || 0) + 1);
+    });
+
+    // Preparar los datos para el gráfico de líneas horizontales
+    const datos = eje1.map((valor) => ({
+      valor,
+      count: contador.get(valor) || 0,
+    }));
+
+    // Ordenar los datos por valor ascendente
+    datos.sort((a, b) => a.valor - b.valor);
+
+    // Obtener los valores y etiquetas
+    const etiquetas = datos.map((item) => item.valor);
+    const valores = datos.map((item) => item.count);
+
+    const htmlLegendPlugin = {
+      id: "htmlLegend",
+      afterUpdate: (chart, args, options) => {
+        // Cambio a función de flecha
+        this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+      },
+    };
+
+    // Crear el gráfico de líneas horizontales
+    const ctx = document.getElementById("myChart") as HTMLCanvasElement;
+    this.myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: etiquetas,
+        datasets: eje1.map((valor, index) => {
+          const dataPorValor = datos.find((item) => item.valor === valor);
+          const data = etiquetas.map((etiqueta) => (etiqueta === valor ? dataPorValor?.count || 0 : 0));
+          return {
+            label: valor,
+            data: data,
+            backgroundColor: this.getRandomColorWithOpacity(0.5),
+            hidden: false,
+          };
+        }),
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+            onClick: function (event, legendItem) {
+              const dataset = this.chart.data.datasets[legendItem.datasetIndex];
+              dataset.hidden = !dataset.hidden;
+              this.chart.update();
+            },
+          },
+          // @ts-ignore
+          htmlLegend: {
+            containerID: "legend-container",
+          },
+        },
+        indexAxis: "y",
+        scales: {
+          y: {
+            beginAtZero: true,
+            stacked: true,  // Apilar las barras para evitar espacio en blanco
+          },
+          x: {
+            stacked: true,
+          },
+        },
+      },
+      plugins: [htmlLegendPlugin],
+    });
+    
   }
   // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
   getOrCreateLegendList = (chart, id) => {
@@ -64,30 +157,18 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
     }
 
     // Obtener las etiquetas personalizadas de la columna seleccionada
-    const labels = chart.data.labels;
+    const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
-    // Separar las etiquetas en dos arrays: uno para las etiquetas alfabéticas y otro para las etiquetas numéricas
-    const alphabeticalLabels = [];
-    const numericalLabels = [];
-
-    labels.forEach((label) => {
-      if (isNaN(label)) {
-        alphabeticalLabels.push(label);
-      } else {
-        numericalLabels.push(Number(label));
+    // Ordenar las etiquetas alfabéticamente o numéricamente
+    items.sort((a, b) => {
+      if (typeof a.text === "string" && typeof b.text === "string") {
+        return a.text.localeCompare(b.text); // Orden alfabético
+      } else if (typeof a.text === "number" && typeof b.text === "number") {
+        return a.text - b.text; // Orden numérico ascendente
       }
+      return 0; // No se cambia el orden si los tipos son diferentes
     });
-
-    // Ordenar las etiquetas alfabéticas a-z
-    alphabeticalLabels.sort();
-
-    // Ordenar las etiquetas numéricas de manera ascendente
-    numericalLabels.sort((a, b) => a - b);
-
-    // Combinar las etiquetas ordenadas en un solo array
-    const sortedLabels = alphabeticalLabels.concat(numericalLabels);
-
-    labels.forEach((label, index) => {
+    items.forEach((item) => {
       const li = document.createElement("li");
       li.style.alignItems = "center";
       li.style.cursor = "pointer";
@@ -95,11 +176,24 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       li.style.flexDirection = "row";
       li.style.marginLeft = "10px";
 
+      li.onclick = () => {
+        const { type } = chart.config;
+        if (type === "pie" || type === "doughnut") {
+          chart.toggleDataVisibility(item.index);
+        } else {
+          chart.setDatasetVisibility(
+            item.datasetIndex,
+            !chart.isDatasetVisible(item.datasetIndex)
+          );
+        }
+        chart.update();
+      };
+
       // Color box
       const boxSpan = document.createElement("span");
-      boxSpan.style.background = chart.data.datasets[0].backgroundColor[index];
-      boxSpan.style.borderColor = chart.data.datasets[0].borderColor[index];
-      boxSpan.style.borderWidth = chart.data.datasets[0].borderWidth + "px";
+      boxSpan.style.background = item.fillStyle;
+      boxSpan.style.borderColor = item.strokeStyle;
+      boxSpan.style.borderWidth = item.lineWidth + "px";
       boxSpan.style.display = "inline-block";
       boxSpan.style.flexShrink = "0";
       boxSpan.style.height = "20px";
@@ -108,14 +202,12 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
 
       // Texto
       const textContainer = document.createElement("p");
-      textContainer.style.color = chart.data.datasets[0].fontColor;
+      textContainer.style.color = item.fontColor;
       textContainer.style.margin = "0";
       textContainer.style.padding = "0";
-      /*textContainer.style.textDecoration = !chart.isDatasetVisible(index)
-        ? "line-through"
-        : "";*/
+      textContainer.style.textDecoration = item.hidden ? "line-through" : "";
 
-      const text = document.createTextNode(label);
+      const text = document.createTextNode(item.text);
       textContainer.appendChild(text);
 
       li.appendChild(boxSpan);
@@ -123,88 +215,6 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       ul.appendChild(li);
     });
   };
-
-  private crearGraficaBarrasHorizontal(columna_selec: string) {
-    // Obtener los valores
-    console.log("VIEJO");
-    console.log(this.dataframe);
-
-    TraductorEtiquetas.traducirColumnas(this.dataframe);
-
-    console.log("NUEVAS");
-    console.log(this.dataframe);
-
-    const datos = Array.from(
-      new Set(this.dataframe.map((item) => item[columna_selec]))
-    );
-
-    // Contar la frecuencia de cada categoría
-    const contador = new Map();
-    this.dataframe.forEach((item) => {
-      contador.set(
-        item[columna_selec],
-        (contador.get(item[columna_selec]) || 0) + 1
-      );
-    });
-
-    // Obtener los datos para la gráfica de queso
-    let etiquetas = datos;
-    let valores = datos.map((x) => contador.get(x));
-
-    // Generar una lista de colores aleatorios
-    const colores = this.generarColoresAleatorios(datos.length);
-
-    // Configuración del plugin htmlLegendPlugin
-    const htmlLegendPlugin = {
-      id: "htmlLegend",
-      afterUpdate: (chart, args, options) => {
-        // Cambio a función de flecha
-        this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
-      },
-    };
-
-    // Crear la gráfica de barras
-    const ctx = document.getElementById("myChart2") as HTMLCanvasElement;
-    const chartContainer = document.querySelector(
-      ".chart-scroll-container"
-    ) as HTMLElement;
-
-    this.myChart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: etiquetas,
-        datasets: [
-          {
-            data: valores,
-            backgroundColor: colores,
-            borderColor: colores,
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          htmlLegend: {
-            containerID: "legend-container",
-          },
-        },
-        indexAxis: "y",
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
-        },
-      },
-      plugins: [htmlLegendPlugin],
-    });
-  }
 
   private filtrarEtiquetas(etiquetas, valores, contador) {
     const otrosEtiqueta = "Otros";
@@ -233,22 +243,18 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
     return { etiquetas, valores };
   }
 
-  private generarColoresAleatorios(cantidad: number): string[] {
-    const colores = [];
-    for (let i = 0; i < cantidad; i++) {
-      const color = this.generarColorAleatorio();
-      colores.push(color);
-    }
-    return colores;
-  }
+  private getRandomColorWithOpacity(opacity: number) {
+    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
 
-  private generarColorAleatorio(): string {
-    const letras = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letras[Math.floor(Math.random() * 16)];
-    }
-    return color;
+    let color;
+    do {
+      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+    } while (
+      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+      parseInt(color.substr(1), 16) < parseInt("444444", 16)
+    );
+
+    return `${color}${Math.round(opacity * 255).toString(16)}`;
   }
   showTooltip() {
     if (!this.tooltip.disabled) {
@@ -257,7 +263,7 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+    this.renderer.listen(this.tooltipIcon.nativeElement, "click", () => {
       this.showTooltip();
     });
   }

@@ -9,12 +9,14 @@ exports.__esModule = true;
 exports.GraficaBarrasHorizontalesComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
-var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
+var tooltip_1 = require("@angular/material/tooltip");
 var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
-    function GraficaBarrasHorizontalesComponent(service) {
+    function GraficaBarrasHorizontalesComponent(service, renderer) {
         var _this = this;
         this.service = service;
+        this.renderer = renderer;
         this.columna_selec = "Selecciona una columna primero";
+        this.tooltipContent = "En este gráfico de barras horizontales interactivo, se ofrece la capacidad de seleccionar una variable específica. Al elegir la variable de interés, la visualización se adapta dinámicamente, mostrando la distribución de las categorías asociadas a esa variable en el eje horizontal. Al desplazar el cursor sobre cada barra, se despliega información detallada, incluyendo los valores numéricos correspondientes a cada categoría. Esta funcionalidad proporciona una herramienta efectiva para explorar y comparar la distribución de una variable particular, facilitando la identificación de patrones y tendencias dentro de los datos.";
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -37,36 +39,39 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
                 ul.firstChild.remove();
             }
             // Obtener las etiquetas personalizadas de la columna seleccionada
-            var labels = chart.data.labels;
-            // Separar las etiquetas en dos arrays: uno para las etiquetas alfabéticas y otro para las etiquetas numéricas
-            var alphabeticalLabels = [];
-            var numericalLabels = [];
-            labels.forEach(function (label) {
-                if (isNaN(label)) {
-                    alphabeticalLabels.push(label);
+            var items = chart.options.plugins.legend.labels.generateLabels(chart);
+            // Ordenar las etiquetas alfabéticamente o numéricamente
+            items.sort(function (a, b) {
+                if (typeof a.text === "string" && typeof b.text === "string") {
+                    return a.text.localeCompare(b.text); // Orden alfabético
                 }
-                else {
-                    numericalLabels.push(Number(label));
+                else if (typeof a.text === "number" && typeof b.text === "number") {
+                    return a.text - b.text; // Orden numérico ascendente
                 }
+                return 0; // No se cambia el orden si los tipos son diferentes
             });
-            // Ordenar las etiquetas alfabéticas a-z
-            alphabeticalLabels.sort();
-            // Ordenar las etiquetas numéricas de manera ascendente
-            numericalLabels.sort(function (a, b) { return a - b; });
-            // Combinar las etiquetas ordenadas en un solo array
-            var sortedLabels = alphabeticalLabels.concat(numericalLabels);
-            labels.forEach(function (label, index) {
+            items.forEach(function (item) {
                 var li = document.createElement("li");
                 li.style.alignItems = "center";
                 li.style.cursor = "pointer";
                 li.style.display = "flex";
                 li.style.flexDirection = "row";
                 li.style.marginLeft = "10px";
+                li.onclick = function () {
+                    var type = chart.config.type;
+                    if (type === "pie" || type === "doughnut") {
+                        chart.toggleDataVisibility(item.index);
+                    }
+                    else {
+                        chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+                    }
+                    chart.update();
+                };
                 // Color box
                 var boxSpan = document.createElement("span");
-                boxSpan.style.background = chart.data.datasets[0].backgroundColor[index];
-                boxSpan.style.borderColor = chart.data.datasets[0].borderColor[index];
-                boxSpan.style.borderWidth = chart.data.datasets[0].borderWidth + "px";
+                boxSpan.style.background = item.fillStyle;
+                boxSpan.style.borderColor = item.strokeStyle;
+                boxSpan.style.borderWidth = item.lineWidth + "px";
                 boxSpan.style.display = "inline-block";
                 boxSpan.style.flexShrink = "0";
                 boxSpan.style.height = "20px";
@@ -74,13 +79,11 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
                 boxSpan.style.width = "20px";
                 // Texto
                 var textContainer = document.createElement("p");
-                textContainer.style.color = chart.data.datasets[0].fontColor;
+                textContainer.style.color = item.fontColor;
                 textContainer.style.margin = "0";
                 textContainer.style.padding = "0";
-                /*textContainer.style.textDecoration = !chart.isDatasetVisible(index)
-                  ? "line-through"
-                  : "";*/
-                var text = document.createTextNode(label);
+                textContainer.style.textDecoration = item.hidden ? "line-through" : "";
+                var text = document.createTextNode(item.text);
                 textContainer.appendChild(text);
                 li.appendChild(boxSpan);
                 li.appendChild(textContainer);
@@ -108,24 +111,27 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
     };
     GraficaBarrasHorizontalesComponent.prototype.crearGraficaBarrasHorizontal = function (columna_selec) {
         var _this = this;
-        // Obtener los valores
-        console.log("VIEJO");
+        var data = this.dataframe;
         console.log(this.dataframe);
-        traductor_etiquetas_1.TraductorEtiquetas.traducirColumnas(this.dataframe);
-        console.log("NUEVAS");
-        console.log(this.dataframe);
-        var datos = Array.from(new Set(this.dataframe.map(function (item) { return item[columna_selec]; })));
-        // Contar la frecuencia de cada categoría
+        console.log(columna_selec);
+        // Obtener los valores únicos de la columna seleccionada
+        var eje1 = Array.from(new Set(data.map(function (item) { return item[columna_selec]; })));
+        // Contar el número de registros por valor de la columna seleccionada
         var contador = new Map();
-        this.dataframe.forEach(function (item) {
-            contador.set(item[columna_selec], (contador.get(item[columna_selec]) || 0) + 1);
+        data.forEach(function (item) {
+            var clave = item[columna_selec];
+            contador.set(clave, (contador.get(clave) || 0) + 1);
         });
-        // Obtener los datos para la gráfica de queso
-        var etiquetas = datos;
-        var valores = datos.map(function (x) { return contador.get(x); });
-        // Generar una lista de colores aleatorios
-        var colores = this.generarColoresAleatorios(datos.length);
-        // Configuración del plugin htmlLegendPlugin
+        // Preparar los datos para el gráfico de líneas horizontales
+        var datos = eje1.map(function (valor) { return ({
+            valor: valor,
+            count: contador.get(valor) || 0
+        }); });
+        // Ordenar los datos por valor ascendente
+        datos.sort(function (a, b) { return a.valor - b.valor; });
+        // Obtener los valores y etiquetas
+        var etiquetas = datos.map(function (item) { return item.valor; });
+        var valores = datos.map(function (item) { return item.count; });
         var htmlLegendPlugin = {
             id: "htmlLegend",
             afterUpdate: function (chart, args, options) {
@@ -133,30 +139,35 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
                 _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
             }
         };
-        // Crear la gráfica de barras
-        var ctx = document.getElementById("myChart2");
-        var chartContainer = document.querySelector(".chart-scroll-container");
+        // Crear el gráfico de líneas horizontales
+        var ctx = document.getElementById("myChart");
         this.myChart = new chart_js_1.Chart(ctx, {
             type: "bar",
             data: {
                 labels: etiquetas,
-                datasets: [
-                    {
-                        data: valores,
-                        backgroundColor: colores,
-                        borderColor: colores,
-                        borderWidth: 1
-                    },
-                ]
+                datasets: eje1.map(function (valor, index) {
+                    var dataPorValor = datos.find(function (item) { return item.valor === valor; });
+                    var data = etiquetas.map(function (etiqueta) { return (etiqueta === valor ? (dataPorValor === null || dataPorValor === void 0 ? void 0 : dataPorValor.count) || 0 : 0); });
+                    return {
+                        label: valor,
+                        data: data,
+                        backgroundColor: _this.getRandomColorWithOpacity(0.5),
+                        hidden: false
+                    };
+                })
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: false,
+                        onClick: function (event, legendItem) {
+                            var dataset = this.chart.data.datasets[legendItem.datasetIndex];
+                            dataset.hidden = !dataset.hidden;
+                            this.chart.update();
+                        }
                     },
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     htmlLegend: {
                         containerID: "legend-container"
@@ -165,7 +176,11 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
                 indexAxis: "y",
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        stacked: true
+                    },
+                    x: {
+                        stacked: true
                     }
                 }
             },
@@ -189,22 +204,33 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
         valores.push(totalValoresOtros);
         return { etiquetas: etiquetas, valores: valores };
     };
-    GraficaBarrasHorizontalesComponent.prototype.generarColoresAleatorios = function (cantidad) {
-        var colores = [];
-        for (var i = 0; i < cantidad; i++) {
-            var color = this.generarColorAleatorio();
-            colores.push(color);
-        }
-        return colores;
+    GraficaBarrasHorizontalesComponent.prototype.getRandomColorWithOpacity = function (opacity) {
+        var getRandomHex = function () { return Math.floor(Math.random() * 256).toString(16); };
+        var color;
+        do {
+            color = "#" + getRandomHex() + getRandomHex() + getRandomHex();
+        } while (
+        // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+        parseInt(color.substr(1), 16) < parseInt("444444", 16));
+        return "" + color + Math.round(opacity * 255).toString(16);
     };
-    GraficaBarrasHorizontalesComponent.prototype.generarColorAleatorio = function () {
-        var letras = "0123456789ABCDEF";
-        var color = "#";
-        for (var i = 0; i < 6; i++) {
-            color += letras[Math.floor(Math.random() * 16)];
+    GraficaBarrasHorizontalesComponent.prototype.showTooltip = function () {
+        if (!this.tooltip.disabled) {
+            this.tooltip.show();
         }
-        return color;
     };
+    GraficaBarrasHorizontalesComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.renderer.listen(this.tooltipIcon.nativeElement, "click", function () {
+            _this.showTooltip();
+        });
+    };
+    __decorate([
+        core_1.ViewChild(tooltip_1.MatTooltip)
+    ], GraficaBarrasHorizontalesComponent.prototype, "tooltip");
+    __decorate([
+        core_1.ViewChild("tooltipIcon")
+    ], GraficaBarrasHorizontalesComponent.prototype, "tooltipIcon");
     GraficaBarrasHorizontalesComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-barras-horizontales",

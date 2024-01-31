@@ -193,19 +193,6 @@ export class GraficaLineaComponent implements OnInit {
       plugins: [htmlLegendPlugin1, htmlLegendPlugin2],
     });
   }
-  private getRandomColorWithOpacity(opacity: number) {
-    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
-
-    let color;
-    do {
-      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
-    } while (
-      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
-      parseInt(color.substr(1), 16) < parseInt("444444", 16)
-    );
-
-    return `${color}${Math.round(opacity * 255).toString(16)}`;
-  }
 
   getOrCreateLegendList = (chart, id) => {
     const legendContainer = document.getElementById(id);
@@ -281,6 +268,20 @@ export class GraficaLineaComponent implements OnInit {
       ul.appendChild(li);
     });
   };
+
+  private getRandomColorWithOpacity(opacity: number) {
+    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
+
+    let color;
+    do {
+      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+    } while (
+      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+      parseInt(color.substr(1), 16) < parseInt("444444", 16)
+    );
+
+    return `${color}${Math.round(opacity * 255).toString(16)}`;
+  }
 
   createCustomLegendItems2 = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);

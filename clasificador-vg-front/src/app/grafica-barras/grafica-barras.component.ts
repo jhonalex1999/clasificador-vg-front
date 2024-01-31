@@ -15,6 +15,7 @@ export class GraficaBarrasComponent implements OnInit {
 
   public columna1_selec: string = 'Selecciona una columna primero';
   public columna2_selec: string = 'Selecciona una columna primero';
+
   tooltipContent = 'En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.';
 
   myChart: Chart<"bar", any[], any>;
@@ -48,6 +49,7 @@ export class GraficaBarrasComponent implements OnInit {
     console.log(this.dataframe);
     console.log(columna1_selec);
     console.log(columna2_selec);
+
     // Obtener los valores únicos de grupo edad edad y sexo
     const eje1 = Array.from(new Set(data.map((item) => item[columna1_selec])));
     const eje2 = Array.from(new Set(data.map((item) => item[columna2_selec])));
@@ -79,9 +81,6 @@ export class GraficaBarrasComponent implements OnInit {
       datos.map((item) => item[columna2_selec])
     );
 
-    // Generar una lista de colores aleatorios
-    const colores = this.generarColoresAleatorios(valores.length);
-
     const htmlLegendPlugin1 = {
       id: "htmlLegend1",
       afterUpdate: (chart, args, options) => {
@@ -96,22 +95,22 @@ export class GraficaBarrasComponent implements OnInit {
       },
     };
 
-    const colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
+    const color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
 
     // Crear el gráfico de barras
-    let delayed;
     const ctx = document.getElementById("myChart") as HTMLCanvasElement;
     this.myChart = new Chart(ctx, {
       type: "bar",
       data: {
         labels: etiquetas,
-        datasets: eje2.map((sexo, index) => ({
-          label: sexo,
-          data: valores[index],
-          backgroundColor: [colors[index % colors.length]], // Usar colores intercalados
-          borderColor: [colors[index % colors.length]], // Usar colores intercalados
-          borderWidth: 1,
-        })),
+        datasets: eje2.map((sexo, index) => {
+          const color = this.getRandomColorWithOpacity(0.5);
+          return {
+            label: sexo,
+            data: valores[index],
+            backgroundColor: color,
+          };
+        }),
       },
       options: {
         responsive:true,
@@ -146,24 +145,6 @@ export class GraficaBarrasComponent implements OnInit {
       },
       plugins: [htmlLegendPlugin1,htmlLegendPlugin2],
     });
-  }
-
-  private generarColoresAleatorios(cantidad: number): string[] {
-    const colores = [];
-    for (let i = 0; i < cantidad; i++) {
-      const color = this.generarColorAleatorio();
-      colores.push(color);
-    }
-    return colores;
-  }
-
-  private generarColorAleatorio(): string {
-    const letras = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letras[Math.floor(Math.random() * 16)];
-    }
-    return color;
   }
 
   // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
@@ -287,6 +268,21 @@ export class GraficaBarrasComponent implements OnInit {
       ul.appendChild(li);
     });
   };
+
+
+  private getRandomColorWithOpacity(opacity: number) {
+    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
+
+    let color;
+    do {
+      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
+    } while (
+      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+      parseInt(color.substr(1), 16) < parseInt("444444", 16)
+    );
+
+    return `${color}${Math.round(opacity * 255).toString(16)}`;
+  } 
   showTooltip() {
     if (!this.tooltip.disabled) {
       this.tooltip.show();

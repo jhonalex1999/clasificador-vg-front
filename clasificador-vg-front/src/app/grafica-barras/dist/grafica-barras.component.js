@@ -9,12 +9,15 @@ exports.__esModule = true;
 exports.GraficaBarrasComponent = void 0;
 var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
+var tooltip_1 = require("@angular/material/tooltip");
 var GraficaBarrasComponent = /** @class */ (function () {
-    function GraficaBarrasComponent(service) {
+    function GraficaBarrasComponent(service, renderer) {
         var _this = this;
         this.service = service;
+        this.renderer = renderer;
         this.columna1_selec = 'Selecciona una columna primero';
         this.columna2_selec = 'Selecciona una columna primero';
+        this.tooltipContent = 'En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.';
         // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
@@ -169,8 +172,6 @@ var GraficaBarrasComponent = /** @class */ (function () {
         var valores = eje2.map(function (columna2_selec) {
             return datos.map(function (item) { return item[columna2_selec]; });
         });
-        // Generar una lista de colores aleatorios
-        var colores = this.generarColoresAleatorios(valores.length);
         var htmlLegendPlugin1 = {
             id: "htmlLegend1",
             afterUpdate: function (chart, args, options) {
@@ -184,21 +185,21 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 _this.createCustomLegendItems2(chart, options);
             }
         };
-        var colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
+        var color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
         // Crear el gráfico de barras
-        var delayed;
         var ctx = document.getElementById("myChart");
         this.myChart = new chart_js_1.Chart(ctx, {
             type: "bar",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) { return ({
-                    label: sexo,
-                    data: valores[index],
-                    backgroundColor: [colors[index % colors.length]],
-                    borderColor: [colors[index % colors.length]],
-                    borderWidth: 1
-                }); })
+                datasets: eje2.map(function (sexo, index) {
+                    var color = _this.getRandomColorWithOpacity(0.5);
+                    return {
+                        label: sexo,
+                        data: valores[index],
+                        backgroundColor: color
+                    };
+                })
             },
             options: {
                 responsive: true,
@@ -234,22 +235,33 @@ var GraficaBarrasComponent = /** @class */ (function () {
             plugins: [htmlLegendPlugin1, htmlLegendPlugin2]
         });
     };
-    GraficaBarrasComponent.prototype.generarColoresAleatorios = function (cantidad) {
-        var colores = [];
-        for (var i = 0; i < cantidad; i++) {
-            var color = this.generarColorAleatorio();
-            colores.push(color);
-        }
-        return colores;
+    GraficaBarrasComponent.prototype.getRandomColorWithOpacity = function (opacity) {
+        var getRandomHex = function () { return Math.floor(Math.random() * 256).toString(16); };
+        var color;
+        do {
+            color = "#" + getRandomHex() + getRandomHex() + getRandomHex();
+        } while (
+        // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
+        parseInt(color.substr(1), 16) < parseInt("444444", 16));
+        return "" + color + Math.round(opacity * 255).toString(16);
     };
-    GraficaBarrasComponent.prototype.generarColorAleatorio = function () {
-        var letras = "0123456789ABCDEF";
-        var color = "#";
-        for (var i = 0; i < 6; i++) {
-            color += letras[Math.floor(Math.random() * 16)];
+    GraficaBarrasComponent.prototype.showTooltip = function () {
+        if (!this.tooltip.disabled) {
+            this.tooltip.show();
         }
-        return color;
     };
+    GraficaBarrasComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.renderer.listen(this.tooltipIcon.nativeElement, 'click', function () {
+            _this.showTooltip();
+        });
+    };
+    __decorate([
+        core_1.ViewChild(tooltip_1.MatTooltip)
+    ], GraficaBarrasComponent.prototype, "tooltip");
+    __decorate([
+        core_1.ViewChild('tooltipIcon')
+    ], GraficaBarrasComponent.prototype, "tooltipIcon");
     GraficaBarrasComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-barras",

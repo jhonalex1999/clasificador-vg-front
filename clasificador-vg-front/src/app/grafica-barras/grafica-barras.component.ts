@@ -12,12 +12,10 @@ export class GraficaBarrasComponent implements OnInit {
   @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
   private dataframe: any[];
   public columnas: string[];
-
   public columna1_selec: string = 'Selecciona una columna primero';
   public columna2_selec: string = 'Selecciona una columna primero';
-
   tooltipContent = 'En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.';
-
+  originalData = null; 
   myChart: Chart<"bar", any[], any>;
 
   constructor(private service: Service,private renderer: Renderer2) {}
@@ -49,7 +47,6 @@ export class GraficaBarrasComponent implements OnInit {
     console.log(this.dataframe);
     console.log(columna1_selec);
     console.log(columna2_selec);
-
     // Obtener los valores únicos de grupo edad edad y sexo
     const eje1 = Array.from(new Set(data.map((item) => item[columna1_selec])));
     const eje2 = Array.from(new Set(data.map((item) => item[columna2_selec])));
@@ -81,6 +78,9 @@ export class GraficaBarrasComponent implements OnInit {
       datos.map((item) => item[columna2_selec])
     );
 
+    // Generar una lista de colores aleatorios
+    const colores = this.generarColoresAleatorios(valores.length);
+
     const htmlLegendPlugin1 = {
       id: "htmlLegend1",
       afterUpdate: (chart, args, options) => {
@@ -94,23 +94,23 @@ export class GraficaBarrasComponent implements OnInit {
         this.createCustomLegendItems2(chart, options);
       },
     };
-
-    const color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
+    
+    const colors = ["rgba(0, 0, 255, 0.2)", "rgba(0, 128, 0, 0.2)"];
 
     // Crear el gráfico de barras
+    let delayed;
     const ctx = document.getElementById("myChart") as HTMLCanvasElement;
     this.myChart = new Chart(ctx, {
       type: "bar",
       data: {
         labels: etiquetas,
-        datasets: eje2.map((sexo, index) => {
-          const color = this.getRandomColorWithOpacity(0.5);
-          return {
-            label: sexo,
-            data: valores[index],
-            backgroundColor: color,
-          };
-        }),
+        datasets: eje2.map((sexo, index) => ({
+          label: sexo,
+          data: valores[index],
+          backgroundColor: [colors[index % colors.length]], // Usar colores intercalados
+          borderColor: [colors[index % colors.length]], // Usar colores intercalados
+          borderWidth: 1,
+        })),
       },
       options: {
         responsive:true,
@@ -145,6 +145,24 @@ export class GraficaBarrasComponent implements OnInit {
       },
       plugins: [htmlLegendPlugin1,htmlLegendPlugin2],
     });
+  }
+
+  private generarColoresAleatorios(cantidad: number): string[] {
+    const colores = [];
+    for (let i = 0; i < cantidad; i++) {
+      const color = this.generarColorAleatorio();
+      colores.push(color);
+    }
+    return colores;
+  }
+
+  private generarColorAleatorio(): string {
+    const letras = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letras[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
@@ -234,55 +252,60 @@ export class GraficaBarrasComponent implements OnInit {
       ul.appendChild(li);
     });
   };
+ 
   createCustomLegendItems2 = (chart, options) => {
     const ul = this.getOrCreateLegendList(chart, options.containerID);
-  
+
     // Limpiar los elementos de la leyenda anteriores
     while (ul.firstChild) {
-      ul.firstChild.remove();
+        ul.firstChild.remove();
     }
-  
+
+    // Si originalData es null, guarda los datos originales
+    if (this.originalData === null) {
+        this.originalData = chart.data.datasets.map((dataset) => [...dataset.data]);
+    }
+
     // Generar elementos de leyenda personalizados para el eje x
     const labels = chart.data.labels;
-  
-    labels.forEach((label) => {
-      const li = document.createElement("li");
-      li.style.alignItems = "center";
-      li.style.cursor = "pointer";
-      li.style.display = "flex";
-      li.style.flexDirection = "row";
-      li.style.marginLeft = "10px";
-  
-      li.onclick = () => {
-        // Realizar acciones al hacer clic en una etiqueta del eje x
-        console.log(`Clic en la etiqueta del eje x: ${label}`);
+
+    labels.forEach((label, index) => {
+        const li = document.createElement("li");
+        li.style.alignItems = "center";
+        li.style.cursor = "pointer";
+        li.style.display = "flex";
+        li.style.flexDirection = "row";
+        li.style.marginLeft = "10px";
+
+        li.onclick = () => {
+          // Verificar si el valor actual es 0 y restablecerlo, de lo contrario, establecerlo en 0
+          chart.data.datasets.forEach((dataset) => {
+              const datasetIndex = chart.data.datasets.indexOf(dataset); // Obtener el índice del conjunto de datos actual
+      
+              if (dataset.data[index] === 0) {
+                  // Restablecer a valores originales
+                  dataset.data[index] = this.originalData[datasetIndex][index];
+              } else {
+                  // Establecer en 0
+                  dataset.data[index] = 0;
+              }
+          });
+      
+          chart.update(); // Actualizar el gráfico después de cambiar los valores
       };
-  
-      // Puedes personalizar el contenido del elemento li según tus necesidades
-      const textContainer = document.createElement("p");
-      textContainer.style.margin = "0";
-      const text = document.createTextNode(label);
-      textContainer.appendChild(text);
-  
-      li.appendChild(textContainer);
-      ul.appendChild(li);
+
+        // Puedes personalizar el contenido del elemento li según tus necesidades
+        const textContainer = document.createElement("p");
+        textContainer.style.margin = "0";
+        const text = document.createTextNode(label);
+        textContainer.appendChild(text);
+
+        li.appendChild(textContainer);
+        ul.appendChild(li);
     });
-  };
+};
 
 
-  private getRandomColorWithOpacity(opacity: number) {
-    const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
-
-    let color;
-    do {
-      color = `#${getRandomHex()}${getRandomHex()}${getRandomHex()}`;
-    } while (
-      // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
-      parseInt(color.substr(1), 16) < parseInt("444444", 16)
-    );
-
-    return `${color}${Math.round(opacity * 255).toString(16)}`;
-  } 
   showTooltip() {
     if (!this.tooltip.disabled) {
       this.tooltip.show();

@@ -1,4 +1,4 @@
-import { Component, OnInit,  ElementRef, Renderer2, ViewChild } from "@angular/core";
+import { Component, OnInit,  ElementRef, Renderer2, ViewChild,HostListener} from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -147,6 +147,12 @@ export class PredictorComponent implements OnInit {
     this.registroDTO = new RegistroDto();
 
     this.initFormulario();
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  beforeunloadHandler(event: Event) {
+    // Borrar la clave del localStorage al cerrar la pestaña
+    localStorage.removeItem('primerCarga');
   }
   initFormulario() {
     this.formulario = this.formBuilder.group({

@@ -4,6 +4,7 @@ import {
   ElementRef,
   Renderer2,
   ViewChild,
+  HostListener
 } from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
@@ -62,7 +63,12 @@ export class GraficaLineaComponent implements OnInit {
       }
     });
   }
-
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  beforeunloadHandler(event: Event) {
+    // Borrar la clave del localStorage al cerrar la pestaña
+    localStorage.removeItem('primerCarga');
+  }
   actualizarGraficoLinear() {
     console.log("se llama actualizar");
     if (this.linearChart) {

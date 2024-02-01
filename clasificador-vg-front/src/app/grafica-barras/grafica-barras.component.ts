@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, Renderer2, ViewChild } from "@angular/core";
+import { Component, OnInit, ElementRef, Renderer2, ViewChild ,HostListener} from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
 import { MatTooltip } from "@angular/material/tooltip";
@@ -36,7 +36,12 @@ export class GraficaBarrasComponent implements OnInit {
       }
     });
   }
-
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  beforeunloadHandler(event: Event) {
+    // Borrar la clave del localStorage al cerrar la pestaña
+    localStorage.removeItem('primerCarga');
+  }
   actualizarGrafica() {
     console.log("se llama actualizar");
     if (this.myChart) {

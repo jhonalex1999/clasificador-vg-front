@@ -1,4 +1,4 @@
-import { Component, OnInit ,  ElementRef, Renderer2, ViewChild} from "@angular/core";
+import { Component, OnInit ,  ElementRef, Renderer2, ViewChild,HostListener} from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
 import { Chart, registerables } from "chart.js";
@@ -38,6 +38,12 @@ export class GraficaDonaComponent implements OnInit {
         this.crearGraficaQueso(this.columna_selec);
       }
     });
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  beforeunloadHandler(event: Event) {
+    // Borrar la clave del localStorage al cerrar la pestaña
+    localStorage.removeItem('primerCarga');
   }
   actualizarGraficaQueso() {
     console.log("se llama actualizar");

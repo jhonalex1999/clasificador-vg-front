@@ -4,6 +4,7 @@ import {
   ElementRef,
   Renderer2,
   ViewChild,
+  HostListener
 } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
@@ -34,6 +35,12 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
         this.crearGraficaBarrasHorizontal(this.columna_selec);
       }
     });
+  }
+  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:pagehide', ['$event'])
+  beforeunloadHandler(event: Event) {
+    // Borrar la clave del localStorage al cerrar la pestaña
+    localStorage.removeItem('primerCarga');
   }
 
   actualizarGraficaHorizontal() {

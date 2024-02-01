@@ -2,13 +2,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-12 col-md-12">
-        <div class="card">
+        <div class="card card-info">
           <div class="card-header card-header-primary">
             <h4>Informacion de las columnas del Dataset</h4>
             <p>Datos de Violencia de Género e intrafamiliar de enero 2015 a Marzo 2023 del
               departamento de santander</p>
           </div>
-          <div class="card-body table-responsive">
+          <div class="card-body card-body-info table-responsive">
             <div class="table-container">
               <table class="table table-hover">
                 <thead class="text-primary">
@@ -190,12 +190,12 @@
 
     <div class="row">
       <div class="col-lg-12 col-md-12">
-        <div class="card">
+        <div class="card card-info">
           <div class="card-header card-header-primary">
             <h4>Dataset</h4>
             <p>En esta tabla se muestran los registros del Dataset</p>
           </div>
-          <div class="card-body table-responsive">
+          <div class="card-body card-body-info table-responsive">
             <div class="table-container-data">
               <table class="table table-hover">
                 <thead class="text-primary">
@@ -264,22 +264,23 @@
         </div>
       </div>
     </div>
-    <!-- Agrega botones de paginación -->
+    
     <div class="pagination-buttons d-flex justify-content-between position-sticky bottom-0">
       <button mat-raised-button class="btn btn-primary" type="submit" (click)="prevPage()">Anterior</button>
-      <h3>{{ currentPage }}</h3>
+      <h3><u>{{ currentPage }}</u></h3>
       <button mat-raised-button class="btn btn-primary" type="submit" (click)="nextPage()">Siguiente</button>
     </div>
+
     <div class="row">
       <div class="col-lg-12 col-md-12">
-        <div class="card">
+        <div class="card card-info">
           <div class="card-header card-header-primary">
             <h4>Metricas</h4>
             <p>Despues de observar las metricas obtenidas con los modelos evaluados con los parametros por defecto,
               se decidio optimizar parametros para los dos modelos mas prometedores, los cuales son LightGBM y XGBoost y
               luego de esta optmizacion el modelo con mejores metricas es el XGBoost con parametros los optmizados.</p>
           </div>
-          <div class="card-body table-responsive">
+          <div class="card-body card-body-info table-responsive">
             <div class="table-container">
               <table class="table table-hover">
                 <thead class="text-primary">
@@ -321,6 +322,7 @@
         </div>
       </div>
     </div>
+
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="card">
@@ -333,91 +335,109 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-lg-6 col-md-6">
-            <div class="card card-chart">
-              <div class="card-header card-header-primary">
-                <img src="./assets/img/modelo.png" alt="" id="ImgHeader">
-              </div>
-              <div class="card-body">
-                <h4 class="card-title">Modelo Seleccionado </h4>
-                <p class="card-category" style="color: black;">
-                  <span class="text-success"><i class="fa fa-long-arrow-up"></i> XGBoost Classifier </span>
-                  El XGBoost Classifier, también conocido como Extreme Gradient Boosting Classifier,
-                  es un algoritmo de aprendizaje automático especializado en tareas de clasificación.
-                  Basado en la combinación de múltiples modelos de árboles de decisión, el XGBoost Classifier
-                  mejora gradualmente su capacidad predictiva al corregir errores en cada iteración.
-                  Para realizar una predicción, el modelo utiliza los árboles previamente construidos para evaluar
-                  las características de los datos de entrada y asignar una categoría basada en la probabilidad más
-                  alta. Esto lo convierte en una herramienta efectiva y precisa para abordar problemas de
-                  clasificación en diversos campos, desde el diagnóstico médico hasta el análisis de fraudes.
-                </p>
-              </div>
-              <div class="card-footer">
-                <div class="stats">
-                  <i class="material-icons">library_books</i> <a href="https://xgboost.readthedocs.io/en/latest/"
-                    target="_blank">Ver Documentacion</a>
-                </div>
-              </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <div class="card card-info card-chart">
+          <div class="card-header card-header-primary">
+            <img src="./assets/img/modelo.png" alt="" id="ImgHeader">
+          </div>
+          <div class="card-body card-body-info">
+            <h4 class="card-title">Modelo Seleccionado </h4>
+            <p class="card-category" style="color: black;">
+              <span class="text-success"><i class="fa fa-long-arrow-up"></i> XGBoost Classifier </span>
+              El XGBoost Classifier, también conocido como Extreme Gradient Boosting Classifier,
+              es un algoritmo de aprendizaje automático especializado en tareas de clasificación.
+              Basado en la combinación de múltiples modelos de árboles de decisión, el XGBoost Classifier
+              mejora gradualmente su capacidad predictiva al corregir errores en cada iteración.
+              Para realizar una predicción, el modelo utiliza los árboles previamente construidos para evaluar
+              las características de los datos de entrada y asignar una categoría basada en la probabilidad más
+              alta. Esto lo convierte en una herramienta efectiva y precisa para abordar problemas de
+              clasificación en diversos campos, desde el diagnóstico médico hasta el análisis de fraudes.
+            </p>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">library_books</i> <a href="https://xgboost.readthedocs.io/en/latest/"
+                target="_blank">Ver Documentacion</a>
             </div>
           </div>
-          <div class="col-lg-6 col-md-6">
-            <div class="card card-chart">
-              <div class="card-header card-header-primary">
-                <img src="./assets/img/optimizacion.png" alt="" id="ImgHeader">
-              </div>
-              <div class="card-body card-container">
-                <h4 class="card-title">Configuracion de los parametros </h4>
-                <p class="card-category" style="color: black;">
-                  xgb.XGBClassifier( objective= 'multi:softmax',  
-                  num_class = 3,
-                  importance_type='gain',
-                  learning_rate=0.030958241241393895, 
-                  max_depth=7, 
-                  colsample_bytree=0.5330554532179588, 
-                  n_estimators=568, 
-                  reg_alpha=4.1084086686936143e-08, 
-                  reg_lambda=0.00024280802318611656, 
-                  min_child_weight=1, 
-                  gamma=0.23340955083195258, 
-                  subsample=0.8458562164387711) </p>
-                  <ul>
-                    <li><strong>Objective:</strong> La función objetivo utilizada por el algoritmo es "multi:softmax", implicando una clasificación multi-clase.</li>
-                    
-                    <li><strong>Num_class:</strong> Número de clases en el problema de clasificación. Configurado en 3, indicando tres clases distintas.</li>
-                    
-                    <li><strong>Importance_type:</strong> Tipo de importancia utilizado para evaluar la relevancia de las características. Configurado en 'gain', que se refiere a la ganancia de información.</li>
-                    
-                    <li><strong>Learning_rate:</strong> Tasa de aprendizaje que controla la contribución de cada árbol al modelo final. Configurado en 0.030958241241393895, sugiriendo una convergencia más lenta pero estable.</li>
-                    
-                    <li><strong>Max_depth:</strong> Profundidad máxima de cada árbol en el modelo. Configurado en 7, controlando la cantidad de divisiones y afectando la complejidad y el sobreajuste del modelo.</li>
-                    
-                    <li><strong>Colsample_bytree:</strong> Proporción de características consideradas al construir cada árbol. Configurado en 0.5330554532179588, controlando la diversidad entre los árboles y previniendo el sobreajuste.</li>
-                    
-                    <li><strong>N_estimators:</strong> Número total de árboles en el modelo. Configurado en 568, implicando un modelo más complejo con mayor capacidad de ajuste a los datos.</li>
-                    
-                    <li><strong>Reg_alpha:</strong> Parámetro de regularización L1 que penaliza características con coeficientes grandes. Configurado en 4.1084086686936143e-08, previniendo el sobreajuste.</li>
-                    
-                    <li><strong>Reg_lambda:</strong> Parámetro de regularización L2 que penaliza valores grandes de coeficientes. Configurado en 0.00024280802318611656, ayudando a evitar el sobreajuste.</li>
-                    
-                    <li><strong>Min_child_weight:</strong> Suma mínima de instancias necesarias en un nodo hoja. Configurado en 1, controlando la partición de datos y evitando particiones con pocas instancias.</li>
-                    
-                    <li><strong>Gamma:</strong> Parámetro de regularización que especifica una reducción mínima requerida en la función de pérdida para que ocurra una partición. Configurado en 0.23340955083195258, controlando la complejidad del modelo.</li>
-                    
-                    <li><strong>Subsample:</strong> Proporción de instancias de entrenamiento que se muestrean al construir cada árbol. Configurado en 0.8458562164387711, previniendo el sobreajuste y mejorando la generalización.</li>
-                  </ul>
-              </div>
-              <div class="card-footer">
-                <div class="stats">
-                  <i class="material-icons">library_books</i> <a
-                    href="https://xgboost.readthedocs.io/en/latest/parameter.html" target="_blank">Ver Documentacion</a>
-                </div>
-              </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="card card-info card-chart">
+          <div class="card-header card-header-primary">
+            <img src="./assets/img/optimizacion.png" alt="" id="ImgHeader">
+          </div>
+          <div class="card-body card-body-info card-container">
+            <h4 class="card-title">Configuracion de los parametros </h4>
+            <p class="card-category" style="color: black;">
+              xgb.XGBClassifier( objective= 'multi:softmax',
+              num_class = 3,
+              importance_type='gain',
+              learning_rate=0.030958241241393895,
+              max_depth=7,
+              colsample_bytree=0.5330554532179588,
+              n_estimators=568,
+              reg_alpha=4.1084086686936143e-08,
+              reg_lambda=0.00024280802318611656,
+              min_child_weight=1,
+              gamma=0.23340955083195258,
+              subsample=0.8458562164387711) </p>
+            <ul>
+              <li><strong>Objective:</strong> La función objetivo utilizada por el algoritmo es "multi:softmax",
+                implicando una clasificación multi-clase.</li>
+
+              <li><strong>Num_class:</strong> Número de clases en el problema de clasificación. Configurado en 3,
+                indicando tres clases distintas.</li>
+
+              <li><strong>Importance_type:</strong> Tipo de importancia utilizado para evaluar la relevancia de las
+                características. Configurado en 'gain', que se refiere a la ganancia de información.</li>
+
+              <li><strong>Learning_rate:</strong> Tasa de aprendizaje que controla la contribución de cada árbol al
+                modelo final. Configurado en 0.030958241241393895, sugiriendo una convergencia más lenta pero estable.
+              </li>
+
+              <li><strong>Max_depth:</strong> Profundidad máxima de cada árbol en el modelo. Configurado en 7,
+                controlando la cantidad de divisiones y afectando la complejidad y el sobreajuste del modelo.</li>
+
+              <li><strong>Colsample_bytree:</strong> Proporción de características consideradas al construir cada árbol.
+                Configurado en 0.5330554532179588, controlando la diversidad entre los árboles y previniendo el
+                sobreajuste.</li>
+
+              <li><strong>N_estimators:</strong> Número total de árboles en el modelo. Configurado en 568, implicando un
+                modelo más complejo con mayor capacidad de ajuste a los datos.</li>
+
+              <li><strong>Reg_alpha:</strong> Parámetro de regularización L1 que penaliza características con
+                coeficientes grandes. Configurado en 4.1084086686936143e-08, previniendo el sobreajuste.</li>
+
+              <li><strong>Reg_lambda:</strong> Parámetro de regularización L2 que penaliza valores grandes de
+                coeficientes. Configurado en 0.00024280802318611656, ayudando a evitar el sobreajuste.</li>
+
+              <li><strong>Min_child_weight:</strong> Suma mínima de instancias necesarias en un nodo hoja. Configurado
+                en 1, controlando la partición de datos y evitando particiones con pocas instancias.</li>
+
+              <li><strong>Gamma:</strong> Parámetro de regularización que especifica una reducción mínima requerida en
+                la función de pérdida para que ocurra una partición. Configurado en 0.23340955083195258, controlando la
+                complejidad del modelo.</li>
+
+              <li><strong>Subsample:</strong> Proporción de instancias de entrenamiento que se muestrean al construir
+                cada árbol. Configurado en 0.8458562164387711, previniendo el sobreajuste y mejorando la generalización.
+              </li>
+            </ul>
+          </div>
+          <div class="card-footer">
+            <div class="stats">
+              <i class="material-icons">library_books</i> <a
+                href="https://xgboost.readthedocs.io/en/latest/parameter.html" target="_blank">Ver Documentacion</a>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <div *ngIf="mostrarOverlay" class="loading-overlay">
       <mat-card class="custom-card">
         <div class="left-side">

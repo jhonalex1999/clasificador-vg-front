@@ -20,12 +20,12 @@
   display: block;
   margin: 0 auto;
 }
-.card {
+.card-info{
   min-height: 400px; /* Ajusta la altura mínima según tus necesidades */
   max-height: 500px; /* Ajusta la altura máxima según tus necesidades */
 }
 
-.card-body {
+.card-body-info{
   overflow-y: auto; /* Agregar una barra de desplazamiento vertical si el contenido es demasiado largo */
 }
 .loading-overlay {

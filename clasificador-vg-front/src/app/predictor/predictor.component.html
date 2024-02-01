@@ -2,6 +2,13 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-6 col-md-6 col-sm-12 ">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h3 class="card-title">Predictor</h3>
+            <p >Rellena los campos para realizar la predicción del tipo de violencia 
+            </p>
+          </div>
+          <div class="card-body">
             <cdk-virtual-scroll-viewport itemSize="auto" class="form-scroll-viewport">
               <form [formGroup]="formulario" (ngSubmit)="predecir()">
 
@@ -193,8 +200,8 @@
                 <mat-form-field>
                   <mat-label>Sustancias Víctima</mat-label>
                   <mat-select formControlName="sustancias_victima" required>
-                <mat-option *ngFor="let sustancias_victima of  sustanciasVictima" [value]="sustancias_victima.valor">
-
+                    <mat-option *ngFor="let sustancias_victima of  sustanciasVictima"
+                      [value]="sustancias_victima.valor">
                       {{ sustancias_victima.texto }}
                     </mat-option>
                   </mat-select>
@@ -238,16 +245,11 @@
                     Nombre UPGD es requerido.
                   </mat-error>
                 </mat-form-field>
-
-
-
-
-            <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
+                <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
               </form>
             </cdk-virtual-scroll-viewport>
-
-
-
+          </div>
+        </div>
 
       </div>
 

@@ -32,10 +32,12 @@ var chart_js_1 = require("chart.js");
 require("chart.js/auto");
 var date_fns_1 = require("date-fns");
 var operators_1 = require("rxjs/operators");
+var tooltip_1 = require("@angular/material/tooltip");
 var PredictorComponent = /** @class */ (function () {
-    function PredictorComponent(service, formBuilder) {
+    function PredictorComponent(service, formBuilder, renderer) {
         this.service = service;
         this.formBuilder = formBuilder;
+        this.renderer = renderer;
         this.banderaVisibilidad = false;
         this.mostrarOverlay = false;
         this.banderaCard = true;
@@ -152,11 +154,16 @@ var PredictorComponent = /** @class */ (function () {
             "UNIVERSIDAD INDUSTRIAL DE SANTANDER- UIS",
             "Otros",
         ];
+        this.tooltipContent = 'En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana';
         this.parentezcosVictBackup = __spreadArrays(this.parentezcosVict);
     }
     PredictorComponent.prototype.ngOnInit = function () {
         this.registroDTO = new registro_dto_1.RegistroDto();
         this.initFormulario();
+    };
+    PredictorComponent.prototype.beforeunloadHandler = function (event) {
+        // Borrar la clave del localStorage al cerrar la pestaña
+        localStorage.removeItem('primerCarga');
     };
     PredictorComponent.prototype.initFormulario = function () {
         var _this = this;
@@ -407,6 +414,27 @@ var PredictorComponent = /** @class */ (function () {
         // Establece las opciones filtradas en el formulario
         this.formulario.get("parentezco_vict").setValue("");
     };
+    PredictorComponent.prototype.showTooltip = function () {
+        if (!this.tooltip.disabled) {
+            this.tooltip.show();
+        }
+    };
+    PredictorComponent.prototype.ngAfterViewInit = function () {
+        var _this = this;
+        this.renderer.listen(this.tooltipIcon.nativeElement, 'click', function () {
+            _this.showTooltip();
+        });
+    };
+    __decorate([
+        core_1.ViewChild(tooltip_1.MatTooltip)
+    ], PredictorComponent.prototype, "tooltip");
+    __decorate([
+        core_1.ViewChild('tooltipIcon')
+    ], PredictorComponent.prototype, "tooltipIcon");
+    __decorate([
+        core_1.HostListener('window:beforeunload', ['$event']),
+        core_1.HostListener('window:pagehide', ['$event'])
+    ], PredictorComponent.prototype, "beforeunloadHandler");
     PredictorComponent = __decorate([
         core_1.Component({
             selector: "app-predictor",

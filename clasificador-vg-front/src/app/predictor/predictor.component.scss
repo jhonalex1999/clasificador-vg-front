@@ -51,21 +51,6 @@ color: white;
 text-align: center;
 font-weight: bold;
 }
-.loading-animation {
-  border: 10px solid #9C27B0;
-  border-top: 10px solid transparent;
-  border-radius: 50%;
-  width: 150px;
-  height: 150px;
-  animation: spin 2s linear infinite;
-
-  /* Cambiado a posición relativa */
-  position: relative;
-  margin: 10px auto; /* Centra horizontalmente y agrega espacio arriba */
-
-  /* Ajusta el espacio entre el círculo y el contenedor */
-  margin-top: 10px; /* Ajusta según sea necesario */
-}
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -73,11 +58,31 @@ font-weight: bold;
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.8);
-  z-index: 9999;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
+
+.loading-animation {
+  border: 10px solid #9C27B0;
+  border-top: 10px solid transparent;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  animation: spin 2s linear infinite;
+  position: relative;
+  margin: 10px auto;
+}
+
+.loading-message {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #9C27B0;
+  text-align: center;
+}
+
 #MensajeCarga {
   color: purple;
   /* Otros estilos que desees aplicar */

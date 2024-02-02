@@ -104,6 +104,10 @@ var GraficaDonaComponent = /** @class */ (function () {
             }
         });
     };
+    GraficaDonaComponent.prototype.beforeunloadHandler = function (event) {
+        // Borrar la clave del localStorage al cerrar la pestaña
+        localStorage.removeItem('primerCarga');
+    };
     GraficaDonaComponent.prototype.actualizarGraficaQueso = function () {
         console.log("se llama actualizar");
         if (this.myChart) {
@@ -223,6 +227,10 @@ var GraficaDonaComponent = /** @class */ (function () {
     __decorate([
         core_1.ViewChild('tooltipIcon')
     ], GraficaDonaComponent.prototype, "tooltipIcon");
+    __decorate([
+        core_1.HostListener('window:beforeunload', ['$event']),
+        core_1.HostListener('window:pagehide', ['$event'])
+    ], GraficaDonaComponent.prototype, "beforeunloadHandler");
     GraficaDonaComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-dona",

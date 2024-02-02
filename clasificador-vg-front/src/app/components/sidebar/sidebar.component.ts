@@ -17,7 +17,7 @@ export const ROUTES: RouteInfo[] = [
   },
   {
     path: "/grafica-barras",
-    title: "Grafica Barras Vertical",
+    title: "Grafica Barras Verticales",
     icon: "leaderboard",
     class: "",
   },

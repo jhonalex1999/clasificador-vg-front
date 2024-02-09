@@ -5,6 +5,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 exports.GraficaLineaComponent = void 0;
 var core_1 = require("@angular/core");
@@ -16,6 +23,8 @@ var GraficaLineaComponent = /** @class */ (function () {
         var _this = this;
         this.service = service;
         this.renderer = renderer;
+        this.originalData = null;
+        this.lastSelectedColumns = { columna1: null, columna2: null };
         this.columna1_selec = "Selecciona una columna primero";
         this.columna2_selec = "Selecciona una columna primero";
         this.tooltipContent = "En este gráfico de líneas interactivo, se proporciona la flexibilidad de seleccionar dos variables específicas para explorar su relación entre sí. Al elegir las variables de interés, las líneas se ajustan dinámicamente, permitiendo visualizar cómo cambian en función de las variables seleccionadas. Esto facilita la identificación de tendencias, patrones o correlaciones entre las dos variables. Al pasar el cursor sobre puntos específicos en las líneas, se despliega información detallada, incluyendo los valores exactos de ambas variables en ese punto. Esta funcionalidad es esencial para comprender la relación y la interacción entre las dos variables seleccionadas.";
@@ -81,13 +90,19 @@ var GraficaLineaComponent = /** @class */ (function () {
         };
         this.createCustomLegendItems2 = function (chart, options) {
             var ul = _this.getOrCreateLegendList(chart, options.containerID);
-            // Limpiar los elementos de la leyenda anteriores
             while (ul.firstChild) {
                 ul.firstChild.remove();
             }
-            // Generar elementos de leyenda personalizados para el eje x
+            if (_this.originalData === null ||
+                _this.lastSelectedColumns.columna1 !== _this.columna1_selec ||
+                _this.lastSelectedColumns.columna2 !== _this.columna2_selec) {
+                _this.originalData = chart.data.datasets.map(function (dataset) { return __spreadArrays(dataset.data); });
+                // Actualiza las últimas columnas seleccionadas
+                _this.lastSelectedColumns.columna1 = _this.columna1_selec;
+                _this.lastSelectedColumns.columna2 = _this.columna2_selec;
+            }
             var labels = chart.data.labels;
-            labels.forEach(function (label) {
+            labels.forEach(function (label, index) {
                 var li = document.createElement("li");
                 li.style.alignItems = "center";
                 li.style.cursor = "pointer";
@@ -95,12 +110,22 @@ var GraficaLineaComponent = /** @class */ (function () {
                 li.style.flexDirection = "row";
                 li.style.marginLeft = "10px";
                 li.onclick = function () {
-                    // Realizar acciones al hacer clic en una etiqueta del eje x
-                    console.log("Clic en la etiqueta del eje x: " + label);
+                    chart.data.datasets.forEach(function (dataset) {
+                        var datasetIndex = chart.data.datasets.indexOf(dataset);
+                        if (dataset.data[index] === null) {
+                            dataset.data[index] = _this.originalData[datasetIndex][index];
+                        }
+                        else {
+                            dataset.data[index] = null;
+                        }
+                    });
+                    chart.update();
                 };
-                // Puedes personalizar el contenido del elemento li según tus necesidades
                 var textContainer = document.createElement("p");
+                textContainer.style.color = label.fontColor;
                 textContainer.style.margin = "0";
+                textContainer.style.padding = "0";
+                textContainer.style.textDecoration = chart.data.datasets.some(function (dataset) { return dataset.data[index] === null; }) ? "line-through" : "";
                 var text = document.createTextNode(label);
                 textContainer.appendChild(text);
                 li.appendChild(textContainer);
@@ -134,6 +159,10 @@ var GraficaLineaComponent = /** @class */ (function () {
             }
         });
     };
+    GraficaLineaComponent.prototype.beforeunloadHandler = function (event) {
+        // Borrar la clave del localStorage al cerrar la pestaña
+        localStorage.removeItem('primerCarga');
+    };
     GraficaLineaComponent.prototype.actualizarGraficoLinear = function () {
         console.log("se llama actualizar");
         if (this.linearChart) {
@@ -159,10 +188,10 @@ var GraficaLineaComponent = /** @class */ (function () {
         console.log(this.dataframe);
         console.log(columna1_selec);
         console.log(columna2_selec);
-        // Obtener los valores únicos de grupo edad edad y sexo
+        // Obtener los valores únicos de los ejes
         var eje1 = Array.from(new Set(data.map(function (item) { return item[columna1_selec]; })));
         var eje2 = Array.from(new Set(data.map(function (item) { return item[columna2_selec]; })));
-        // Contar el número de registros por combinación de edad y sexo
+        // Contar el número de registros por combinación de ejes
         var contador = new Map();
         data.forEach(function (item) {
             var clave = item[columna1_selec] + "-" + item[columna2_selec];
@@ -178,9 +207,9 @@ var GraficaLineaComponent = /** @class */ (function () {
             });
             datos.push(fila);
         });
-        // Ordenar los datos por edad ascendente
+        // Ordenar los datos por la primera columna
         datos.sort(function (a, b) { return a.columna1_selec - b.columna2_selec; });
-        // Obtener los valores de edad y sexos
+        // Obtener los valores de los ejes
         var etiquetas = datos.map(function (item) { return item.columna1_selec; });
         var valores = eje2.map(function (columna2_selec) {
             return datos.map(function (item) { return item[columna2_selec]; });
@@ -188,8 +217,7 @@ var GraficaLineaComponent = /** @class */ (function () {
         var htmlLegendPlugin1 = {
             id: "htmlLegend1",
             afterUpdate: function (chart, args, options) {
-                // Cambio a función de flecha
-                _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+                _this.createCustomLegendItems(chart, options);
             }
         };
         var htmlLegendPlugin2 = {
@@ -206,10 +234,10 @@ var GraficaLineaComponent = /** @class */ (function () {
             type: "line",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) {
+                datasets: eje2.map(function (item, index) {
                     var color = _this.getRandomColorWithOpacity(0.5); // Color aleatorio con opacidad 0.2
                     return {
-                        label: sexo,
+                        label: item,
                         data: valores[index],
                         backgroundColor: color,
                         borderColor: color,
@@ -239,13 +267,12 @@ var GraficaLineaComponent = /** @class */ (function () {
                     x: {
                         title: {
                             display: true,
-                            text: columna1_selec
+                            text: columna1_selec + ' - ' + columna2_selec
                         }
                     },
                     y: {
                         title: {
-                            display: true,
-                            text: columna2_selec
+                            display: false
                         }
                     }
                 }
@@ -280,6 +307,10 @@ var GraficaLineaComponent = /** @class */ (function () {
     __decorate([
         core_1.ViewChild("tooltipIcon")
     ], GraficaLineaComponent.prototype, "tooltipIcon");
+    __decorate([
+        core_1.HostListener('window:beforeunload', ['$event']),
+        core_1.HostListener('window:pagehide', ['$event'])
+    ], GraficaLineaComponent.prototype, "beforeunloadHandler");
     GraficaLineaComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-dispersion",

@@ -143,7 +143,7 @@ export class GraficaLineaComponent implements OnInit {
     };
 
     const color = this.getRandomColorWithOpacity(0.2); // Color aleatorio con opacidad 0.2
-
+    
     // Create the scatter plot
     const ctx = document.getElementById("linearChart") as HTMLCanvasElement;
     // Cambiar el tipo de gráfico a 'line'
@@ -185,13 +185,12 @@ export class GraficaLineaComponent implements OnInit {
           x: {
             title: {
               display: true,
-              text: columna1_selec,
+              text: columna1_selec + ' - ' + columna2_selec,
             },
           },
           y: {
             title: {
-              display: true,
-              text: columna2_selec,
+              display: false,
             },
           },
         },

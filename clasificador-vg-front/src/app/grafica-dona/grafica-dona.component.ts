@@ -9,6 +9,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { TraductorEtiquetas } from "app/utils/traductor-etiquetas";
 import { MatTooltip } from '@angular/material/tooltip';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({
   selector: "app-grafica-dona",
   templateUrl: "./grafica-dona.component.html",
@@ -99,6 +100,7 @@ export class GraficaDonaComponent implements OnInit {
       ".chart-scroll-container"
     ) as HTMLElement;
 
+    Chart.register(ChartDataLabels);
     this.myChart = new Chart(ctx, {
       type: "doughnut",
       data: {
@@ -124,12 +126,20 @@ export class GraficaDonaComponent implements OnInit {
           htmlLegend: {
             containerID: "legend-container",
           },
+          datalabels: {
+            formatter: (value, ctx) => {
+                return value.toString(); // Devuelve el valor como una cadena
+            },
+            color: '#fff',
+        }
         },
       },
       plugins: [htmlLegendPlugin],
     });
+    
   }
 
+  
   // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
   getOrCreateLegendList = (chart, id) => {
     const legendContainer = document.getElementById(id);

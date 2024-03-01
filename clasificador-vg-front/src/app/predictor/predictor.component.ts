@@ -183,6 +183,20 @@ export class PredictorComponent implements OnInit {
       nom_eve: ["", Validators.required],
       nom_upgd: ["", Validators.required],
     });
+      // Agregar el escuchador de cambios al campo "area"
+      this.formulario
+      .get("area")
+      .valueChanges
+      .subscribe((area) => {
+        // Si el área es "CABECERA MUNICIPAL", mostrar el campo "comuna"
+        if (area === "CABECERA MUNICIPAL") {
+          this.formulario.get("comuna").enable();
+        } else {
+          // Si no, establecer el valor de "comuna" en "Otros" y deshabilitarlo
+          this.formulario.get("comuna").setValue("Otros");
+          this.formulario.get("comuna").disable();
+        }
+      });
 
     this.formulario
       .get("departamento")
@@ -237,6 +251,10 @@ export class PredictorComponent implements OnInit {
       if (this.registroDTO.departamento == "Otros") {
         this.registroDTO.municipio = "Otros";
       }
+      this.registroDTO.comuna = this.formulario.get('comuna').value;
+      this.registroDTO.mes = this.obtenerMesDesdeSemana(
+      this.registroDTO.semana
+      );
       this.registroDTO.mes = this.obtenerMesDesdeSemana(
         this.registroDTO.semana
       );

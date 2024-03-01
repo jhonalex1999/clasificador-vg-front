@@ -122,7 +122,12 @@ export class ModeloInfoComponent implements OnInit {
         },
         responsive: true,  
         maintainAspectRatio: false, 
-      }
+        plugins:{
+          datalabels: {
+            display: false, 
+          }
+        }
+      },
     });
   }
   // Función para obtener los elementos de la página actual

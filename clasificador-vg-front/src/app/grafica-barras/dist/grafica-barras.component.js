@@ -26,7 +26,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
         this.columna2_selec = "Selecciona una columna primero";
         this.tooltipContent = "En este gráfico de barras verticales interactivo, se presenta la opción de seleccionar dos variables. Al elegir las variables de interés, la visualización se ajusta dinámicamente, proporcionando un análisis comparativo entre las dos categorías seleccionadas. Al pasar el cursor sobre cada barra, se muestra la información detallada, incluyendo los valores numéricos asociados a cada categoría. Esta funcionalidad brinda una herramienta efectiva para explorar las relaciones y tendencias entre las dos variables seleccionadas, permitiendo una comprensión más profunda de la distribución y la interacción entre los datos.";
         this.originalData = null;
-        // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
+        this.lastSelectedColumns = { columna1: null, columna2: null };
         this.getOrCreateLegendList = function (chart, id) {
             var legendContainer = document.getElementById(id);
             var listContainer = legendContainer.querySelector("ul");
@@ -40,24 +40,20 @@ var GraficaBarrasComponent = /** @class */ (function () {
             }
             return listContainer;
         };
-        // Función para crear los elementos de la leyenda HTML personalizada
         this.createCustomLegendItems = function (chart, options) {
             var ul = _this.getOrCreateLegendList(chart, options.containerID);
-            // Limpiar los elementos de la leyenda anteriores
             while (ul.firstChild) {
                 ul.firstChild.remove();
             }
-            // Generar elementos de leyenda personalizados
             var items = chart.options.plugins.legend.labels.generateLabels(chart);
-            // Ordenar las etiquetas alfabéticamente o numéricamente
             items.sort(function (a, b) {
                 if (typeof a.text === "string" && typeof b.text === "string") {
-                    return a.text.localeCompare(b.text); // Orden alfabético
+                    return a.text.localeCompare(b.text);
                 }
                 else if (typeof a.text === "number" && typeof b.text === "number") {
-                    return a.text - b.text; // Orden numérico ascendente
+                    return a.text - b.text;
                 }
-                return 0; // No se cambia el orden si los tipos son diferentes
+                return 0;
             });
             items.forEach(function (item) {
                 var li = document.createElement("li");
@@ -76,7 +72,6 @@ var GraficaBarrasComponent = /** @class */ (function () {
                     }
                     chart.update();
                 };
-                // Color box
                 var boxSpan = document.createElement("span");
                 boxSpan.style.background = item.fillStyle;
                 boxSpan.style.borderColor = item.strokeStyle;
@@ -86,7 +81,6 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 boxSpan.style.height = "20px";
                 boxSpan.style.marginRight = "10px";
                 boxSpan.style.width = "20px";
-                // Texto
                 var textContainer = document.createElement("p");
                 textContainer.style.color = item.fontColor;
                 textContainer.style.margin = "0";
@@ -101,15 +95,17 @@ var GraficaBarrasComponent = /** @class */ (function () {
         };
         this.createCustomLegendItems2 = function (chart, options) {
             var ul = _this.getOrCreateLegendList(chart, options.containerID);
-            // Limpiar los elementos de la leyenda anteriores
             while (ul.firstChild) {
                 ul.firstChild.remove();
             }
-            // Si originalData es null, guarda los datos originales
-            if (_this.originalData === null) {
+            if (_this.originalData === null ||
+                _this.lastSelectedColumns.columna1 !== _this.columna1_selec ||
+                _this.lastSelectedColumns.columna2 !== _this.columna2_selec) {
                 _this.originalData = chart.data.datasets.map(function (dataset) { return __spreadArrays(dataset.data); });
+                // Actualiza las últimas columnas seleccionadas
+                _this.lastSelectedColumns.columna1 = _this.columna1_selec;
+                _this.lastSelectedColumns.columna2 = _this.columna2_selec;
             }
-            // Generar elementos de leyenda personalizados para el eje x
             var labels = chart.data.labels;
             labels.forEach(function (label, index) {
                 var li = document.createElement("li");
@@ -119,26 +115,22 @@ var GraficaBarrasComponent = /** @class */ (function () {
                 li.style.flexDirection = "row";
                 li.style.marginLeft = "10px";
                 li.onclick = function () {
-                    // Verificar si el valor actual es 0 y restablecerlo, de lo contrario, establecerlo en 0
                     chart.data.datasets.forEach(function (dataset) {
-                        var datasetIndex = chart.data.datasets.indexOf(dataset); // Obtener el índice del conjunto de datos actual
-                        if (dataset.data[index] === 0) {
-                            // Restablecer a valores originales
+                        var datasetIndex = chart.data.datasets.indexOf(dataset);
+                        if (dataset.data[index] === null) {
                             dataset.data[index] = _this.originalData[datasetIndex][index];
                         }
                         else {
-                            // Establecer en 0
-                            dataset.data[index] = 0;
+                            dataset.data[index] = null;
                         }
                     });
-                    chart.update(); // Actualizar el gráfico después de cambiar los valores
+                    chart.update();
                 };
-                // Puedes personalizar el contenido del elemento li según tus necesidades
                 var textContainer = document.createElement("p");
                 textContainer.style.color = label.fontColor;
                 textContainer.style.margin = "0";
                 textContainer.style.padding = "0";
-                textContainer.style.textDecoration = chart.data.datasets.some(function (dataset) { return dataset.data[index] === 0; }) ? "line-through" : "";
+                textContainer.style.textDecoration = chart.data.datasets.some(function (dataset) { return dataset.data[index] === null; }) ? "line-through" : "";
                 var text = document.createTextNode(label);
                 textContainer.appendChild(text);
                 li.appendChild(textContainer);
@@ -158,6 +150,14 @@ var GraficaBarrasComponent = /** @class */ (function () {
             }
         });
     };
+    GraficaBarrasComponent.prototype.beforeunloadHandler = function (event) {
+        // Borrar la clave del localStorage al cerrar la pestaña
+        localStorage.removeItem('primerCarga');
+        if (localStorage.getItem('formData')) {
+            // Si existe, eliminar la clave del localStorage
+            localStorage.removeItem('formData');
+        }
+    };
     GraficaBarrasComponent.prototype.actualizarGrafica = function () {
         console.log("se llama actualizar");
         if (this.myChart) {
@@ -174,10 +174,10 @@ var GraficaBarrasComponent = /** @class */ (function () {
         console.log(this.dataframe);
         console.log(columna1_selec);
         console.log(columna2_selec);
-        // Obtener los valores únicos de grupo edad edad y sexo
+        // Obtener los valores únicos de los ejes
         var eje1 = Array.from(new Set(data.map(function (item) { return item[columna1_selec]; })));
         var eje2 = Array.from(new Set(data.map(function (item) { return item[columna2_selec]; })));
-        // Contar el número de registros por combinación de edad y sexo
+        // Contar el número de registros por combinación de ejes
         var contador = new Map();
         data.forEach(function (item) {
             var clave = item[columna1_selec] + "-" + item[columna2_selec];
@@ -193,9 +193,9 @@ var GraficaBarrasComponent = /** @class */ (function () {
             });
             datos.push(fila);
         });
-        // Ordenar los datos por edad ascendente
+        // Ordenar los datos por la primera columna
         datos.sort(function (a, b) { return a.columna1_selec - b.columna2_selec; });
-        // Obtener los valores de edad y sexos
+        // Obtener los valores de los ejes
         var etiquetas = datos.map(function (item) { return item.columna1_selec; });
         var valores = eje2.map(function (columna2_selec) {
             return datos.map(function (item) { return item[columna2_selec]; });
@@ -205,8 +205,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
         var htmlLegendPlugin1 = {
             id: "htmlLegend1",
             afterUpdate: function (chart, args, options) {
-                // Cambio a función de flecha
-                _this.createCustomLegendItems(chart, options); // Uso de 'this' correctamente
+                _this.createCustomLegendItems(chart, options);
             }
         };
         var htmlLegendPlugin2 = {
@@ -216,14 +215,13 @@ var GraficaBarrasComponent = /** @class */ (function () {
             }
         };
         // Crear el gráfico de barras
-        var delayed;
         var ctx = document.getElementById("myChart");
         this.myChart = new chart_js_1.Chart(ctx, {
             type: "bar",
             data: {
                 labels: etiquetas,
-                datasets: eje2.map(function (sexo, index) { return ({
-                    label: sexo,
+                datasets: eje2.map(function (item, index) { return ({
+                    label: item,
                     data: valores[index],
                     backgroundColor: _this.getRandomColorWithOpacity(0.5),
                     borderWidth: 1
@@ -242,6 +240,9 @@ var GraficaBarrasComponent = /** @class */ (function () {
                     },
                     htmlLegend2: {
                         containerID: "legend-container-2"
+                    },
+                    datalabels: {
+                        display: false
                     }
                 },
                 scales: {
@@ -268,9 +269,7 @@ var GraficaBarrasComponent = /** @class */ (function () {
         var color;
         do {
             color = "#" + getRandomHex() + getRandomHex() + getRandomHex();
-        } while (
-        // Excluir colores oscuros (tonos de marrón, morado oscuro y negro)
-        parseInt(color.substr(1), 16) < parseInt("444444", 16));
+        } while (parseInt(color.substr(1), 16) < parseInt("444444", 16));
         return "" + color + Math.round(opacity * 255).toString(16);
     };
     GraficaBarrasComponent.prototype.generarColoresAleatorios = function (cantidad) {
@@ -306,6 +305,10 @@ var GraficaBarrasComponent = /** @class */ (function () {
     __decorate([
         core_1.ViewChild("tooltipIcon")
     ], GraficaBarrasComponent.prototype, "tooltipIcon");
+    __decorate([
+        core_1.HostListener('window:beforeunload', ['$event']),
+        core_1.HostListener('window:pagehide', ['$event'])
+    ], GraficaBarrasComponent.prototype, "beforeunloadHandler");
     GraficaBarrasComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-barras",

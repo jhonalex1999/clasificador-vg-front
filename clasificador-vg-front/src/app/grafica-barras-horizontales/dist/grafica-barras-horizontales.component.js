@@ -102,6 +102,14 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
             }
         });
     };
+    GraficaBarrasHorizontalesComponent.prototype.beforeunloadHandler = function (event) {
+        // Borrar la clave del localStorage al cerrar la pestaña
+        localStorage.removeItem('primerCarga');
+        if (localStorage.getItem('formData')) {
+            // Si existe, eliminar la clave del localStorage
+            localStorage.removeItem('formData');
+        }
+    };
     GraficaBarrasHorizontalesComponent.prototype.actualizarGraficaHorizontal = function () {
         console.log("se llama actualizar");
         if (this.myChart) {
@@ -171,6 +179,9 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
                     // @ts-ignore
                     htmlLegend: {
                         containerID: "legend-container"
+                    },
+                    datalabels: {
+                        display: false
                     }
                 },
                 indexAxis: "y",
@@ -231,6 +242,10 @@ var GraficaBarrasHorizontalesComponent = /** @class */ (function () {
     __decorate([
         core_1.ViewChild("tooltipIcon")
     ], GraficaBarrasHorizontalesComponent.prototype, "tooltipIcon");
+    __decorate([
+        core_1.HostListener('window:beforeunload', ['$event']),
+        core_1.HostListener('window:pagehide', ['$event'])
+    ], GraficaBarrasHorizontalesComponent.prototype, "beforeunloadHandler");
     GraficaBarrasHorizontalesComponent = __decorate([
         core_1.Component({
             selector: "app-grafica-barras-horizontales",

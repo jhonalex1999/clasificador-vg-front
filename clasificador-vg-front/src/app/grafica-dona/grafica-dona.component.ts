@@ -133,9 +133,12 @@ export class GraficaDonaComponent implements OnInit {
           },
           datalabels: {
             formatter: (value, ctx) => {
-                return value.toString(); // Devuelve el valor como una cadena
+                return value.toString(); 
             },
             color: '#fff',
+            font: {
+              weight: 'bold' 
+            }
         }
         },
       },

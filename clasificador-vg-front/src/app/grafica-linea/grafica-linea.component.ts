@@ -184,6 +184,9 @@ export class GraficaLineaComponent implements OnInit {
           htmlLegend2: {
             containerID: "legend-container-2",
           },
+          datalabels: {
+            display: false, 
+          }
         },
         scales: {
           x: {

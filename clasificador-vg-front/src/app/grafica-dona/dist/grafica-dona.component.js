@@ -11,6 +11,7 @@ var core_1 = require("@angular/core");
 var chart_js_1 = require("chart.js");
 var traductor_etiquetas_1 = require("app/utils/traductor-etiquetas");
 var tooltip_1 = require("@angular/material/tooltip");
+var chartjs_plugin_datalabels_1 = require("chartjs-plugin-datalabels");
 var GraficaDonaComponent = /** @class */ (function () {
     function GraficaDonaComponent(service, renderer) {
         var _this = this;
@@ -99,6 +100,7 @@ var GraficaDonaComponent = /** @class */ (function () {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.columnas = Object.keys(_this.dataframe[0]);
             console.log(_this.columnas);
+            chart_js_1.Chart.register(chartjs_plugin_datalabels_1["default"]);
             if (_this.columna_selec != 'Selecciona una columna primero') {
                 _this.crearGraficaQueso(_this.columna_selec);
             }
@@ -107,6 +109,10 @@ var GraficaDonaComponent = /** @class */ (function () {
     GraficaDonaComponent.prototype.beforeunloadHandler = function (event) {
         // Borrar la clave del localStorage al cerrar la pestaña
         localStorage.removeItem('primerCarga');
+        if (localStorage.getItem('formData')) {
+            // Si existe, eliminar la clave del localStorage
+            localStorage.removeItem('formData');
+        }
     };
     GraficaDonaComponent.prototype.actualizarGraficaQueso = function () {
         console.log("se llama actualizar");
@@ -171,6 +177,15 @@ var GraficaDonaComponent = /** @class */ (function () {
                     // @ts-ignore
                     htmlLegend: {
                         containerID: "legend-container"
+                    },
+                    datalabels: {
+                        formatter: function (value, ctx) {
+                            return value.toString();
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        }
                     }
                 }
             },

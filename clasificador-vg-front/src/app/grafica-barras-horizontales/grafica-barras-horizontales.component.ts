@@ -124,6 +124,9 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
           htmlLegend: {
             containerID: "legend-container",
           },
+          datalabels: {
+            display: false,
+          }
         },
         indexAxis: "y",
         scales: {

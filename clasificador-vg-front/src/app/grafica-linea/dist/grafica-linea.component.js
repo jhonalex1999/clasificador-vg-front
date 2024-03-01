@@ -162,6 +162,10 @@ var GraficaLineaComponent = /** @class */ (function () {
     GraficaLineaComponent.prototype.beforeunloadHandler = function (event) {
         // Borrar la clave del localStorage al cerrar la pestaña
         localStorage.removeItem('primerCarga');
+        if (localStorage.getItem('formData')) {
+            // Si existe, eliminar la clave del localStorage
+            localStorage.removeItem('formData');
+        }
     };
     GraficaLineaComponent.prototype.actualizarGraficoLinear = function () {
         console.log("se llama actualizar");
@@ -261,6 +265,9 @@ var GraficaLineaComponent = /** @class */ (function () {
                     },
                     htmlLegend2: {
                         containerID: "legend-container-2"
+                    },
+                    datalabels: {
+                        display: false
                     }
                 },
                 scales: {

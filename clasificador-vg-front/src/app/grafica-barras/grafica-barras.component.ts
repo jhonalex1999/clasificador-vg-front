@@ -139,6 +139,9 @@ export class GraficaBarrasComponent implements OnInit {
           htmlLegend2: {
             containerID: "legend-container-2",
           },
+          datalabels: {
+            display: false, 
+          }
         },
         scales: {
           y: {

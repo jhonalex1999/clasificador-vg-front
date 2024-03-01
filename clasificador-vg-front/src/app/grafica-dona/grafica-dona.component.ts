@@ -35,6 +35,7 @@ export class GraficaDonaComponent implements OnInit {
       this.dataframe = JSON.parse(result.dataframe);
       this.columnas = Object.keys(this.dataframe[0]);
       console.log(this.columnas);
+      Chart.register(ChartDataLabels);
       if(this.columna_selec != 'Selecciona una columna primero'){
         this.crearGraficaQueso(this.columna_selec);
       }
@@ -45,6 +46,10 @@ export class GraficaDonaComponent implements OnInit {
   beforeunloadHandler(event: Event) {
     // Borrar la clave del localStorage al cerrar la pestaña
     localStorage.removeItem('primerCarga');
+    if (localStorage.getItem('formData')) {
+      // Si existe, eliminar la clave del localStorage
+      localStorage.removeItem('formData');
+    }
   }
   actualizarGraficaQueso() {
     console.log("se llama actualizar");
@@ -100,7 +105,7 @@ export class GraficaDonaComponent implements OnInit {
       ".chart-scroll-container"
     ) as HTMLElement;
 
-    Chart.register(ChartDataLabels);
+
     this.myChart = new Chart(ctx, {
       type: "doughnut",
       data: {

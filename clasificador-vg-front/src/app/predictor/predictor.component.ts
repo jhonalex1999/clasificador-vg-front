@@ -147,13 +147,20 @@ export class PredictorComponent implements OnInit {
     this.registroDTO = new RegistroDto();
 
     this.initFormulario();
+    this.cargarDesdeLocalStorage();
   }
   @HostListener('window:beforeunload', ['$event'])
   @HostListener('window:pagehide', ['$event'])
   beforeunloadHandler(event: Event) {
     // Borrar la clave del localStorage al cerrar la pestaña
     localStorage.removeItem('primerCarga');
+    if (localStorage.getItem('formData')) {
+      // Si existe, eliminar la clave del localStorage
+      localStorage.removeItem('formData');
+    }
   }
+
+
   initFormulario() {
     this.formulario = this.formBuilder.group({
       departamento: ["", Validators.required],
@@ -193,8 +200,30 @@ export class PredictorComponent implements OnInit {
       .subscribe((sexoAgresor) => {
         this.actualizarOpcionesParentezco(sexoAgresor);
       });
-  }
 
+      this.formulario.valueChanges.subscribe(() => {
+        this.guardarSinEnviar();
+      });
+  }
+  cargarDesdeLocalStorage() {
+    const formDataString = localStorage.getItem('formData');
+    if (formDataString) {
+      const formData = JSON.parse(formDataString);
+      this.formulario.patchValue(formData);
+    }
+  }
+  limpiarFormulario() {
+    this.formulario.reset();
+    if (localStorage.getItem('formData')) {
+      localStorage.removeItem('formData');
+    }
+  }  
+  guardarSinEnviar() {
+    // Aquí se obtienen los valores del formulario
+    const formData = this.formulario.value;
+    // Se convierten a cadena JSON y se guardan en el almacenamiento local bajo la clave 'formData'
+    localStorage.setItem('formData', JSON.stringify(formData));
+  }
   public predecir() {
     this.banderaVisibilidad = true;
     this.banderaCard=true;

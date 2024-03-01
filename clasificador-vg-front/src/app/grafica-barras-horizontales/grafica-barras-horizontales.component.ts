@@ -41,6 +41,10 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
   beforeunloadHandler(event: Event) {
     // Borrar la clave del localStorage al cerrar la pestaña
     localStorage.removeItem('primerCarga');
+    if (localStorage.getItem('formData')) {
+      // Si existe, eliminar la clave del localStorage
+      localStorage.removeItem('formData');
+    }
   }
 
   actualizarGraficaHorizontal() {

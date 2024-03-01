@@ -160,10 +160,15 @@ var PredictorComponent = /** @class */ (function () {
     PredictorComponent.prototype.ngOnInit = function () {
         this.registroDTO = new registro_dto_1.RegistroDto();
         this.initFormulario();
+        this.cargarDesdeLocalStorage();
     };
     PredictorComponent.prototype.beforeunloadHandler = function (event) {
         // Borrar la clave del localStorage al cerrar la pestaña
         localStorage.removeItem('primerCarga');
+        if (localStorage.getItem('formData')) {
+            // Si existe, eliminar la clave del localStorage
+            localStorage.removeItem('formData');
+        }
     };
     PredictorComponent.prototype.initFormulario = function () {
         var _this = this;
@@ -205,6 +210,28 @@ var PredictorComponent = /** @class */ (function () {
             .subscribe(function (sexoAgresor) {
             _this.actualizarOpcionesParentezco(sexoAgresor);
         });
+        this.formulario.valueChanges.subscribe(function () {
+            _this.guardarSinEnviar();
+        });
+    };
+    PredictorComponent.prototype.cargarDesdeLocalStorage = function () {
+        var formDataString = localStorage.getItem('formData');
+        if (formDataString) {
+            var formData = JSON.parse(formDataString);
+            this.formulario.patchValue(formData);
+        }
+    };
+    PredictorComponent.prototype.limpiarFormulario = function () {
+        this.formulario.reset();
+        if (localStorage.getItem('formData')) {
+            localStorage.removeItem('formData');
+        }
+    };
+    PredictorComponent.prototype.guardarSinEnviar = function () {
+        // Aquí se obtienen los valores del formulario
+        var formData = this.formulario.value;
+        // Se convierten a cadena JSON y se guardan en el almacenamiento local bajo la clave 'formData'
+        localStorage.setItem('formData', JSON.stringify(formData));
     };
     PredictorComponent.prototype.predecir = function () {
         var _this = this;
@@ -326,6 +353,9 @@ var PredictorComponent = /** @class */ (function () {
                                     return originalValue.toFixed(5);
                                 }
                             }
+                        },
+                        datalabels: {
+                            display: false
                         }
                     }
                 }

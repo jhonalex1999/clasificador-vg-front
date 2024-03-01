@@ -371,6 +371,9 @@ export class PredictorComponent implements OnInit {
                 },
               },
             },
+            datalabels: {
+              display: false, 
+            }
           },
         },
       });

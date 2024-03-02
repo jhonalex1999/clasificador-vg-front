@@ -120,10 +120,6 @@ export class PredictorComponent implements OnInit {
     { valor: "11", texto: "Institución de salud" },
     { valor: "12", texto: "Área deportiva y recreativa" },
   ];
-  noms_eve: string[] = [
-    "VIGILANCIA EN SALUD PÚBLICA DE LA VIOLENCIA DE GÉNERO E INTRAFAMILIAR",
-    "VIGILANCIA EN SALUD PÚBLICA DE LAS VIOLENCIAS DE GÉNERO",
-  ];
   noms_upgd: string[] = [
     "HOSPITAL LOCAL DEL NORTE",
     "HOSPITAL UNIVERSITARIO DE SANTANDER",
@@ -180,7 +176,6 @@ export class PredictorComponent implements OnInit {
       parentezco_vict: ["", Validators.required],
       sustancias_victima: ["", Validators.required],
       escenario: ["", Validators.required],
-      nom_eve: ["", Validators.required],
       nom_upgd: ["", Validators.required],
     });
       // Agregar el escuchador de cambios al campo "area"
@@ -226,12 +221,20 @@ export class PredictorComponent implements OnInit {
       this.formulario.patchValue(formData);
     }
   }
-  limpiarFormulario() {
-    this.formulario.reset();
-    if (localStorage.getItem('formData')) {
-      localStorage.removeItem('formData');
-    }
-  }  
+  
+ limpiarFormulario() {
+   // Eliminar los datos del formulario del almacenamiento local
+   if (localStorage.getItem('formData')) {
+    localStorage.removeItem('formData');
+  }
+  this.formulario.reset(); // Restablecer el formulario
+  this.formulario.get('comuna').enable(); // Habilitar el control "comuna"
+  
+ 
+}
+
+
+  
   guardarSinEnviar() {
     // Aquí se obtienen los valores del formulario
     const formData = this.formulario.value;
@@ -272,6 +275,9 @@ export class PredictorComponent implements OnInit {
       );
       this.registroDTO.agresor_menor_de_edad=this.obtenerAgresorMenor(
         this.registroDTO.edad_agre
+      );
+      this.registroDTO.nom_eve=this. obtenerNombreDelEvento(
+        this.registroDTO.parentezco_vict
       );
       console.log(this.registroDTO);
 
@@ -323,6 +329,10 @@ export class PredictorComponent implements OnInit {
   obtenerViolenciaIntrafamiliar(parentezco_vict: string): string {
     const valoresPermitidos = ["Madre", "Padre", "Familiar", "Pareja", "Ex pareja", "Esposo", "Compañero permanente", "Novio(a)", "Abuelo(a)"];
     return valoresPermitidos.includes(parentezco_vict) ? "1" : "0";
+  }
+  obtenerNombreDelEvento(parentezco_vict: string): string {
+    const valoresPermitidos = ["Madre", "Padre", "Familiar", "Pareja", "Ex pareja", "Esposo", "Compañero permanente", "Novio(a)", "Abuelo(a)"];
+    return valoresPermitidos.includes(parentezco_vict) ? "VIGILANCIA EN SALUD PÚBLICA DE LA VIOLENCIA DE GÉNERO E INTRAFAMILIAR" : "VIGILANCIA EN SALUD PÚBLICA DE LAS VIOLENCIAS DE GÉNERO";
   }
 
   graficaCaracteristicas(importancia_caracteristicas: any) {

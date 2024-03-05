@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Exo:400,700');
 
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        background-color: green; /* Cambia "your_color" al color que desees */
+    }
 
 
 .area{

@@ -391,6 +391,13 @@ export class PredictorComponent implements OnInit {
             },
           },
           plugins: {
+            title: {
+              display: true,
+              text: `Gráfica de Importancia de Características`,
+              font: {
+                size: 18,
+              },
+            },
             tooltip: {
               callbacks: {
                 label: (context: any) => {

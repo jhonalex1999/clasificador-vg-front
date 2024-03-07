@@ -129,6 +129,13 @@ export class GraficaBarrasComponent implements OnInit {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
+          title: {
+            display: true,
+            text: columna1_selec.length > 5 || columna2_selec.length > 5 ? `Gráfica de Barras verticales de la columna '${columna1_selec}' - '${columna2_selec}'` : `Gráfica de Líneas de la columna '${columna1_selec}' - '${columna2_selec}'`,
+            font: {
+              size: 18 
+            }
+          },
           legend: {
             display: false,
           },

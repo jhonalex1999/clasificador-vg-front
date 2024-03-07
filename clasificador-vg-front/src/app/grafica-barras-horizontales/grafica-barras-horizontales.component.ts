@@ -4,7 +4,7 @@ import {
   ElementRef,
   Renderer2,
   ViewChild,
-  HostListener
+  HostListener,
 } from "@angular/core";
 import { Service } from "../service/service";
 import { Chart, registerables } from "chart.js";
@@ -36,14 +36,14 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       }
     });
   }
-  @HostListener('window:beforeunload', ['$event'])
-  @HostListener('window:pagehide', ['$event'])
+  @HostListener("window:beforeunload", ["$event"])
+  @HostListener("window:pagehide", ["$event"])
   beforeunloadHandler(event: Event) {
     // Borrar la clave del localStorage al cerrar la pestaña
-    localStorage.removeItem('primerCarga');
-    if (localStorage.getItem('formData')) {
+    localStorage.removeItem("primerCarga");
+    if (localStorage.getItem("formData")) {
       // Si existe, eliminar la clave del localStorage
-      localStorage.removeItem('formData');
+      localStorage.removeItem("formData");
     }
   }
 
@@ -99,7 +99,9 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
         labels: etiquetas,
         datasets: eje1.map((valor, index) => {
           const dataPorValor = datos.find((item) => item.valor === valor);
-          const data = etiquetas.map((etiqueta) => (etiqueta === valor ? dataPorValor?.count || 0 : 0));
+          const data = etiquetas.map((etiqueta) =>
+            etiqueta === valor ? dataPorValor?.count || 0 : 0
+          );
           return {
             label: valor,
             data: data,
@@ -112,6 +114,13 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
+          title: {
+            display: true,
+            text: `Gráfica de Barras Horizontales de la columna '${columna_selec}'`,
+            font: {
+              size: 18,
+            },
+          },
           legend: {
             display: false,
             onClick: function (event, legendItem) {
@@ -126,13 +135,13 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
           },
           datalabels: {
             display: false,
-          }
+          },
         },
         indexAxis: "y",
         scales: {
           y: {
             beginAtZero: true,
-            stacked: true,  // Apilar las barras para evitar espacio en blanco
+            stacked: true, // Apilar las barras para evitar espacio en blanco
           },
           x: {
             stacked: true,
@@ -141,7 +150,6 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       },
       plugins: [htmlLegendPlugin],
     });
-    
   }
   // Función para obtener o crear la lista de elementos de la leyenda HTML personalizada
   getOrCreateLegendList = (chart, id) => {

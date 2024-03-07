@@ -174,6 +174,13 @@ export class GraficaLineaComponent implements OnInit {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
+          title: {
+            display: true,
+            text: columna1_selec.length > 5 || columna2_selec.length > 5 ? `Gráfica de Líneas de la columna '${columna1_selec}' - '${columna2_selec}'` : `Gráfica de Líneas de la columna '${columna1_selec}' - '${columna2_selec}'`,
+            font: {
+              size: 18 
+            }
+          },
           legend: {
             display: false,
           },
@@ -341,7 +348,7 @@ export class GraficaLineaComponent implements OnInit {
 
       
       const textContainer = document.createElement("p");
-      textContainer.style.color = label.fontColor;
+      //textContainer.style.color = label.fontColor;
       textContainer.style.margin = "0";
       textContainer.style.padding = "0";
       textContainer.style.textDecoration = chart.data.datasets.some(dataset => dataset.data[index] === null) ? "line-through" : "";

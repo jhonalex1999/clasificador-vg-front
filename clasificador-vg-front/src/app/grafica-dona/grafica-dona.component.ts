@@ -123,6 +123,13 @@ export class GraficaDonaComponent implements OnInit {
         responsive:true,
         maintainAspectRatio:false,
         plugins: {
+          title: {
+            display: true,
+            text: `Gráfica Dona de la columna '${columna_selec}'`,
+            font: {
+              size: 18 
+            }
+          },
           legend: {
             display: false,
           },

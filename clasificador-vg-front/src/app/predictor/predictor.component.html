@@ -14,7 +14,7 @@
 
                 <mat-form-field>
                   <mat-label>¿En qué departamento ocurrió el evento?</mat-label>
-                  <mat-select formControlName="departamento" required>
+                  <mat-select formControlName="departamento" >
                     <mat-option *ngFor="let departamento of departamentos" [value]="departamento">
                       {{ departamento }}
                     </mat-option>
@@ -26,7 +26,7 @@
 
                 <mat-form-field>
                   <mat-label>¿En qué municipio ocurrió el evento?</mat-label>
-                  <mat-select formControlName="municipio" required>
+                  <mat-select formControlName="municipio" >
                     <mat-option *ngFor="let municipio of municipios" [value]="municipio">
                       {{ municipio}}
                     </mat-option>
@@ -63,7 +63,7 @@
 
                 <mat-form-field>
                   <mat-label>¿A qué rango de edades pertenece la víctima?</mat-label>
-                  <mat-select formControlName="grupo_edad" required>
+                  <mat-select formControlName="grupo_edad" >
                     <mat-option *ngFor="let grupoEdad of gruposEdad" [value]="grupoEdad">
                       {{ grupoEdad }}
                     </mat-option>
@@ -76,7 +76,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es el sexo de la víctima?</mat-label>
-                  <mat-select formControlName="sexo" required>
+                  <mat-select formControlName="sexo" >
                     <mat-option *ngFor="let sexo of sexos" [value]="sexo">
                       {{ sexo }}
                     </mat-option>
@@ -88,7 +88,7 @@
 
                 <mat-form-field>
                   <mat-label>¿En qué área del municipio ocurrió el evento?</mat-label>
-                  <mat-select formControlName="area" required>
+                  <mat-select formControlName="area" >
                     <mat-option *ngFor="let area of areas" [value]="area">
                       {{ area }}
                     </mat-option>
@@ -100,7 +100,7 @@
 
                 <mat-form-field>
                   <mat-label>¿En qué comuna ocurrió el evento?</mat-label>
-                  <mat-select formControlName="comuna" required>
+                  <mat-select formControlName="comuna" >
                     <mat-option *ngFor="let comuna of comunas" [value]="comuna">
                       {{ comuna }}
                     </mat-option>
@@ -112,7 +112,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es el tipo de seguridad social de la victima?</mat-label>
-                  <mat-select formControlName="tipo_de_seguridad_social" required>
+                  <mat-select formControlName="tipo_de_seguridad_social" >
                     <mat-option *ngFor="let tipo_de_seguridad_social of tiposDeSeguridadSocial"
                       [value]="tipo_de_seguridad_social">
                       {{ tipo_de_seguridad_social }}
@@ -125,7 +125,7 @@
 
                 <mat-form-field>
                   <mat-label>¿La victima fue hospitalizada?</mat-label>
-                  <mat-select formControlName="paciente_hospitalizado" required>
+                  <mat-select formControlName="paciente_hospitalizado" >
                     <mat-option *ngFor="let paciente_hospitalizado of  tiposDePacienteHospitalizado"
                       [value]="paciente_hospitalizado.valor">
                       {{ paciente_hospitalizado.texto }}
@@ -138,7 +138,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es la condición final de la victima?</mat-label>
-                  <mat-select formControlName="condicion_final" required>
+                  <mat-select formControlName="condicion_final" >
                     <mat-option *ngFor="let condicion_final of  condicionesFinales" [value]="condicion_final.valor">
                       {{ condicion_final.texto }}
                     </mat-option>
@@ -150,7 +150,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es la actividad de la víctima?</mat-label>
-                  <mat-select formControlName="actividad" required>
+                  <mat-select formControlName="actividad" >
                     <mat-option *ngFor="let actividad of  actividades" [value]="actividad.valor">
                       {{ actividad.texto }}
                     </mat-option>
@@ -175,7 +175,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es el sexo del agresor?</mat-label>
-                  <mat-select formControlName="sexo_agre" required>
+                  <mat-select formControlName="sexo_agre" >
                     <mat-option *ngFor="let sexo_agre of  sexosAgre" [value]="sexo_agre">
                       {{ sexo_agre }}
                     </mat-option>
@@ -187,7 +187,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es el parentezco del agresor con la víctima?</mat-label>
-                  <mat-select formControlName="parentezco_vict" required>
+                  <mat-select formControlName="parentezco_vict" >
                     <mat-option *ngFor="let parentezco_vict of  parentezcosVict" [value]="parentezco_vict">
                       {{ parentezco_vict}}
                     </mat-option>
@@ -199,7 +199,7 @@
 
                 <mat-form-field>
                   <mat-label>¿La víctima consumía alcohol u otra sustancia?</mat-label>
-                  <mat-select formControlName="sustancias_victima" required>
+                  <mat-select formControlName="sustancias_victima" >
                     <mat-option *ngFor="let sustancias_victima of  sustanciasVictima"
                       [value]="sustancias_victima.valor">
                       {{ sustancias_victima.texto }}
@@ -212,7 +212,7 @@
 
                 <mat-form-field>
                   <mat-label>¿En qué escenario ocurrió el evento?</mat-label>
-                  <mat-select formControlName="escenario" required>
+                  <mat-select formControlName="escenario" >
                     <mat-option *ngFor="let escenario of  escenarios" [value]="escenario.valor">
                       {{ escenario.texto }}
                     </mat-option>
@@ -224,7 +224,7 @@
 
                 <mat-form-field>
                   <mat-label>¿Cuál es el nombre de la unidad primaria generadora de datos?</mat-label>
-                  <mat-select formControlName="nom_upgd" required>
+                  <mat-select formControlName="nom_upgd" >
                     <mat-option *ngFor="let nom_upgd of  noms_upgd" [value]="nom_upgd">
                       {{ nom_upgd }}
                     </mat-option>

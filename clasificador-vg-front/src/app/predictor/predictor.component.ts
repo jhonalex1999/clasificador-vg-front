@@ -1,12 +1,13 @@
 import { Component, OnInit,  ElementRef, Renderer2, ViewChild,HostListener} from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators,AbstractControl  } from "@angular/forms";
 import { Chart } from "chart.js";
 import "chart.js/auto";
 import { startOfWeek, addWeeks, getMonth, getQuarter, format } from "date-fns";
 import { startWith } from "rxjs/operators";
 import { MatTooltip } from '@angular/material/tooltip';
+import { filter } from 'rxjs/operators';
 @Component({
   selector: "app-predictor",
   templateUrl: "./predictor.component.html",
@@ -135,7 +136,7 @@ export class PredictorComponent implements OnInit {
   ];
 
   tooltipContent ='En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana';
-
+  private sexoAgreAnterior: string = '';
   parentezcosVictBackup: string[] = [...this.parentezcosVict];
   constructor(private service: Service, private formBuilder: FormBuilder,private renderer: Renderer2) {}
 
@@ -159,24 +160,24 @@ export class PredictorComponent implements OnInit {
 
   initFormulario() {
     this.formulario = this.formBuilder.group({
-      departamento: ["", Validators.required],
-      municipio: ["", Validators.required],
-      semana: ["", Validators.required],
-      año: ["", Validators.required],
-      grupo_edad: ["", Validators.required],
-      sexo: ["", Validators.required],
-      area: ["", Validators.required],
-      comuna: ["", Validators.required],
-      tipo_de_seguridad_social: ["", Validators.required],
-      paciente_hospitalizado: ["", Validators.required],
-      condicion_final: ["", Validators.required],
-      actividad: ["", Validators.required],
-      edad_agre: ["", Validators.required],
-      sexo_agre: ["", Validators.required],
-      parentezco_vict: ["", Validators.required],
-      sustancias_victima: ["", Validators.required],
-      escenario: ["", Validators.required],
-      nom_upgd: ["", Validators.required],
+      departamento: [""],
+      municipio: [""],
+      semana: [""],
+      año: [""],
+      grupo_edad: [""],
+      sexo: [""],
+      area: [""],
+      comuna: [""],
+      tipo_de_seguridad_social: [""],
+      paciente_hospitalizado: [""],
+      condicion_final: [""],
+      actividad: [""],
+      edad_agre: [""],
+      sexo_agre: [""],
+      parentezco_vict: [""],
+      sustancias_victima: [""],
+      escenario: [""],
+      nom_upgd: [""],
     });
       // Agregar el escuchador de cambios al campo "area"
       this.formulario
@@ -186,7 +187,8 @@ export class PredictorComponent implements OnInit {
         // Si el área es "CABECERA MUNICIPAL", mostrar el campo "comuna"
         if (area === "CABECERA MUNICIPAL") {
           this.formulario.get("comuna").enable();
-        } else {
+        
+        } else if (area === "RURAL DISPERSO" || area === "CENTRO POBLADO"){
           // Si no, establecer el valor de "comuna" en "Otros" y deshabilitarlo
           this.formulario.get("comuna").setValue("Otros");
           this.formulario.get("comuna").disable();
@@ -203,11 +205,15 @@ export class PredictorComponent implements OnInit {
           this.formulario.get("municipio").enable();
         }
       });
-    this.formulario
+      
+      this.formulario
       .get("sexo_agre")
       .valueChanges.pipe(startWith(""))
       .subscribe((sexoAgresor) => {
-        this.actualizarOpcionesParentezco(sexoAgresor);
+        if (sexoAgresor !== this.sexoAgreAnterior) {
+          this.actualizarOpcionesParentezco(sexoAgresor);
+          this.sexoAgreAnterior = sexoAgresor; // Actualizar el valor anterior
+        }
       });
 
       this.formulario.valueChanges.subscribe(() => {
@@ -223,17 +229,23 @@ export class PredictorComponent implements OnInit {
   }
   
  limpiarFormulario() {
-   // Eliminar los datos del formulario del almacenamiento local
-   if (localStorage.getItem('formData')) {
-    localStorage.removeItem('formData');
-  }
+   
   this.formulario.reset(); // Restablecer el formulario
   this.formulario.get('comuna').enable(); // Habilitar el control "comuna"
-  
- 
+  this.desactivarValidaciones();
+  // Eliminar los datos del formulario del almacenamiento local
+  if (localStorage.getItem('formData')) {
+    localStorage.removeItem('formData');
+  }
 }
 
-
+desactivarValidaciones() {
+  Object.keys(this.formulario.controls).forEach(field => {
+    const control = this.formulario.get(field);
+    control.setValidators(null); // Establece los validadores como nulos
+    control.updateValueAndValidity(); // Actualiza la validez del control
+  });
+}
   
   guardarSinEnviar() {
     // Aquí se obtienen los valores del formulario
@@ -241,7 +253,34 @@ export class PredictorComponent implements OnInit {
     // Se convierten a cadena JSON y se guardan en el almacenamiento local bajo la clave 'formData'
     localStorage.setItem('formData', JSON.stringify(formData));
   }
+  agregarValidacionRequeridaATodosLosCampos() {
+    // Obtenemos los nombres de los campos del formulario
+    const campos = Object.keys(this.formulario.controls);
+  
+    // Iteramos sobre cada campo y le agregamos la validación requerida si no la tiene
+    campos.forEach(campo => {
+        const control = this.formulario.get(campo);
+        // Verificamos si el campo no tiene la validación requerida
+        if (!control.validator || !this.hasRequiredValidator(control)) {
+            // Agregamos la validación requerida
+            const validators = control.validator ? [control.validator, Validators.required] : Validators.required;
+            control.setValidators(validators);
+            control.updateValueAndValidity();
+        }
+    });
+}
+
+hasRequiredValidator(control: AbstractControl<any>): boolean {
+    if (control.validator) {
+        const validators = Array.isArray(control.validator) ? control.validator : [control.validator];
+        return validators.some(validator => validator === Validators.required);
+    }
+    return false;
+}
+
+
   public predecir() {
+    this.agregarValidacionRequeridaATodosLosCampos();
     this.banderaVisibilidad = true;
     this.banderaCard=true;
     if (this.formulario.valid) {

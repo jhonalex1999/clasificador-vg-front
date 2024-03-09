@@ -23,22 +23,107 @@ var ModeloInfoComponent = /** @class */ (function () {
         this.itemsPerPage = 10;
         this.currentPage = 1;
         this.primerCarga = false;
+        this.imagenes = [];
+        this.cantidadImagenes = 14;
     }
     ModeloInfoComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.metric = [{ modelo: 'GaussianNB', exactitud: 0.648, precision: 0.676, sensibilidad: 0.664, puntuacion_F1: 0.611 },
-            { modelo: 'SVM', exactitud: 0.81, precision: 0.802, sensibilidad: 0.777, puntuacion_F1: 0.786 },
-            { modelo: 'KNN', exactitud: 0.775, precision: 0.754, sensibilidad: 0.742, puntuacion_F1: 0.747 },
-            { modelo: 'Neural Networks', exactitud: 0.811, precision: 0.801, sensibilidad: 0.796, puntuacion_F1: 0.798 },
-            { modelo: 'Decision Trees', exactitud: 0.782, precision: 0.769, sensibilidad: 0.768, puntuacion_F1: 0.768 },
-            { modelo: 'AdaBoost', exactitud: 0.823, precision: 0.815, sensibilidad: 0.809, puntuacion_F1: 0.812 },
-            { modelo: 'Regresión Logística', exactitud: 0.833, precision: 0.825, sensibilidad: 0.82, puntuacion_F1: 0.822 },
-            { modelo: 'Gradient Boosting', exactitud: 0.835, precision: 0.815, sensibilidad: 0.815, puntuacion_F1: 0.82 },
-            { modelo: 'Extra Trees', exactitud: 0.847, precision: 0.839, sensibilidad: 0.834, puntuacion_F1: 0.836 },
-            { modelo: 'Random Forest', exactitud: 0.849, precision: 0.842, sensibilidad: 0.837, puntuacion_F1: 0.839 },
-            { modelo: 'LightGBM', exactitud: 0.854, precision: 0.846, sensibilidad: 0.846, puntuacion_F1: 0.846 },
-            { modelo: 'XGBoost', exactitud: 0.851, precision: 0.843, sensibilidad: 0.842, puntuacion_F1: 0.842 },
-            { modelo: 'XGBoost Optimizado', exactitud: 0.859, precision: 0.851, sensibilidad: 0.847, puntuacion_F1: 0.848 }];
+        for (var i = 1; i <= this.cantidadImagenes; i++) {
+            this.imagenes.push("../../assets/img/ppt/" + i + ".png");
+        }
+        this.metric = [
+            {
+                modelo: "GaussianNB",
+                exactitud: 0.658,
+                precision: 0.686,
+                sensibilidad: 0.682,
+                puntuacion_F1: 0.624
+            },
+            {
+                modelo: "SVM",
+                exactitud: 0.816,
+                precision: 0.805,
+                sensibilidad: 0.789,
+                puntuacion_F1: 0.796
+            },
+            {
+                modelo: "KNN",
+                exactitud: 0.793,
+                precision: 0.774,
+                sensibilidad: 0.766,
+                puntuacion_F1: 0.769
+            },
+            {
+                modelo: "Neural Networks",
+                exactitud: 0.81,
+                precision: 0.8,
+                sensibilidad: 0.799,
+                puntuacion_F1: 0.799
+            },
+            {
+                modelo: "Decision Trees",
+                exactitud: 0.783,
+                precision: 0.771,
+                sensibilidad: 0.769,
+                puntuacion_F1: 0.77
+            },
+            {
+                modelo: "AdaBoost",
+                exactitud: 0.825,
+                precision: 0.817,
+                sensibilidad: 0.812,
+                puntuacion_F1: 0.814
+            },
+            {
+                modelo: "Regresión Logística",
+                exactitud: 0.835,
+                precision: 0.827,
+                sensibilidad: 0.822,
+                puntuacion_F1: 0.825
+            },
+            {
+                modelo: "Gradient Boosting",
+                exactitud: 0.836,
+                precision: 0.827,
+                sensibilidad: 0.819,
+                puntuacion_F1: 0.822
+            },
+            {
+                modelo: "Extra Trees",
+                exactitud: 0.847,
+                precision: 0.837,
+                sensibilidad: 0.836,
+                puntuacion_F1: 0.836
+            },
+            {
+                modelo: "Random Forest",
+                exactitud: 0.85,
+                precision: 0.84,
+                sensibilidad: 0.84,
+                puntuacion_F1: 0.839
+            },
+            {
+                modelo: "LightGBM",
+                exactitud: 0.85,
+                precision: 0.841,
+                sensibilidad: 0.84,
+                puntuacion_F1: 0.84
+            },
+            {
+                modelo: "XGBoost",
+                exactitud: 0.85,
+                precision: 0.842,
+                sensibilidad: 0.84,
+                puntuacion_F1: 0.841
+            },
+            {
+                modelo: "XGBoost Optimizado",
+                exactitud: 0.855,
+                precision: 0.845,
+                sensibilidad: 0.846,
+                puntuacion_F1: 0.845
+            },
+        ];
         this.service.obtenerDF().subscribe(function (result) {
             _this.dataframe = JSON.parse(result.dataframe);
             _this.dataRows = Object.values(_this.dataframe);
@@ -56,50 +141,54 @@ var ModeloInfoComponent = /** @class */ (function () {
         });
         // Crear la gráfica
         this.createChart();
-        if (!localStorage.getItem('primerCarga')) {
+        if (!localStorage.getItem("primerCarga")) {
             this.mostrarOverlay = true;
-            localStorage.setItem('primerCarga', 'true');
+            localStorage.setItem("primerCarga", "true");
         }
     };
     ModeloInfoComponent.prototype.beforeunloadHandler = function (event) {
         // Borrar la clave del localStorage al cerrar la pestaña
-        localStorage.removeItem('primerCarga');
+        localStorage.removeItem("primerCarga");
+        if (localStorage.getItem("formData")) {
+            // Si existe, eliminar la clave del localStorage
+            localStorage.removeItem("formData");
+        }
     };
     ModeloInfoComponent.prototype.createChart = function () {
-        var ctx = this.metricCanvas.nativeElement.getContext('2d');
+        var ctx = this.metricCanvas.nativeElement.getContext("2d");
         this.chart = new chart_js_1.Chart(ctx, {
-            type: 'bar',
+            type: "bar",
             data: {
                 labels: this.modelos,
                 datasets: [
                     {
-                        label: 'Exactitud',
+                        label: "Exactitud",
                         data: this.exactitudes,
-                        backgroundColor: 'rgba(0,0,205,1)',
-                        borderColor: 'rgba(0,0,205,1)',
+                        backgroundColor: "rgba(0,0,205,1)",
+                        borderColor: "rgba(0,0,205,1)",
                         borderWidth: 1
                     },
                     {
-                        label: 'Precisión',
+                        label: "Precisión",
                         data: this.precisiones,
-                        backgroundColor: 'rgba(156, 39, 176, 1)',
-                        borderColor: 'rgba(156, 39, 176, 1)',
+                        backgroundColor: "rgba(156, 39, 176, 1)",
+                        borderColor: "rgba(156, 39, 176, 1)",
                         borderWidth: 1
                     },
                     {
-                        label: 'Sensibilidad',
+                        label: "Sensibilidad",
                         data: this.sensibilidades,
-                        backgroundColor: 'rgba(34,139,34, 1)',
-                        borderColor: 'rgba(34,139,34, 1)',
+                        backgroundColor: "rgba(34,139,34, 1)",
+                        borderColor: "rgba(34,139,34, 1)",
                         borderWidth: 1
                     },
                     {
-                        label: 'Puntuación F1',
+                        label: "Puntuación F1",
                         data: this.puntuacionesF1,
-                        backgroundColor: 'rgba(255,140,0, 1)',
-                        borderColor: 'rgba(255,140,0, 1)',
+                        backgroundColor: "rgba(255,140,0, 1)",
+                        borderColor: "rgba(255,140,0, 1)",
                         borderWidth: 1
-                    }
+                    },
                 ]
             },
             options: {
@@ -109,7 +198,12 @@ var ModeloInfoComponent = /** @class */ (function () {
                     }
                 },
                 responsive: true,
-                maintainAspectRatio: false
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        display: false
+                    }
+                }
             }
         });
     };
@@ -121,7 +215,7 @@ var ModeloInfoComponent = /** @class */ (function () {
     };
     // Función para cambiar a la siguiente página
     ModeloInfoComponent.prototype.nextPage = function () {
-        if ((this.currentPage * this.itemsPerPage) < this.dataRows.length) {
+        if (this.currentPage * this.itemsPerPage < this.dataRows.length) {
             this.currentPage++;
         }
     };
@@ -131,20 +225,24 @@ var ModeloInfoComponent = /** @class */ (function () {
             this.currentPage--;
         }
     };
+    ModeloInfoComponent.prototype.desplegarOverlay = function () {
+        this.mostrarOverlay = true;
+    };
     ModeloInfoComponent.prototype.ocultarOverlay = function () {
         this.mostrarOverlay = false;
     };
     __decorate([
-        core_1.ViewChild('metrics', { static: true })
+        core_1.ViewChild("metrics", { static: true })
     ], ModeloInfoComponent.prototype, "metricCanvas");
     __decorate([
-        core_1.HostListener('window:beforeunload', ['$event'])
+        core_1.HostListener("window:beforeunload", ["$event"]),
+        core_1.HostListener("window:pagehide", ["$event"])
     ], ModeloInfoComponent.prototype, "beforeunloadHandler");
     ModeloInfoComponent = __decorate([
         core_1.Component({
-            selector: 'app-modelo-info',
-            templateUrl: './modelo-info.component.html',
-            styleUrls: ['./modelo-info.component.scss', './background-animado.css']
+            selector: "app-modelo-info",
+            templateUrl: "./modelo-info.component.html",
+            styleUrls: ["./modelo-info.component.scss", "./background-animado.css"]
         })
     ], ModeloInfoComponent);
     return ModeloInfoComponent;

@@ -135,3 +135,20 @@
     /* Ajusta el espacio entre tarjetas según sea necesario */
   }
 }
+.tooltip-container {
+  display: flex;
+  align-items: center;
+}
+
+.tooltip-container mat-form-field {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.tooltip-container i {
+  font-size: 16px;
+  margin-left: 5px;
+  /* Espacio entre el campo de formulario y el tooltip */
+  margin-right: 10px;
+  cursor: pointer;
+}

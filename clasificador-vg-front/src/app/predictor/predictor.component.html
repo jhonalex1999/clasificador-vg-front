@@ -5,25 +5,29 @@
         <div class="card">
           <div class="card-header card-header-primary">
             <h3 class="card-title">Predictor</h3>
-            <p>Rellena los campos para realizar la predicción del tipo de violencia
+            <p>Ingresa todos los campos para realizar la prediccion sobre la naturaleza de violencia de genero.
             </p>
           </div>
           <div class="card-body">
             <cdk-virtual-scroll-viewport itemSize="auto" class="form-scroll-viewport">
               <form [formGroup]="formulario" (ngSubmit)="predecir()">
 
-                <mat-form-field>
-                  <mat-label>¿En qué departamento ocurrió el evento?</mat-label>
-                  <mat-select formControlName="departamento" >
-                    <mat-option *ngFor="let departamento of departamentos" [value]="departamento">
-                      {{ departamento }}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error *ngIf="formulario.get('departamento').invalid">
-                    Departamento es requerido.
-                  </mat-error>
-                </mat-form-field>
+                <div class="tooltip-container">
+                  <mat-form-field>
+                    <mat-label>¿En qué departamento ocurrió el evento? </mat-label>
+                    <mat-select formControlName="departamento">
+                      <mat-option *ngFor="let departamento of departamentos" [value]="departamento">
+                        {{ departamento }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="formulario.get('departamento').invalid">
+                      Departamento es requerido.
+                    </mat-error>
+                  </mat-form-field>
+                  <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipDepartamento" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿En qué municipio ocurrió el evento?</mat-label>
                   <mat-select formControlName="municipio" >
@@ -35,7 +39,10 @@
                     Municipio es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipMunicipio" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field class="slider-field">
                   <mat-label>¿En qué semana ocurrió el evento?</mat-label>
                   <div class="slider-container">
@@ -47,7 +54,10 @@
                     Semana es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSemana" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field class="slider-field">
                   <mat-label>¿En qué año ocurrió el evento?</mat-label>
                   <div class="slider-container">
@@ -59,8 +69,10 @@
                     Año es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipAnio" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
-
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿A qué rango de edades pertenece la víctima?</mat-label>
                   <mat-select formControlName="grupo_edad" >
@@ -72,8 +84,10 @@
                     Grupo edad es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipRangoEdad" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
-
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es el sexo de la víctima?</mat-label>
                   <mat-select formControlName="sexo" >
@@ -85,7 +99,10 @@
                     Sexo es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSexoVictima" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿En qué área del municipio ocurrió el evento?</mat-label>
                   <mat-select formControlName="area" >
@@ -97,7 +114,10 @@
                     Area es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipArea" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿En qué comuna ocurrió el evento?</mat-label>
                   <mat-select formControlName="comuna" >
@@ -109,7 +129,10 @@
                     Comuna es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipComuna" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es el tipo de seguridad social de la victima?</mat-label>
                   <mat-select formControlName="tipo_de_seguridad_social" >
@@ -122,7 +145,11 @@
                     Tipo de Seguridad Social es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSeguridadSocial" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿La victima fue hospitalizada?</mat-label>
                   <mat-select formControlName="paciente_hospitalizado" >
@@ -135,7 +162,10 @@
                     Paciente Hospitalizado es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipVictimaHospitalizada" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es la condición final de la victima?</mat-label>
                   <mat-select formControlName="condicion_final" >
@@ -147,7 +177,10 @@
                     Condición Final es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipEstadiFinal" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es la actividad de la víctima?</mat-label>
                   <mat-select formControlName="actividad" >
@@ -159,8 +192,10 @@
                     Actividad es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipActividadVictima" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
-
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es la edad del agresor?</mat-label>
                   <div class="slider-container">
@@ -172,19 +207,26 @@
                     Edad Agresor es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipEdadAgresor" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es el sexo del agresor?</mat-label>
                   <mat-select formControlName="sexo_agre" >
-                    <mat-option *ngFor="let sexo_agre of  sexosAgre" [value]="sexo_agre">
-                      {{ sexo_agre }}
+                    <mat-option *ngFor="let sexo_agre of  sexosAgre" [value]="sexo_agre.valor">
+                      {{ sexo_agre.texto }}
                     </mat-option>
                   </mat-select>
                   <mat-error *ngIf="formulario.get('sexo_agre').invalid">
                     Sexo Agresor es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSexoAgresor" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es el parentezco del agresor con la víctima?</mat-label>
                   <mat-select formControlName="parentezco_vict" >
@@ -196,9 +238,12 @@
                     Parentezco Víctima es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipParentezco" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
-                  <mat-label>¿La víctima consumía alcohol u otra sustancia?</mat-label>
+                  <mat-label>¿La víctima consumío alcohol u otra sustancia?</mat-label>
                   <mat-select formControlName="sustancias_victima" >
                     <mat-option *ngFor="let sustancias_victima of  sustanciasVictima"
                       [value]="sustancias_victima.valor">
@@ -209,7 +254,10 @@
                     Sustancias Víctima es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSustanciasVictima" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿En qué escenario ocurrió el evento?</mat-label>
                   <mat-select formControlName="escenario" >
@@ -221,7 +269,10 @@
                     Escenario es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipEscenarioEvento" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
 
+              <div class="tooltip-container">
                 <mat-form-field>
                   <mat-label>¿Cuál es el nombre de la unidad primaria generadora de datos?</mat-label>
                   <mat-select formControlName="nom_upgd" >
@@ -233,6 +284,8 @@
                     Nombre UPGD es requerido.
                   </mat-error>
                 </mat-form-field>
+                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipUPGD" aria-label="Button that displays a tooltip when focused or clicked"></i>
+              </div>
                 <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
                 <span style="margin-left: 10px;"></span> 
                 <button mat-raised-button class="btn btn-light" type="button" (click)="limpiarFormulario()">Limpiar</button>

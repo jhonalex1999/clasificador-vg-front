@@ -91,7 +91,9 @@ export class PredictorComponent implements OnInit {
     { valor: "33", texto: "Ninguna" },
     { valor: "31", texto: "Persona dedicada al cuidado del hogar" },
   ];
-  sexosAgre: String[] = ["M", "F"];
+  sexosAgre  = [  
+  { valor: "F", texto: "Femenino" },
+  { valor: "M", texto: "Masculino" },];
   parentezcosVict: string[] = [
     "Madre",
     "Pareja",
@@ -135,7 +137,25 @@ export class PredictorComponent implements OnInit {
     "Otros",
   ];
 
-  tooltipContent ='En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana';
+  tooltipContent ='En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana.';
+  tooltipDepartamento ='Departamento donde sucedio el caso de violencia de genero.';
+  tooltipMunicipio ='Municipio donde sucedio el caso de violencia de genero. Este campo se autocompleta con el valor de Otros si el departamento tiene como valor Otros.';
+  tooltipSemana ='Semana en la que sucedio el caso de violencia de genero. (Apartir de este valor tambien se generan los valores para las variables Mes y Trimestre).';
+  tooltipAnio ='Año en el que sucedio el caso de violencia de genero.';
+  tooltipRangoEdad ='Rango de edad que tenia la victima en el momento del suceso de violencia de genero.';
+  tooltipSexoVictima ='Sexo de la victima del acto de violencia de genero.';
+  tooltipArea ='Area geografica del municipio donde ocurrio el caso de violencia de genero.';
+  tooltipComuna ='Comuna del area geografica donde sucedio el acto de violencia de genero. (Este campo toma como Valor Otros si el municpio es diferente a cabecera municipal, de lo contrario se desplegan una serie de comunas )';
+  tooltipSeguridadSocial ='Tipo de seguridad social a la que se encuentra vinculada la victima de violencia de genero.';
+  tooltipVictimaHospitalizada ='Valor que indica si la victima fue hospitalizada depues de susfrir el acto de violencia de genero.';
+  tooltipEstadiFinal ='Indica el estado vital de la victima luego de sufrir el acto de violencia de genero.';
+  tooltipActividadVictima ='Actividad en la que se desempeña la victima de violencia de genero.';
+  tooltipEdadAgresor ='Edad del agresor en el momento del acto de violencia de genero.';
+  tooltipSexoAgresor ='Sexo del agresor.';
+  tooltipParentezco ='Parentezco persona o familiar de la victima con el agresor.';
+  tooltipSustanciasVictima ='Indica si la victima bajo el efecto de sustancias psicoactivas en el momento del acto de violencia de genero.';
+  tooltipEscenarioEvento ='Entorno ambiental donde sucedio el caso de violencia de genero.';
+  tooltipUPGD ='La unidad primaria generadora de datos hace referencia a la entidad encargada de recibir o generar la informacion del acto de violencia de genero';
   private sexoAgreAnterior: string = '';
   parentezcosVictBackup: string[] = [...this.parentezcosVict];
   constructor(private service: Service, private formBuilder: FormBuilder,private renderer: Renderer2) {}
@@ -430,13 +450,7 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
             },
           },
           plugins: {
-            title: {
-              display: true,
-              text: `Gráfica de Importancia de Características`,
-              font: {
-                size: 18,
-              },
-            },
+           
             tooltip: {
               callbacks: {
                 label: (context: any) => {

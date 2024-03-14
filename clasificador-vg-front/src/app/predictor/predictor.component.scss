@@ -129,3 +129,22 @@ font-weight: bold;
   margin-right:10px;
   cursor: pointer;
 }
+.btn-question {
+  background-color: #007bff; /* Color del botón */
+  border-radius: 50%; /* Forma circular */
+  width: 36px; /* Ancho del botón */
+  height: 36px; /* Altura del botón */
+  border: none; /* Sin borde */
+  color: white; /* Color del texto */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-question:hover {
+  background-color: #0056b3; /* Color del botón al pasar el mouse */
+}
+
+.fa-question-circle {
+  font-size: 18px; /* Tamaño del ícono */
+}

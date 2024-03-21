@@ -80,13 +80,6 @@ export class GraficaDonaComponent implements OnInit {
     let etiquetas = datos;
     let valores = datos.map((x) => contador.get(x));
 
-    if (columna_selec === "nom_upgd") {
-      const { etiquetas: nuevasEtiquetas, valores: nuevosValores } =
-        this.filtrarEtiquetas(etiquetas, valores, contador);
-      etiquetas = nuevasEtiquetas;
-      valores = nuevosValores;
-    }
-
     // Generar una lista de colores aleatorios
     const colores = this.generarColoresAleatorios(datos.length);
 
@@ -243,32 +236,6 @@ export class GraficaDonaComponent implements OnInit {
     });
   };
   
-  private filtrarEtiquetas(etiquetas, valores, contador) {
-    const otrosEtiqueta = "Otros";
-
-    const etiquetasAgrupadas = etiquetas.filter(
-      (etiqueta) => contador.get(etiqueta) < 20
-    );
-
-    let totalValoresOtros = 0;
-    const valoresFiltrados = valores.filter((valor, index) => {
-      if (etiquetasAgrupadas.includes(etiquetas[index])) {
-        totalValoresOtros += valor;
-        return false;
-      }
-      return true;
-    });
-
-    etiquetas = etiquetas.filter(
-      (etiqueta) => !etiquetasAgrupadas.includes(etiqueta)
-    );
-    valores = valoresFiltrados;
-
-    etiquetas.push(otrosEtiqueta);
-    valores.push(totalValoresOtros);
-
-    return { etiquetas, valores };
-  }
 
   private generarColoresAleatorios(cantidad: number): string[] {
     const colores = [];

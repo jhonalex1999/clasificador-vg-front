@@ -21,9 +21,9 @@
       <div class="col-lg-12 col-md-12">
         <div class="card card-info">
           <div class="card-header card-header-primary">
-            <h4>Informacion de las columnas del Dataset</h4>
-            <p>Datos de Violencia de Género e intrafamiliar de enero 2015 a Marzo 2023 del
-              departamento de santander</p>
+            <h4>Información de las columnas del Dataset</h4>
+            <p>Datos de Violencia de Género e Intrafamiliar de enero de 2015 a marzo de 2023 del departamento de
+              Santander.</p>
           </div>
           <div class="card-body card-body-info table-responsive">
             <div class="table-container">
@@ -31,7 +31,7 @@
                 <thead class="text-primary">
                   <th>ID</th>
                   <th>Nombre</th>
-                  <th>Descripcion</th>
+                  <th>Descripción</th>
                   <th>Tipo</th>
                 </thead>
                 <tbody>
@@ -175,25 +175,25 @@
                   </tr>
                   <tr>
                     <td>22</td>
-                    <td>trimestre</td>
+                    <td>Trimestre</td>
                     <td>Trimestre del año en que sucedió el hecho, valores posibles: 1, 2, 3 y 4</td>
                     <td>Int</td>
                   </tr>
                   <tr>
                     <td>23</td>
-                    <td>violencia_intrafamiliar</td>
+                    <td>Violencia_intrafamiliar</td>
                     <td>Indica si existe o no violencia intrefamiliar 1.Si 2.No</td>
                     <td>Int</td>
                   </tr>
                   <tr>
                     <td>24</td>
-                    <td>victima_menor_de_edad</td>
+                    <td>Victima_menor_de_edad</td>
                     <td>Indica si la victima menor de edad 1.Si 2.No</td>
                     <td>Int</td>
                   </tr>
                   <tr>
                     <td>25</td>
-                    <td>agresor_menor_de_edad</td>
+                    <td>Agresor_menor_de_edad</td>
                     <td>Indica si el agresor es menor de edad 1.Si 2.No</td>
                     <td>Int</td>
                   </tr>
@@ -224,24 +224,24 @@
                     <th>Grupo edad</th>
                     <th>Ciclo de vida</th>
                     <th>Sexo</th>
-                    <th>Area</th>
+                    <th>Área</th>
                     <th>Comuna</th>
                     <th>Tipo de seguridad social</th>
                     <th>Paciente hospitalizado</th>
-                    <th>Condicion final</th>
+                    <th>Condición final</th>
                     <th>Naturaleza</th>
                     <th>Actividad</th>
                     <th>Edad del agresor</th>
                     <th>Sexo del agresor</th>
-                    <th>Sustancias en la victima</th>
+                    <th>Sustancias en la víctima</th>
                     <th>Escenario</th>
                     <th>Nombre del evento</th>
-                    <th>Nombre de upgd</th>
+                    <th>Nombre de UPGD</th>
                     <th>Mes</th>
                     <th>Trimestre</th>
-                    <th>violencia intrafamiliar</th>
-                    <th>victima menor de edad</th>
-                    <th>agresor menor de edad</th>
+                    <th>Violencia intrafamiliar</th>
+                    <th>Víctima menor de edad</th>
+                    <th>Agresor menor de edad</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -292,10 +292,11 @@
       <div class="col-lg-12 col-md-12">
         <div class="card card-info">
           <div class="card-header card-header-primary">
-            <h4>Metricas</h4>
-            <p>Despues de observar las metricas obtenidas con los modelos evaluados con los parametros por defecto,
-              se decidio optimizar parametros para los dos modelos mas prometedores, los cuales son LightGBM y XGBoost y
-              luego de esta optmizacion el modelo con mejores metricas es el XGBoost con parametros los optmizados.</p>
+            <h4>Métricas</h4>
+            <p>Después de observar las métricas obtenidas con los modelos evaluados con los parámetros por defecto,
+              se decidió optimizar los parámetros para los dos modelos más prometedores, los cuales son LightGBM y
+              XGBoost, y
+              luego de esta optimización, el modelo con mejores métricas es XGBoost con los parámetros optimizados.</p>
           </div>
           <div class="card-body card-body-info table-responsive">
             <div class="table-container">
@@ -304,9 +305,9 @@
                   <tr style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     <th>Modelo</th>
                     <th>Exactitud</th>
-                    <th>Precision</th>
-                    <th>Sencibilidad</th>
-                    <th>Puntuacion F1</th>
+                    <th>Precisión</th>
+                    <th>Sensibilidad</th>
+                    <th>Puntuación F1</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -389,7 +390,7 @@
             <img src="./assets/img/optimizacion.png" alt="" id="ImgHeader">
           </div>
           <div class="card-body card-body-info card-container">
-            <h4 class="card-title">Configuracion de los parametros </h4>
+            <h4 class="card-title">Configuración de los parámetros </h4>
             <p class="card-category" style="color: black;">
               xgb.XGBClassifier( objective= 'multi:softmax',
               num_class = 3,
@@ -480,7 +481,7 @@
               </a>
             </div>
             <div class="boton boton-container">
-              <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Comenzar</button>
+              <button mat-raised-button class="btn btn-primary" (click)="ocultarOverlay()">Ir a la aplicación</button>
             </div>
           </div>
         </mat-card-content>

@@ -237,34 +237,7 @@ export class GraficaBarrasHorizontalesComponent implements OnInit {
       ul.appendChild(li);
     });
   };
-
-  private filtrarEtiquetas(etiquetas, valores, contador) {
-    const otrosEtiqueta = "Otros";
-
-    const etiquetasAgrupadas = etiquetas.filter(
-      (etiqueta) => contador.get(etiqueta) < 20
-    );
-
-    let totalValoresOtros = 0;
-    const valoresFiltrados = valores.filter((valor, index) => {
-      if (etiquetasAgrupadas.includes(etiquetas[index])) {
-        totalValoresOtros += valor;
-        return false;
-      }
-      return true;
-    });
-
-    etiquetas = etiquetas.filter(
-      (etiqueta) => !etiquetasAgrupadas.includes(etiqueta)
-    );
-    valores = valoresFiltrados;
-
-    etiquetas.push(otrosEtiqueta);
-    valores.push(totalValoresOtros);
-
-    return { etiquetas, valores };
-  }
-
+  
   private getRandomColorWithOpacity(opacity: number) {
     const getRandomHex = () => Math.floor(Math.random() * 256).toString(16);
 

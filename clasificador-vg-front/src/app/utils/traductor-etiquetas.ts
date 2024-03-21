@@ -189,15 +189,13 @@ export class TraductorEtiquetas {
           item["escenario"] = "Lugar de trabajo";
           break;
         case "7":
-          item["escenario"] = "Otro";
+        case "9":
+          item["escenario"] =
+            "Otros espacios abiertos (bosques, potreros, etc)";
           break;
         case "8":
           item["escenario"] =
             "Comercio y áreas de servicios (Tienda, centro comercial, etc)";
-          break;
-        case "9":
-          item["escenario"] =
-            "Otros espacios abiertos (bosques, potreros, etc)";
           break;
       }
     });

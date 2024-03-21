@@ -1,13 +1,25 @@
-import { Component, OnInit,  ElementRef, Renderer2, ViewChild,HostListener} from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ElementRef,
+  Renderer2,
+  ViewChild,
+  HostListener,
+} from "@angular/core";
 import { Service } from "../service/service";
 import { RegistroDto } from "app/dto/registro-dto";
-import { FormBuilder, FormGroup, Validators,AbstractControl  } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+} from "@angular/forms";
 import { Chart } from "chart.js";
 import "chart.js/auto";
 import { startOfWeek, addWeeks, getMonth, getQuarter, format } from "date-fns";
 import { startWith } from "rxjs/operators";
-import { MatTooltip } from '@angular/material/tooltip';
-import { filter } from 'rxjs/operators';
+import { MatTooltip } from "@angular/material/tooltip";
+import { filter } from "rxjs/operators";
 @Component({
   selector: "app-predictor",
   templateUrl: "./predictor.component.html",
@@ -15,7 +27,7 @@ import { filter } from 'rxjs/operators';
 })
 export class PredictorComponent implements OnInit {
   @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('tooltipIcon') tooltipIcon: ElementRef;
+  @ViewChild("tooltipIcon") tooltipIcon: ElementRef;
   public registroDTO: RegistroDto;
   public definicion: any;
   public prediccion: any;
@@ -23,7 +35,7 @@ export class PredictorComponent implements OnInit {
   public banderaVisibilidad: boolean = false;
   public animacion;
   public mostrarOverlay: boolean = false;
-  public banderaCard: boolean=true;
+  public banderaCard: boolean = true;
   formulario: FormGroup;
   departamentos: string[] = ["SANTANDER", "Otros"];
   municipios: string[] = ["BUCARAMANGA", "Otros"];
@@ -64,7 +76,6 @@ export class PredictorComponent implements OnInit {
     "Subsidiado",
     "Contributivo",
     "Excepción",
-    "Excepción",
     "Indeterminado",
     "No Asegurado",
     "No Afiliado",
@@ -91,9 +102,10 @@ export class PredictorComponent implements OnInit {
     { valor: "33", texto: "Ninguna" },
     { valor: "31", texto: "Persona dedicada al cuidado del hogar" },
   ];
-  sexosAgre  = [  
-  { valor: "F", texto: "Femenino" },
-  { valor: "M", texto: "Masculino" },];
+  sexosAgre = [
+    { valor: "F", texto: "Femenino" },
+    { valor: "M", texto: "Masculino" },
+  ];
   parentezcosVict: string[] = [
     "Madre",
     "Pareja",
@@ -137,28 +149,49 @@ export class PredictorComponent implements OnInit {
     "Otros",
   ];
 
-  tooltipContent ='En esta grafica se puede observar la importancia de las caracteristicas al momento de realizar la prediccion. Algunas caracteristicas se calculan a partir de otras variables del formulario, como por ejemplo trismestre o mes que se generan a partir de la semana.';
-  tooltipDepartamento ='Departamento donde sucedio el caso de violencia de genero.';
-  tooltipMunicipio ='Municipio donde sucedio el caso de violencia de genero. Este campo se autocompleta con el valor de Otros si el departamento tiene como valor Otros.';
-  tooltipSemana ='Semana en la que sucedio el caso de violencia de genero. (Apartir de este valor tambien se generan los valores para las variables Mes y Trimestre).';
-  tooltipAnio ='Año en el que sucedio el caso de violencia de genero.';
-  tooltipRangoEdad ='Rango de edad que tenia la victima en el momento del suceso de violencia de genero.';
-  tooltipSexoVictima ='Sexo de la victima del acto de violencia de genero.';
-  tooltipArea ='Area geografica del municipio donde ocurrio el caso de violencia de genero.';
-  tooltipComuna ='Comuna del area geografica donde sucedio el acto de violencia de genero. (Este campo toma como Valor Otros si el municpio es diferente a cabecera municipal, de lo contrario se desplegan una serie de comunas )';
-  tooltipSeguridadSocial ='Tipo de seguridad social a la que se encuentra vinculada la victima de violencia de genero.';
-  tooltipVictimaHospitalizada ='Valor que indica si la victima fue hospitalizada depues de susfrir el acto de violencia de genero.';
-  tooltipEstadiFinal ='Indica el estado vital de la victima luego de sufrir el acto de violencia de genero.';
-  tooltipActividadVictima ='Actividad en la que se desempeña la victima de violencia de genero.';
-  tooltipEdadAgresor ='Edad del agresor en el momento del acto de violencia de genero.';
-  tooltipSexoAgresor ='Sexo del agresor.';
-  tooltipParentezco ='Parentezco persona o familiar de la victima con el agresor.';
-  tooltipSustanciasVictima ='Indica si la victima bajo el efecto de sustancias psicoactivas en el momento del acto de violencia de genero.';
-  tooltipEscenarioEvento ='Entorno ambiental donde sucedio el caso de violencia de genero.';
-  tooltipUPGD ='La unidad primaria generadora de datos hace referencia a la entidad encargada de recibir o generar la informacion del acto de violencia de genero';
-  private sexoAgreAnterior: string = '';
+  tooltipContent =
+    "En esta gráfica se puede observar la importancia de las características al momento de realizar la predicción. Algunas características se calculan a partir de otras variables del formulario, como por ejemplo trimestre o mes que se generan a partir de la semana.";
+  tooltipDepartamento =
+    "Departamento donde sucedió el caso de violencia de género.";
+  tooltipMunicipio =
+    "Municipio donde sucedió el caso de violencia de género. Este campo se autocompleta con el valor de Otros si el departamento tiene como valor Otros.";
+  tooltipSemana =
+    "Semana en la que sucedió el caso de violencia de género. (A partir de este valor también se generan los valores para las variables Mes y Trimestre).";
+  tooltipAnio = "Año en el que sucedió el caso de violencia de género.";
+  tooltipRangoEdad =
+    "Rango de edad que tenía la víctima en el momento del suceso de violencia de género.";
+  tooltipSexoVictima = "Sexo de la víctima del acto de violencia de género.";
+  tooltipArea =
+    "Área geográfica del municipio donde ocurrió el caso de violencia de género.";
+  tooltipComuna =
+    "Comuna del área geográfica donde sucedió el acto de violencia de género. (Este campo toma como valor Otros si el municipio es diferente a cabecera municipal, de lo contrario se despliegan una serie de comunas).";
+  tooltipSeguridadSocial =
+    "Tipo de seguridad social a la que se encuentra vinculada la víctima de violencia de género.";
+  tooltipVictimaHospitalizada =
+    "Valor que indica si la víctima fue hospitalizada después de sufrir el acto de violencia de género.";
+  tooltipEstadoFinal =
+    "Indica el estado vital de la víctima luego de sufrir el acto de violencia de género.";
+  tooltipActividadVictima =
+    "Actividad en la que se desempeña la víctima de violencia de género.";
+  tooltipEdadAgresor =
+    "Edad del agresor en el momento del acto de violencia de género.";
+  tooltipSexoAgresor = "Sexo del agresor.";
+  tooltipParentezco =
+    "Parentesco persona o familiar de la víctima con el agresor.";
+  tooltipSustanciasVictima =
+    "Indica si la víctima estaba bajo el efecto de sustancias psicoactivas en el momento del acto de violencia de género.";
+  tooltipEscenarioEvento =
+    "Entorno ambiental donde sucedió el caso de violencia de género.";
+  tooltipUPGD =
+    "La unidad primaria generadora de datos hace referencia a la entidad encargada de recibir o generar la información del acto de violencia de género.";
+
+  private sexoAgreAnterior: string = "";
   parentezcosVictBackup: string[] = [...this.parentezcosVict];
-  constructor(private service: Service, private formBuilder: FormBuilder,private renderer: Renderer2) {}
+  constructor(
+    private service: Service,
+    private formBuilder: FormBuilder,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
     this.registroDTO = new RegistroDto();
@@ -166,17 +199,16 @@ export class PredictorComponent implements OnInit {
     this.initFormulario();
     this.cargarDesdeLocalStorage();
   }
-  @HostListener('window:beforeunload', ['$event'])
-  @HostListener('window:pagehide', ['$event'])
+  @HostListener("window:beforeunload", ["$event"])
+  @HostListener("window:pagehide", ["$event"])
   beforeunloadHandler(event: Event) {
     // Borrar la clave del localStorage al cerrar la pestaña
-    localStorage.removeItem('primerCarga');
-    if (localStorage.getItem('formData')) {
+    localStorage.removeItem("primerCarga");
+    if (localStorage.getItem("formData")) {
       // Si existe, eliminar la clave del localStorage
-      localStorage.removeItem('formData');
+      localStorage.removeItem("formData");
     }
   }
-
 
   initFormulario() {
     this.formulario = this.formBuilder.group({
@@ -199,21 +231,17 @@ export class PredictorComponent implements OnInit {
       escenario: [""],
       nom_upgd: [""],
     });
-      // Agregar el escuchador de cambios al campo "area"
-      this.formulario
-      .get("area")
-      .valueChanges
-      .subscribe((area) => {
-        // Si el área es "CABECERA MUNICIPAL", mostrar el campo "comuna"
-        if (area === "CABECERA MUNICIPAL") {
-          this.formulario.get("comuna").enable();
-        
-        } else if (area === "RURAL DISPERSO" || area === "CENTRO POBLADO"){
-          // Si no, establecer el valor de "comuna" en "Otros" y deshabilitarlo
-          this.formulario.get("comuna").setValue("Otros");
-          this.formulario.get("comuna").disable();
-        }
-      });
+    // Agregar el escuchador de cambios al campo "area"
+    this.formulario.get("area").valueChanges.subscribe((area) => {
+      // Si el área es "CABECERA MUNICIPAL", mostrar el campo "comuna"
+      if (area === "CABECERA MUNICIPAL") {
+        this.formulario.get("comuna").enable();
+      } else if (area === "RURAL DISPERSO" || area === "CENTRO POBLADO") {
+        // Si no, establecer el valor de "comuna" en "Otros" y deshabilitarlo
+        this.formulario.get("comuna").setValue("Otros");
+        this.formulario.get("comuna").disable();
+      }
+    });
 
     this.formulario
       .get("departamento")
@@ -225,8 +253,8 @@ export class PredictorComponent implements OnInit {
           this.formulario.get("municipio").enable();
         }
       });
-      
-      this.formulario
+
+    this.formulario
       .get("sexo_agre")
       .valueChanges.pipe(startWith(""))
       .subscribe((sexoAgresor) => {
@@ -236,73 +264,75 @@ export class PredictorComponent implements OnInit {
         }
       });
 
-      this.formulario.valueChanges.subscribe(() => {
-        this.guardarSinEnviar();
-      });
+    this.formulario.valueChanges.subscribe(() => {
+      this.guardarSinEnviar();
+    });
   }
   cargarDesdeLocalStorage() {
-    const formDataString = localStorage.getItem('formData');
+    const formDataString = localStorage.getItem("formData");
     if (formDataString) {
       const formData = JSON.parse(formDataString);
       this.formulario.patchValue(formData);
     }
   }
-  
- limpiarFormulario() {
-   
-  this.formulario.reset(); // Restablecer el formulario
-  this.formulario.get('comuna').enable(); // Habilitar el control "comuna"
-  this.desactivarValidaciones();
-  // Eliminar los datos del formulario del almacenamiento local
-  if (localStorage.getItem('formData')) {
-    localStorage.removeItem('formData');
-  }
-}
 
-desactivarValidaciones() {
-  Object.keys(this.formulario.controls).forEach(field => {
-    const control = this.formulario.get(field);
-    control.setValidators(null); // Establece los validadores como nulos
-    control.updateValueAndValidity(); // Actualiza la validez del control
-  });
-}
-  
+  limpiarFormulario() {
+    this.formulario.reset(); // Restablecer el formulario
+    this.formulario.get("comuna").enable(); // Habilitar el control "comuna"
+    this.desactivarValidaciones();
+    // Eliminar los datos del formulario del almacenamiento local
+    if (localStorage.getItem("formData")) {
+      localStorage.removeItem("formData");
+    }
+  }
+
+  desactivarValidaciones() {
+    Object.keys(this.formulario.controls).forEach((field) => {
+      const control = this.formulario.get(field);
+      control.setValidators(null); // Establece los validadores como nulos
+      control.updateValueAndValidity(); // Actualiza la validez del control
+    });
+  }
+
   guardarSinEnviar() {
     // Aquí se obtienen los valores del formulario
     const formData = this.formulario.value;
     // Se convierten a cadena JSON y se guardan en el almacenamiento local bajo la clave 'formData'
-    localStorage.setItem('formData', JSON.stringify(formData));
+    localStorage.setItem("formData", JSON.stringify(formData));
   }
   agregarValidacionRequeridaATodosLosCampos() {
     // Obtenemos los nombres de los campos del formulario
     const campos = Object.keys(this.formulario.controls);
-  
-    // Iteramos sobre cada campo y le agregamos la validación requerida si no la tiene
-    campos.forEach(campo => {
-        const control = this.formulario.get(campo);
-        // Verificamos si el campo no tiene la validación requerida
-        if (!control.validator || !this.hasRequiredValidator(control)) {
-            // Agregamos la validación requerida
-            const validators = control.validator ? [control.validator, Validators.required] : Validators.required;
-            control.setValidators(validators);
-            control.updateValueAndValidity();
-        }
-    });
-}
 
-hasRequiredValidator(control: AbstractControl<any>): boolean {
+    // Iteramos sobre cada campo y le agregamos la validación requerida si no la tiene
+    campos.forEach((campo) => {
+      const control = this.formulario.get(campo);
+      // Verificamos si el campo no tiene la validación requerida
+      if (!control.validator || !this.hasRequiredValidator(control)) {
+        // Agregamos la validación requerida
+        const validators = control.validator
+          ? [control.validator, Validators.required]
+          : Validators.required;
+        control.setValidators(validators);
+        control.updateValueAndValidity();
+      }
+    });
+  }
+
+  hasRequiredValidator(control: AbstractControl<any>): boolean {
     if (control.validator) {
-        const validators = Array.isArray(control.validator) ? control.validator : [control.validator];
-        return validators.some(validator => validator === Validators.required);
+      const validators = Array.isArray(control.validator)
+        ? control.validator
+        : [control.validator];
+      return validators.some((validator) => validator === Validators.required);
     }
     return false;
-}
-
+  }
 
   public predecir() {
     this.agregarValidacionRequeridaATodosLosCampos();
     this.banderaVisibilidad = true;
-    this.banderaCard=true;
+    this.banderaCard = true;
     if (this.formulario.valid) {
       this.animacion = true;
       this.mostrarOverlay = true;
@@ -313,9 +343,9 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
       if (this.registroDTO.departamento == "Otros") {
         this.registroDTO.municipio = "Otros";
       }
-      this.registroDTO.comuna = this.formulario.get('comuna').value;
+      this.registroDTO.comuna = this.formulario.get("comuna").value;
       this.registroDTO.mes = this.obtenerMesDesdeSemana(
-      this.registroDTO.semana
+        this.registroDTO.semana
       );
       this.registroDTO.mes = this.obtenerMesDesdeSemana(
         this.registroDTO.semana
@@ -326,16 +356,15 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
       this.registroDTO.ciclo_de_vida = this.opcionesCicloDeVida(
         this.registroDTO.grupo_edad
       );
-      this.registroDTO.violencia_intrafamiliar=this.obtenerViolenciaIntrafamiliar(
-        this.registroDTO.parentezco_vict
-      );
-      this.registroDTO.victima_menor_de_edad=this.obtenerVictimaMenor(
+      this.registroDTO.violencia_intrafamiliar =
+        this.obtenerViolenciaIntrafamiliar(this.registroDTO.parentezco_vict);
+      this.registroDTO.victima_menor_de_edad = this.obtenerVictimaMenor(
         this.registroDTO.grupo_edad
       );
-      this.registroDTO.agresor_menor_de_edad=this.obtenerAgresorMenor(
+      this.registroDTO.agresor_menor_de_edad = this.obtenerAgresorMenor(
         this.registroDTO.edad_agre
       );
-      this.registroDTO.nom_eve=this. obtenerNombreDelEvento(
+      this.registroDTO.nom_eve = this.obtenerNombreDelEvento(
         this.registroDTO.parentezco_vict
       );
       console.log(this.registroDTO);
@@ -351,7 +380,7 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
           this.importancia_caracteristicas[this.prediccion]
         );
         this.banderaVisibilidad = false;
-        this.banderaCard=false;
+        this.banderaCard = false;
       });
     } else {
       console.log("Algunos campos del formulario no son válidos.");
@@ -370,28 +399,50 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
   obtenerVictimaMenor(grupoEdad: string): string {
     switch (grupoEdad) {
       case "0 a 6":
-        return "1"
+        return "1";
       case "7  a 11":
-        return "1"
+        return "1";
       case "12 a 17":
-        return "1"
+        return "1";
       case "18 a 28":
-        return "0"
+        return "0";
       case "29 a 59":
-        return "0"
+        return "0";
       case "60 y mas":
         return "0";
       default:
         return "0";
-      }
+    }
   }
   obtenerViolenciaIntrafamiliar(parentezco_vict: string): string {
-    const valoresPermitidos = ["Madre", "Padre", "Familiar", "Pareja", "Ex pareja", "Esposo", "Compañero permanente", "Novio(a)", "Abuelo(a)"];
+    const valoresPermitidos = [
+      "Madre",
+      "Padre",
+      "Familiar",
+      "Pareja",
+      "Ex pareja",
+      "Esposo",
+      "Compañero permanente",
+      "Novio(a)",
+      "Abuelo(a)",
+    ];
     return valoresPermitidos.includes(parentezco_vict) ? "1" : "0";
   }
   obtenerNombreDelEvento(parentezco_vict: string): string {
-    const valoresPermitidos = ["Madre", "Padre", "Familiar", "Pareja", "Ex pareja", "Esposo", "Compañero permanente", "Novio(a)", "Abuelo(a)"];
-    return valoresPermitidos.includes(parentezco_vict) ? "VIGILANCIA EN SALUD PÚBLICA DE LA VIOLENCIA DE GÉNERO E INTRAFAMILIAR" : "VIGILANCIA EN SALUD PÚBLICA DE LAS VIOLENCIAS DE GÉNERO";
+    const valoresPermitidos = [
+      "Madre",
+      "Padre",
+      "Familiar",
+      "Pareja",
+      "Ex pareja",
+      "Esposo",
+      "Compañero permanente",
+      "Novio(a)",
+      "Abuelo(a)",
+    ];
+    return valoresPermitidos.includes(parentezco_vict)
+      ? "VIGILANCIA EN SALUD PÚBLICA DE LA VIOLENCIA DE GÉNERO E INTRAFAMILIAR"
+      : "VIGILANCIA EN SALUD PÚBLICA DE LAS VIOLENCIAS DE GÉNERO";
   }
 
   graficaCaracteristicas(importancia_caracteristicas: any) {
@@ -450,7 +501,6 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
             },
           },
           plugins: {
-           
             tooltip: {
               callbacks: {
                 label: (context: any) => {
@@ -460,8 +510,8 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
               },
             },
             datalabels: {
-              display: false, 
-            }
+              display: false,
+            },
           },
         },
       });
@@ -571,9 +621,8 @@ hasRequiredValidator(control: AbstractControl<any>): boolean {
   }
 
   ngAfterViewInit() {
-    this.renderer.listen(this.tooltipIcon.nativeElement, 'click', () => {
+    this.renderer.listen(this.tooltipIcon.nativeElement, "click", () => {
       this.showTooltip();
     });
   }
-
 }

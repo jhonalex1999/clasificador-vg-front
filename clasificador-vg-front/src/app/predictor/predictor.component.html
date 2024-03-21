@@ -6,6 +6,8 @@
           <div class="card-header card-header-primary">
             <h3 class="card-title">Predictor</h3>
             <p>Ingresa todos los campos para realizar la prediccion sobre la naturaleza de violencia de genero.
+              Ten en cuenta que hay variables que inciden directamente en otras, esto lo podras ver seleccionando el signo de pregunta
+              que esta a lado derecho de cada campo.
             </p>
           </div>
           <div class="card-body">
@@ -24,7 +26,13 @@
                       Departamento es requerido.
                     </mat-error>
                   </mat-form-field>
-                  <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipDepartamento" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                  <i mat-raised-button
+                    [matTooltip]="tooltipContentDepartamento"
+                    aria-label="Button that displays a tooltip when clicked"
+                    (click)="mostrarTooltip(tooltipDepartamento)"
+                    class="fa fa-question-circle"
+                    #tooltipDepartamento="matTooltip">
+                  </i>
                 </div>
 
               <div class="tooltip-container">
@@ -39,7 +47,14 @@
                     Municipio es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipMunicipio" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentMunicipio"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipMunicipio)"
+                class="fa fa-question-circle"
+                #tooltipMunicipio="matTooltip">
+              </i>
+
               </div>
 
               <div class="tooltip-container">
@@ -54,7 +69,13 @@
                     Semana es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSemana" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                    [matTooltip]="tooltipContentSemana"
+                    aria-label="Button that displays a tooltip when clicked"
+                    (click)="mostrarTooltip(tooltipSemana)"
+                    class="fa fa-question-circle"
+                    #tooltipSemana="matTooltip">
+                  </i>
               </div>
 
               <div class="tooltip-container">
@@ -69,7 +90,13 @@
                     Año es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipAnio" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                      [matTooltip]="tooltipContentAnio"
+                      aria-label="Button that displays a tooltip when clicked"
+                      (click)="mostrarTooltip(tooltipAnio)"
+                      class="fa fa-question-circle"
+                      #tooltipAnio="matTooltip">
+                    </i>
               </div>
 
               <div class="tooltip-container">
@@ -84,7 +111,13 @@
                     Grupo edad es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipRangoEdad" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                      [matTooltip]="tooltipContentRangoEdad"
+                      aria-label="Button that displays a tooltip when clicked"
+                      (click)="mostrarTooltip(tooltipRangoEdad)"
+                      class="fa fa-question-circle"
+                      #tooltipRangoEdad="matTooltip">
+                    </i>
               </div>
 
               <div class="tooltip-container">
@@ -99,7 +132,13 @@
                     Sexo es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSexoVictima" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentSexoVictima"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipSexoVictima)"
+                class="fa fa-question-circle"
+                #tooltipSexoVictima="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -114,7 +153,13 @@
                     Area es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipArea" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentArea"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipArea)"
+                class="fa fa-question-circle"
+                #tooltipArea="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -129,7 +174,13 @@
                     Comuna es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipComuna" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentComuna"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipComuna)"
+                class="fa fa-question-circle"
+                #tooltipComuna="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -145,7 +196,13 @@
                     Tipo de Seguridad Social es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSeguridadSocial" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentSeguridadSocial"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipSeguridadSocial)"
+                class="fa fa-question-circle"
+                #tooltipSeguridadSocial="matTooltip">
+              </i>
               </div>
 
               
@@ -162,7 +219,13 @@
                     Paciente Hospitalizado es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipVictimaHospitalizada" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentVictimaHospitalizada"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipVictimaHospitalizada)"
+                class="fa fa-question-circle"
+                #tooltipVictimaHospitalizada="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -177,7 +240,13 @@
                     Condición Final es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipEstadoFinal" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentEstadoFinal"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipEstadoFinal)"
+                class="fa fa-question-circle"
+                #tooltipEstadoFinal="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -192,7 +261,13 @@
                     Actividad es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipActividadVictima" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentActividadVictima"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipActividadVictima)"
+                class="fa fa-question-circle"
+                #tooltipActividadVictima="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -200,14 +275,20 @@
                   <mat-label>¿Cuál es la edad del agresor?</mat-label>
                   <div class="slider-container">
                     <input type="range" matInput formControlName="edad_agre" min="10" max="99" step="1" class="slider">
-                    <div class="slider-track"></div> <!-- Elemento de línea -->
+                    <div class="slider-track"></div> 
                   </div>
                   <span>{{ formulario.get('edad_agre').value }}</span>
                   <mat-error *ngIf="formulario.get('edad_agre').invalid">
                     Edad Agresor es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipEdadAgresor" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentEdadAgresor"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipEdadAgresor)"
+                class="fa fa-question-circle"
+                #tooltipEdadAgresor="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -222,7 +303,13 @@
                     Sexo Agresor es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSexoAgresor" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentSexoAgresor"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipSexoAgresor)"
+                class="fa fa-question-circle"
+                #tooltipSexoAgresor="matTooltip">
+              </i>
               </div>
 
               
@@ -238,7 +325,13 @@
                     Parentezco Víctima es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipParentezco" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentParentezco"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipParentezco)"
+                class="fa fa-question-circle"
+                #tooltipParentezco="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -254,7 +347,13 @@
                     Sustancias Víctima es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipSustanciasVictima" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentSustanciasVictima"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipSustanciasVictima)"
+                class="fa fa-question-circle"
+                #tooltipSustanciasVictima="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -269,7 +368,13 @@
                     Escenario es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipEscenarioEvento" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentEscenarioEvento"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipEscenarioEvento)"
+                class="fa fa-question-circle"
+                #tooltipEscenarioEvento="matTooltip">
+              </i>
               </div>
 
               <div class="tooltip-container">
@@ -284,7 +389,13 @@
                     Nombre UPGD es requerido.
                   </mat-error>
                 </mat-form-field>
-                <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipUPGD" aria-label="Button that displays a tooltip when focused or clicked"></i>
+                <i mat-raised-button
+                [matTooltip]="tooltipContentUPGD"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipUPGD)"
+                class="fa fa-question-circle"
+                #tooltipUPGD="matTooltip">
+              </i>
               </div>
                 <button mat-raised-button class="btn btn-primary" type="submit">Enviar</button>
                 <span style="margin-left: 10px;"></span> 
@@ -336,8 +447,13 @@
         <div [class.invisible]="banderaCard" class="card card-grafico">
           <div class="card-header card-header-primary">
             <h4>Importancia de las caracteristicas
-              <i #tooltipIcon class="fa fa-question-circle" [matTooltip]="tooltipContent"
-                aria-label="Button that displays a tooltip when focused or clicked"></i>
+              <i mat-raised-button
+                [matTooltip]="tooltipContentGrafica"
+                aria-label="Button that displays a tooltip when clicked"
+                (click)="mostrarTooltip(tooltipGrafica)"
+                class="fa fa-question-circle"
+                #tooltipGrafica="matTooltip">
+              </i>
             </h4>
           </div>
           <div class="card-body">

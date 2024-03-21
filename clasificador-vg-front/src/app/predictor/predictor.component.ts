@@ -26,8 +26,26 @@ import { filter } from "rxjs/operators";
   styleUrls: ["./predictor.component.scss"],
 })
 export class PredictorComponent implements OnInit {
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild("tooltipIcon") tooltipIcon: ElementRef;
+  @ViewChild('tooltipDepartamento') tooltipDepartamento: MatTooltip;
+  @ViewChild('tooltipMunicipio') tooltipMunicipio: MatTooltip;
+  @ViewChild('tooltipSemana') tooltipSemana: MatTooltip;
+  @ViewChild('tooltipAnio') tooltipAnio: MatTooltip;
+  @ViewChild('tooltipRangoEdad') tooltipRangoEdad: MatTooltip;
+  @ViewChild('tooltipSexoVictima') tooltipSexoVictima: MatTooltip;
+  @ViewChild('tooltipArea') tooltipArea: MatTooltip;
+  @ViewChild('tooltipComuna') tooltipComuna: MatTooltip;
+  @ViewChild('tooltipSeguridadSocial') tooltipSeguridadSocial: MatTooltip;
+  @ViewChild('tooltipVictimaHospitalizada') tooltipVictimaHospitalizada: MatTooltip;
+  @ViewChild('tooltipEstadoFinal') tooltipEstadoFinal: MatTooltip;
+  @ViewChild('tooltipActividadVictima') tooltipActividadVictima: MatTooltip;
+  @ViewChild('tooltipEdadAgresor') tooltipEdadAgresor: MatTooltip;
+  @ViewChild('tooltipSexoAgresor') tooltipSexoAgresor: MatTooltip;
+  @ViewChild('tooltipParentezco') tooltipParentezco: MatTooltip;
+  @ViewChild('tooltipSustanciasVictima') tooltipSustanciasVictima: MatTooltip;
+  @ViewChild('tooltipEscenarioEvento') tooltipEscenarioEvento: MatTooltip;
+  @ViewChild('tooltipUPGD') tooltipUPGD: MatTooltip;
+  @ViewChild('tooltipGrafica') tooltipGrafica: MatTooltip;
+
   public registroDTO: RegistroDto;
   public definicion: any;
   public prediccion: any;
@@ -149,43 +167,26 @@ export class PredictorComponent implements OnInit {
     "Otros",
   ];
 
-  tooltipContent =
-    "En esta gráfica se puede observar la importancia de las características al momento de realizar la predicción. Algunas características se calculan a partir de otras variables del formulario, como por ejemplo trimestre o mes que se generan a partir de la semana.";
-  tooltipDepartamento =
-    "Departamento donde sucedió el caso de violencia de género.";
-  tooltipMunicipio =
-    "Municipio donde sucedió el caso de violencia de género. Este campo se autocompleta con el valor de Otros si el departamento tiene como valor Otros.";
-  tooltipSemana =
-    "Semana en la que sucedió el caso de violencia de género. (A partir de este valor también se generan los valores para las variables Mes y Trimestre).";
-  tooltipAnio = "Año en el que sucedió el caso de violencia de género.";
-  tooltipRangoEdad =
-    "Rango de edad que tenía la víctima en el momento del suceso de violencia de género.";
-  tooltipSexoVictima = "Sexo de la víctima del acto de violencia de género.";
-  tooltipArea =
-    "Área geográfica del municipio donde ocurrió el caso de violencia de género.";
-  tooltipComuna =
-    "Comuna del área geográfica donde sucedió el acto de violencia de género. (Este campo toma como valor Otros si el municipio es diferente a cabecera municipal, de lo contrario se despliegan una serie de comunas).";
-  tooltipSeguridadSocial =
-    "Tipo de seguridad social a la que se encuentra vinculada la víctima de violencia de género.";
-  tooltipVictimaHospitalizada =
-    "Valor que indica si la víctima fue hospitalizada después de sufrir el acto de violencia de género.";
-  tooltipEstadoFinal =
-    "Indica el estado vital de la víctima luego de sufrir el acto de violencia de género.";
-  tooltipActividadVictima =
-    "Actividad en la que se desempeña la víctima de violencia de género.";
-  tooltipEdadAgresor =
-    "Edad del agresor en el momento del acto de violencia de género.";
-  tooltipSexoAgresor = "Sexo del agresor.";
-  tooltipParentezco =
-    "Parentesco persona o familiar de la víctima con el agresor.";
-  tooltipSustanciasVictima =
-    "Indica si la víctima estaba bajo el efecto de sustancias psicoactivas en el momento del acto de violencia de género.";
-  tooltipEscenarioEvento =
-    "Entorno ambiental donde sucedió el caso de violencia de género.";
-  tooltipUPGD =
-    "La unidad primaria generadora de datos hace referencia a la entidad encargada de recibir o generar la información del acto de violencia de género.";
-
-  private sexoAgreAnterior: string = "";
+  tooltipContentGrafica ='La gráfica resalta las características más importantes consideradas por el modelo de machine learning para realizar predicciones. Cada barra representa la influencia de una característica en la prediccion del modelo, ofreciendo una visión rápida de los factores mas relevantes.';
+  tooltipContentDepartamento ='Departamento donde sucedio el caso de violencia de genero.';
+  tooltipContentMunicipio ='Municipio donde sucedio el caso de violencia de genero. Este campo se autocompleta con el valor de Otros si el departamento tiene como valor Otros.';
+  tooltipContentSemana ='Semana en la que sucedio el caso de violencia de genero. (Apartir de este valor tambien se generan los valores para las variables Mes y Trimestre).';
+  tooltipContentAnio ='Año en el que sucedio el caso de violencia de genero.';
+  tooltipContentRangoEdad ='Rango de edad que tenia la victima en el momento del suceso de violencia de genero. (Apartir de esta variable se genera los valores para la variable ciclo de vida y victima menor de edad)';
+  tooltipContentSexoVictima ='Sexo de la victima del acto de violencia de genero.';
+  tooltipContentArea ='Area geografica del municipio donde ocurrio el caso de violencia de genero.';
+  tooltipContentComuna ='Comuna del area geografica donde sucedio el acto de violencia de genero. (Este campo toma como Valor Otros si el municpio es diferente a cabecera municipal, de lo contrario se desplegan una serie de comunas )';
+  tooltipContentSeguridadSocial ='Tipo de seguridad social a la que se encuentra vinculada la victima de violencia de genero.';
+  tooltipContentVictimaHospitalizada ='Valor que indica si la victima fue hospitalizada depues de susfrir el acto de violencia de genero.';
+  tooltipContentEstadoFinal ='Indica el estado vital de la victima luego de sufrir el acto de violencia de genero.';
+  tooltipContentActividadVictima ='Actividad en la que se desempeña la victima de violencia de genero.';
+  tooltipContentEdadAgresor ='Edad del agresor en el momento del acto de violencia de genero. (Apartir de esta variable se genera el valor para la varible agresor menor de edad)';
+  tooltipContentSexoAgresor ='Sexo del agresor. Se debe tener en cuenta que segun el genero seleccionado en esta variable se modifica los posbiles valores de la variable parentezco victima';
+  tooltipContentParentezco ='Parentezco persona o familiar de la victima con el agresor. (Apartir de esta variable se genera los valores para la variable violencia intrafamiliar y nombre del evento)';
+  tooltipContentSustanciasVictima ='Indica si la victima bajo el efecto de sustancias psicoactivas en el momento del acto de violencia de genero.';
+  tooltipContentEscenarioEvento ='Entorno ambiental donde sucedio el caso de violencia de genero.';
+  tooltipContentUPGD ='La unidad primaria generadora de datos hace referencia a la entidad encargada de recibir o generar la informacion del acto de violencia de genero';
+  private sexoAgreAnterior: string = '';
   parentezcosVictBackup: string[] = [...this.parentezcosVict];
   constructor(
     private service: Service,
@@ -343,10 +344,8 @@ export class PredictorComponent implements OnInit {
       if (this.registroDTO.departamento == "Otros") {
         this.registroDTO.municipio = "Otros";
       }
-      this.registroDTO.comuna = this.formulario.get("comuna").value;
-      this.registroDTO.mes = this.obtenerMesDesdeSemana(
-        this.registroDTO.semana
-      );
+      this.registroDTO.comuna = this.formulario.get('comuna').value;
+      
       this.registroDTO.mes = this.obtenerMesDesdeSemana(
         this.registroDTO.semana
       );
@@ -614,15 +613,8 @@ export class PredictorComponent implements OnInit {
     // Establece las opciones filtradas en el formulario
     this.formulario.get("parentezco_vict").setValue("");
   }
-  showTooltip() {
-    if (!this.tooltip.disabled) {
-      this.tooltip.show();
-    }
-  }
-
-  ngAfterViewInit() {
-    this.renderer.listen(this.tooltipIcon.nativeElement, "click", () => {
-      this.showTooltip();
-    });
+ 
+  mostrarTooltip(tooltip: MatTooltip) {
+    tooltip.show();
   }
 }

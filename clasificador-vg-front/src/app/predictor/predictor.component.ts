@@ -385,17 +385,17 @@ export class PredictorComponent implements OnInit {
       this.registroDTO.nom_eve = this.obtenerNombreDelEvento(
         this.registroDTO.parentezco_vict
       );
-      console.log(this.registroDTO);
+   
 
       this.service.predecir(this.registroDTO).subscribe((result) => {
         this.definicion = result.definicion;
         this.prediccion = result.prediccion;
         this.importancia_caracteristicas = result.importancia_caracteristicas;
-        console.log(this.importancia_caracteristicas[this.prediccion]);
+   
         this.animacion = false;
         this.mostrarOverlay = false;
         this.graficaCaracteristicas(
-          this.importancia_caracteristicas[this.prediccion]
+          this.importancia_caracteristicas
         );
         this.banderaVisibilidad = false;
         this.banderaCard = false;
@@ -464,21 +464,11 @@ export class PredictorComponent implements OnInit {
   }
 
   graficaCaracteristicas(importancia_caracteristicas: any) {
-    // Filtrar solo las características con importancia positiva
-    const caracteristicasPositivas = importancia_caracteristicas.filter(
-      (item) => item.importancia >= 0
-    );
+    
+    const etiquetas = importancia_caracteristicas.map((item: any) => item[0].nombre);
 
-    // Ordenar el arreglo de características positivas por importancia de manera descendente
-    const sortedImportancia = caracteristicasPositivas.sort(
-      (a, b) => b.importancia - a.importancia
-    );
-
-    // Tomar los 10 elementos con mayor importancia
-    const top10Importancia = sortedImportancia.slice(0, 10);
-
-    const etiquetas = top10Importancia.map((item) => item.nombre);
-    const valores = top10Importancia.map((item) => item.importancia);
+    // Obtener valores
+    const valores = importancia_caracteristicas.map((item: any) => item[0].importancia);
 
     const colores = valores.map(() => "rgba(156, 39, 176, 1)"); // Colores para valores positivos
 
